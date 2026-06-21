@@ -436,6 +436,10 @@ function parseAndProcessData(result) {
     // 3. Perform peak/trough analysis, fit lines, and check breakouts
     const analysisResults = calculateRsiBreakout(candles, rsiValues, rsiMaValues, state.params);
 
+    // Run Walk-Forward Replay to find which signals were real in real-time
+    const replaySignals = calculateWalkForwardReplay(candles, state.params);
+    analysisResults.comparedSignals = compareSignals(analysisResults.signals, replaySignals);
+
     // 4. Update UI & Charts
     renderAnalysis(candles, rsiValues, rsiMaValues, analysisResults);
     showLoading(false);
@@ -709,52 +713,30 @@ function calculateRsiBreakout(candles, rsi, rsiMa, params) {
     const buf5_mt4 = new Array(N).fill(null); // BUY
     const buf6_mt4 = new Array(N).fill(null); // SELL
 
-    for (let i = 0; i < N - 2; i++) {
-        if (buf3_mt4[i] == null || buf3_mt4[i+1] == null || buf3_mt4[i+2] == null) continue;
-        if (rsi_mt4[i] == null || rsi_mt4[i+1] == null || rsi_mt4[i+2] == null) continue;
+    // BUY: RSI crosses ABOVE resistance line (buf3)
+    for (let i = 0; i < N - 1; i++) {
+        if (buf3_mt4[i] == null || buf3_mt4[i+1] == null) continue;
+        if (rsi_mt4[i] == null || rsi_mt4[i+1] == null) continue;
 
-        let isStraightBuy = false;
-        if (i > 0 && buf3_mt4[i-1] != null) {
-            if (Math.abs((buf3_mt4[i] - buf3_mt4[i+1]) - (buf3_mt4[i-1] - buf3_mt4[i])) < 0.001) {
-                isStraightBuy = true;
-            }
-        } else {
-            if (Math.abs((buf3_mt4[i+1] - buf3_mt4[i+2]) - (buf3_mt4[i] - buf3_mt4[i+1])) < 0.001) {
-                isStraightBuy = true;
-            }
-        }
+        // Crossing check: RSI was at or below line, now above by at least margin
+        const prevBelow = rsi_mt4[i+1] <= buf3_mt4[i+1] + params.margin;
+        const nowAbove = rsi_mt4[i] > buf3_mt4[i] + params.margin;
 
-        if (isStraightBuy &&
-            buf3_mt4[i] <= buf3_mt4[i+1] && // Downward sloping or flat
-            rsi_mt4[i] > buf3_mt4[i] && // Current RSI is above
-            rsi_mt4[i+2] < buf3_mt4[i+2] && // 2 bars ago RSI was below
-            (rsi_mt4[i+1] - buf3_mt4[i+1]) > params.margin // 1 bar ago broke above by margin
-        ) {
+        if (prevBelow && nowAbove) {
             buf5_mt4[i] = rsi_mt4[i];
         }
     }
 
-    for (let i = 0; i < N - 2; i++) {
-        if (buf4_mt4[i] == null || buf4_mt4[i+1] == null || buf4_mt4[i+2] == null) continue;
-        if (rsi_mt4[i] == null || rsi_mt4[i+1] == null || rsi_mt4[i+2] == null) continue;
+    // SELL: RSI crosses BELOW support line (buf4)
+    for (let i = 0; i < N - 1; i++) {
+        if (buf4_mt4[i] == null || buf4_mt4[i+1] == null) continue;
+        if (rsi_mt4[i] == null || rsi_mt4[i+1] == null) continue;
 
-        let isStraightSell = false;
-        if (i > 0 && buf4_mt4[i-1] != null) {
-            if (Math.abs((buf4_mt4[i] - buf4_mt4[i+1]) - (buf4_mt4[i-1] - buf4_mt4[i])) < 0.001) {
-                isStraightSell = true;
-            }
-        } else {
-            if (Math.abs((buf4_mt4[i+1] - buf4_mt4[i+2]) - (buf4_mt4[i] - buf4_mt4[i+1])) < 0.001) {
-                isStraightSell = true;
-            }
-        }
+        // Crossing check: RSI was at or above line, now below by at least margin
+        const prevAbove = rsi_mt4[i+1] >= buf4_mt4[i+1] - params.margin;
+        const nowBelow = rsi_mt4[i] < buf4_mt4[i] - params.margin;
 
-        if (isStraightSell &&
-            buf4_mt4[i] >= buf4_mt4[i+1] && // Upward sloping or flat
-            rsi_mt4[i] < buf4_mt4[i] && // Current RSI is below
-            rsi_mt4[i+2] > buf4_mt4[i+2] && // 2 bars ago RSI was above
-            (buf4_mt4[i+1] - rsi_mt4[i+1]) > params.margin // 1 bar ago broke below by margin
-        ) {
+        if (prevAbove && nowBelow) {
             buf6_mt4[i] = rsi_mt4[i];
         }
     }
@@ -808,6 +790,80 @@ function calculateRsiBreakout(candles, rsi, rsiMa, params) {
         peakLines,
         troughLines,
         signals
+    };
+}
+
+// Run walk-forward replay step-by-step
+function calculateWalkForwardReplay(candles, params) {
+    const replaySignals = [];
+    const N = candles.length;
+    
+    // Starting index to have enough bars for indicator calculations
+    const startIdx = Math.max(50, params.rsiPeriod + params.maPeriod + 10);
+    
+    for (let t = startIdx; t < N; t++) {
+        // Slice data as-of index t (only historical data up to day t)
+        const slice = candles.slice(0, t + 1);
+        
+        // Recalculate indicators for this slice
+        const rsi = calculateRSI(slice, params.rsiPeriod);
+        const rsiMa = calculateMA(rsi, params.maPeriod, params.maMethod);
+        const res = calculateRsiBreakout(slice, rsi, rsiMa, params);
+        
+        // We look for a signal that triggered on the VERY LAST bar of this slice (index t)
+        // Note that index t in the slice corresponds to index t in the original candles array.
+        const lastSignal = res.signals.find(sig => sig.index === t);
+        if (lastSignal) {
+            replaySignals.push({
+                time: lastSignal.time,
+                index: t,
+                type: lastSignal.type,
+                price: lastSignal.price,
+                rsi: lastSignal.rsi,
+                lineValue: lastSignal.lineValue,
+                description: lastSignal.description
+            });
+        }
+    }
+    return replaySignals;
+}
+
+// Compare batch (with repaint) and replay (without repaint) signals
+function compareSignals(batchSignals, replaySignals) {
+    const replayMap = new Map();
+    replaySignals.forEach(s => {
+        replayMap.set(s.index + '_' + s.type, s);
+    });
+
+    const batchMap = new Map();
+    batchSignals.forEach(s => {
+        batchMap.set(s.index + '_' + s.type, s);
+    });
+
+    const confirmed = [];
+    const phantom = [];
+    const replayOnly = [];
+
+    batchSignals.forEach(bs => {
+        const key = bs.index + '_' + bs.type;
+        if (replayMap.has(key)) {
+            confirmed.push(bs);
+        } else {
+            phantom.push(bs);
+        }
+    });
+
+    replaySignals.forEach(rs => {
+        const key = rs.index + '_' + rs.type;
+        if (!batchMap.has(key)) {
+            replayOnly.push(rs);
+        }
+    });
+
+    return {
+        confirmed,
+        phantom,
+        replayOnly
     };
 }
 
@@ -887,20 +943,45 @@ function renderAnalysis(candles, rsi, rsiMa, analysis) {
     // Draw last nLine Trough lines (Support - glowing blue/cyan)
     analysis.troughLines.forEach(line => renderLine(line, 'rgba(6, 182, 212, 0.75)')); // Cyan
 
-    // 4. Apply Markers to Price & RSI Charts
+    // 4. Apply Markers to Price & RSI Charts based on Walk-Forward verification
     const priceMarkers = [];
-    
-    // Sort signals by time for rendering markers
-    analysis.signals.forEach(sig => {
+    const compared = analysis.comparedSignals || { confirmed: [], phantom: [], replayOnly: [] };
+
+    // A. Confirmed signals (both batch and replay)
+    compared.confirmed.forEach(sig => {
         priceMarkers.push({
             time: sig.time,
             position: sig.type === 'BUY' ? 'belowBar' : 'aboveBar',
-            color: sig.type === 'BUY' ? '#10b981' : '#f43f5e',
+            color: sig.type === 'BUY' ? '#10b981' : '#f43f5e', // Solid green/red
             shape: sig.type === 'BUY' ? 'arrowUp' : 'arrowDown',
-            text: sig.type === 'BUY' ? 'BUY' : 'SELL',
+            text: sig.type === 'BUY' ? 'BUY(確)' : 'SELL(確)',
         });
     });
 
+    // B. Phantom signals (batch only - disappeared in real life!)
+    compared.phantom.forEach(sig => {
+        priceMarkers.push({
+            time: sig.time,
+            position: sig.type === 'BUY' ? 'belowBar' : 'aboveBar',
+            color: '#64748b', // Slate gray
+            shape: sig.type === 'BUY' ? 'arrowUp' : 'arrowDown',
+            text: sig.type === 'BUY' ? 'BUY(消)' : 'SELL(消)',
+        });
+    });
+
+    // C. Replay-only signals (not present in final batch)
+    compared.replayOnly.forEach(sig => {
+        priceMarkers.push({
+            time: sig.time,
+            position: sig.type === 'BUY' ? 'belowBar' : 'aboveBar',
+            color: '#f59e0b', // Amber orange
+            shape: sig.type === 'BUY' ? 'arrowUp' : 'arrowDown',
+            text: sig.type === 'BUY' ? 'BUY(実)' : 'SELL(実)',
+        });
+    });
+
+    // Sort markers chronologically to ensure Lightweight Charts renders them correctly
+    priceMarkers.sort((a, b) => new Date(a.time) - new Date(b.time));
     state.charts.series.candles.setMarkers(priceMarkers);
 
     // Fit visible scale to last 150 bars so candlesticks are clearly visible
@@ -936,35 +1017,73 @@ function renderAnalysis(candles, rsi, rsiMa, analysis) {
     const rsiEl = document.getElementById('stat-rsi');
     rsiEl.textContent = latestRsi ? latestRsi.toFixed(1) : '--.-';
 
-    // Last Signal details
+    // Last Signal details (use verified signals first if available)
     const lastSigEl = document.getElementById('stat-signal');
     const signalCountEl = document.getElementById('stat-signal-count');
-    signalCountEl.textContent = analysis.signals.length;
+    const replayCountEl = document.getElementById('stat-replay-count');
+    const phantomCountEl = document.getElementById('stat-phantom-count');
 
-    if (analysis.signals.length > 0) {
-        const lastSig = analysis.signals[analysis.signals.length - 1];
-        lastSigEl.innerHTML = `<span class="sig-badge ${lastSig.type.toLowerCase()}">${lastSig.type}</span> <span style="font-size:0.75rem; font-weight:normal; color:var(--text-muted);">${lastSig.time}</span>`;
+    const totalBatchCount = analysis.signals.length;
+    const confirmedCount = compared.confirmed.length;
+    const replayOnlyCount = compared.replayOnly.length;
+    const totalReplayCount = confirmedCount + replayOnlyCount;
+    const phantomCount = compared.phantom.length;
+    const phantomRate = totalBatchCount > 0 ? ((phantomCount / totalBatchCount) * 100).toFixed(0) : 0;
+
+    signalCountEl.textContent = totalBatchCount;
+    if (replayCountEl) replayCountEl.textContent = totalReplayCount;
+    if (phantomCountEl) phantomCountEl.textContent = `${phantomCount} (${phantomRate}%)`;
+
+    // Get the chronologically newest signal (either batch or replay)
+    const allSignalsChronological = [];
+    compared.confirmed.forEach(s => allSignalsChronological.push({ ...s, status: 'confirmed' }));
+    compared.phantom.forEach(s => allSignalsChronological.push({ ...s, status: 'phantom' }));
+    compared.replayOnly.forEach(s => allSignalsChronological.push({ ...s, status: 'replayOnly' }));
+    allSignalsChronological.sort((a, b) => new Date(a.time) - new Date(b.time));
+
+    if (allSignalsChronological.length > 0) {
+        const lastSig = allSignalsChronological[allSignalsChronological.length - 1];
+        let statusBadge = '';
+        if (lastSig.status === 'confirmed') statusBadge = '<span style="color:#10b981; font-weight:bold;">[確]</span>';
+        else if (lastSig.status === 'phantom') statusBadge = '<span style="color:#64748b; text-decoration:line-through;">[消]</span>';
+        else if (lastSig.status === 'replayOnly') statusBadge = '<span style="color:#f59e0b; font-weight:bold;">[実]</span>';
+
+        lastSigEl.innerHTML = `<span class="sig-badge ${lastSig.type.toLowerCase()}">${lastSig.type}</span> ${statusBadge} <span style="font-size:0.75rem; font-weight:normal; color:var(--text-muted);">${lastSig.time}</span>`;
     } else {
         lastSigEl.textContent = 'なし';
     }
 
-    // 6. Populate Signals Log Table
+    // 6. Populate Signals Log Table (combining all signals)
     const tableBody = document.getElementById('signals-table').querySelector('tbody');
     
-    if (analysis.signals.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="6" class="no-data">このパラメータ条件ではブレイクアウトが検出されませんでした。</td></tr>`;
+    if (allSignalsChronological.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="7" class="no-data">このパラメータ条件ではブレイクアウトが検出されませんでした。</td></tr>`;
     } else {
         // Reverse array to show newest first in the log table
-        const reversedSignals = [...analysis.signals].reverse();
+        const reversedSignals = [...allSignalsChronological].reverse();
         
         tableBody.innerHTML = reversedSignals.map(sig => {
+            let statusText = '';
+            let rowStyle = '';
+            let sigBadgeClass = sig.type.toLowerCase();
+            
+            if (sig.status === 'confirmed') {
+                statusText = '<span style="color:#10b981; font-weight:600;"><i data-lucide="check-circle" style="width:14px;height:14px;vertical-align:middle;margin-right:4px;"></i>確定 (実戦+後知恵)</span>';
+            } else if (sig.status === 'phantom') {
+                statusText = '<span style="color:#64748b; text-decoration:line-through;"><i data-lucide="alert-triangle" style="width:14px;height:14px;vertical-align:middle;margin-right:4px;"></i>消滅 (後知恵のみダマシ)</span>';
+                rowStyle = 'style="opacity: 0.65; background-color: rgba(244, 63, 94, 0.02);"';
+            } else if (sig.status === 'replayOnly') {
+                statusText = '<span style="color:#f59e0b; font-weight:600;"><i data-lucide="info" style="width:14px;height:14px;vertical-align:middle;margin-right:4px;"></i>実戦のみ (遅延確定)</span>';
+            }
+
             return `
-                <tr>
+                <tr ${rowStyle}>
                     <td>${sig.time}</td>
-                    <td><span class="sig-badge ${sig.type.toLowerCase()}">${sig.type}</span></td>
+                    <td><span class="sig-badge ${sigBadgeClass}">${sig.type}</span></td>
+                    <td>${statusText}</td>
                     <td style="font-weight:600;">${sig.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })}</td>
                     <td style="font-family:monospace; color:#a855f7;">${sig.rsi.toFixed(2)}</td>
-                    <td style="font-family:monospace; color:var(--text-muted);">${sig.lineValue}</td>
+                    <td style="font-family:monospace; color:var(--text-muted);">${sig.lineValue ? sig.lineValue.toFixed(2) : '--'}</td>
                     <td><button class="btn-chart-jump" data-time="${sig.time}">移動</button></td>
                 </tr>
             `;
@@ -985,5 +1104,10 @@ function renderAnalysis(candles, rsi, rsiMa, analysis) {
                 }
             });
         });
+
+        // Re-run lucide icons to render status column icons if any
+        if (window.lucide) {
+            window.lucide.createIcons();
+        }
     }
 }
