@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RSI Breakout Analyzer | tamarin0509-art</title>
+    <!-- SEO and OGP -->
+    <meta name="description" content="RSIブレイクアウト手法を用いたFOREX・国内株式のテクニカル分析チャート。上値抵抗線・下値支持線へのブレイクアウトを自動検知します。">
+    <meta property="og:title" content="RSI Breakout Analyzer">
+    <meta property="og:description" content="RSIブレイクアウト自動検知・テクニカルチャートツール">
+    <meta property="og:type" content="website">
+    
+    <!-- Google Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- TradingView Lightweight Charts -->
+    <script src="https://unpkg.com/lightweight-charts@4.1.1/dist/lightweight-charts.standalone.production.js"></script>
+    
+    <!-- App CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Controls -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i data-lucide="trending-up" class="logo-icon"></i>
+                    <div>
+                        <h1>RSI Breakout</h1>
+                        <span class="subtitle">Technical Analyzer</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="sidebar-content">
+                <!-- Preset Options -->
+                <div class="form-group">
+                    <label><i data-lucide="sliders"></i> プリセット</label>
+                    <div class="preset-buttons">
+                        <button type="button" class="btn-preset active" data-preset="forex">FOREX標準</button>
+                        <button type="button" class="btn-preset" data-preset="stock">株式標準</button>
+                        <button type="button" class="btn-preset" data-preset="aggressive">積極的</button>
+                        <button type="button" class="btn-preset" data-preset="conservative">保守的</button>
+                    </div>
+                </div>
+
+                <!-- Asset Selection -->
+                <div class="form-group">
+                    <label for="asset-selector"><i data-lucide="database"></i> 銘柄選択</label>
+                    <select id="asset-selector" class="form-control">
+                        <optgroup label="主要為替 (FOREX)">
+                            <option value="USDJPY=X" selected>米ドル / 円 (USD/JPY)</option>
+                            <option value="EURUSD=X">ユーロ / 米ドル (EUR/USD)</option>
+                            <option value="GBPJPY=X">英ポンド / 円 (GBP/JPY)</option>
+                            <option value="AUDUSD=X">豪ドル / 米ドル (AUD/USD)</option>
+                        </optgroup>
+                        <optgroup label="国内株式 (Japan Stocks)">
+                            <option value="7203.T">トヨタ自動車 (7203)</option>
+                            <option value="9984.T">ソフトバンクグループ (9984)</option>
+                            <option value="6758.T">ソニーグループ (6758)</option>
+                            <option value="9983.T">ファーストリテイリング (9983)</option>
+                            <option value="7974.T">任天堂 (7974)</option>
+                        </optgroup>
+                        <optgroup label="主要指数 (Indices)">
+                            <option value="^N225">日経平均株価 (Nikkei 225)</option>
+                            <option value="^GSPC">S&P 500 Index</option>
+                        </optgroup>
+                    </select>
+                </div>
+
+                <!-- Data Period Selection -->
+                <div class="form-group">
+                    <label for="period-selector"><i data-lucide="calendar"></i> 表示期間</label>
+                    <select id="period-selector" class="form-control">
+                        <option value="6mo">6ヶ月</option>
+                        <option value="1y">1年</option>
+                        <option value="2y" selected>2年 (約5倍)</option>
+                        <option value="5y">5年</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="custom-symbol"><i data-lucide="search"></i> カスタムシンボル入力</label>
+                    <div class="input-with-button">
+                        <input type="text" id="custom-symbol" class="form-control" placeholder="例: AAPL, BTC-USD, 9984.T">
+                        <button type="button" id="btn-custom-apply" class="btn-secondary">適用</button>
+                    </div>
+                    <span class="help-text">Yahoo Financeのティッカー記号が利用可能です。</span>
+                </div>
+
+                <hr class="divider">
+
+                <!-- Indicator parameters -->
+                <h3 class="section-title"><i data-lucide="settings"></i> パラメータ設定</h3>
+                
+                <div class="form-group">
+                    <div class="label-row">
+                        <label for="param-rsi-period">RSI基準値</label>
+                        <span class="param-value" id="val-rsi-period">14</span>
+                    </div>
+                    <input type="range" id="param-rsi-period" min="5" max="30" value="14" class="slider">
+                </div>
+
+                <div class="form-group">
+                    <div class="label-row">
+                        <label for="param-ma-period">RSI移動平均期間</label>
+                        <span class="param-value" id="val-ma-period">50</span>
+                    </div>
+                    <input type="range" id="param-ma-period" min="10" max="150" value="50" class="slider">
+                </div>
+
+                <div class="form-group">
+                    <label for="param-ma-method">移動平均種別</label>
+                    <select id="param-ma-method" class="form-control">
+                        <option value="EMA" selected>指数平滑移動平均 (EMA)</option>
+                        <option value="SMA">単純移動平均 (SMA)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <div class="label-row">
+                        <label for="param-offset">RSI MAオフセット</label>
+                        <span class="param-value" id="val-offset">0</span>
+                    </div>
+                    <input type="range" id="param-offset" min="-15" max="15" step="0.5" value="0" class="slider">
+                    <span class="help-text">正の値で下値支持、負の値で上値抵抗線が強調されます</span>
+                </div>
+
+                <div class="form-group">
+                    <div class="label-row">
+                        <label for="param-margin">ブレイク判定マージン</label>
+                        <span class="param-value" id="val-margin">1.0</span>
+                    </div>
+                    <input type="range" id="param-margin" min="0" max="5" step="0.1" value="1.0" class="slider">
+                    <span class="help-text">トレンドラインからの最低ブレイク乖離幅</span>
+                </div>
+
+                <div class="form-group">
+                    <div class="label-row">
+                        <label for="param-min-gap">ピーク検出最小間隔</label>
+                        <span class="param-value" id="val-min-gap">2</span>
+                    </div>
+                    <input type="range" id="param-min-gap" min="1" max="10" value="2" class="slider">
+                </div>
+
+                <div class="form-group">
+                    <div class="label-row">
+                        <label for="param-n-lines">表示ライン数</label>
+                        <span class="param-value" id="val-n-lines">3</span>
+                    </div>
+                    <input type="range" id="param-n-lines" min="1" max="10" value="3" class="slider">
+                </div>
+
+                <button type="button" id="btn-update" class="btn-primary">
+                    <i data-lucide="refresh-cw"></i> チャートを更新
+                </button>
+            </div>
+            
+            <div class="sidebar-footer">
+                <p>&copy; 2026 tamarin0509-art</p>
+            </div>
+        </aside>
+
+        <!-- Main Dashboard -->
+        <main class="main-dashboard">
+            <!-- Top Summary Stats -->
+            <header class="dashboard-header">
+                <div class="asset-title-block">
+                    <h2 id="current-asset-name">米ドル / 円 (USD/JPY)</h2>
+                    <span id="current-asset-symbol" class="badge-symbol">USDJPY=X</span>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card card-glass">
+                        <span class="stat-label">現在値 (終値)</span>
+                        <div class="stat-value-container">
+                            <span class="stat-value" id="stat-price">---</span>
+                            <span class="stat-change" id="stat-change">--%</span>
+                        </div>
+                    </div>
+                    <div class="stat-card card-glass">
+                        <span class="stat-label">現在のRSI</span>
+                        <div class="stat-value" id="stat-rsi">--.-</div>
+                    </div>
+                    <div class="stat-card card-glass">
+                        <span class="stat-label">最新シグナル</span>
+                        <div class="stat-value" id="stat-signal">---</div>
+                    </div>
+                    <div class="stat-card card-glass">
+                        <span class="stat-label">総シグナル数</span>
+                        <div class="stat-value" id="stat-signal-count">0</div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Loading overlay -->
+            <div id="loading-overlay" class="loading-overlay hidden">
+                <div class="spinner"></div>
+                <p>データを読み込んでいます...</p>
+            </div>
+
+            <!-- Charts Container -->
+            <section class="charts-section card-glass">
+                <div id="chart-price-container" class="chart-container"></div>
+                <div id="chart-rsi-container" class="chart-container"></div>
+            </section>
+
+            <!-- Bottom Signals Log & Explanations -->
+            <section class="bottom-section">
+                <!-- Breakout Logs -->
+                <div class="log-card card-glass">
+                    <div class="card-header">
+                        <h3><i data-lucide="bell"></i> ブレイクアウト シグナル履歴</h3>
+                    </div>
+                    <div class="table-wrapper">
+                        <table id="signals-table">
+                            <thead>
+                                <tr>
+                                    <th>日時</th>
+                                    <th>シグナル</th>
+                                    <th>ブレイクアウト価格</th>
+                                    <th>RSI値</th>
+                                    <th>ブレイク目標線値</th>
+                                    <th>チャートへ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="6" class="no-data">チャートのデータを読み込んでください。</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Explanation Panel -->
+                <div class="info-card card-glass">
+                    <div class="card-header">
+                        <h3><i data-lucide="help-circle"></i> RSIブレイクアウトについて</h3>
+                    </div>
+                    <div class="info-content">
+                        <p><strong>MTブレイクアウト法</strong>は、価格の移動平均乖離ではなく、オシレーターである<strong>RSI（相対力指数）</strong>の波形に着目したインジケータです。</p>
+                        <ul>
+                            <li>
+                                <strong>極大・極小点（ピーク）の検出</strong><br>
+                                RSIとその移動平均線（RSI MA）の乖離率（差分）が最大（RSIがMAより上のとき）または最小（RSIがMAより下のとき）になる反転ポイントを自動で検出します。
+                            </li>
+                            <li>
+                                <strong>トレンドラインの形成（実体線）</strong><br>
+                                過去に検出された直近の極大点どうしを結んで上値抵抗線、極小点どうしを結んで下値支持線を描きます。
+                            </li>
+                            <li>
+                                <strong>ブレイク予想ライン（予想線）</strong><br>
+                                トレンドラインを未来へ向けて延長投影した境界線です。
+                            </li>
+                            <li>
+                                <strong>売買シグナル</strong><br>
+                                <span class="text-buy">▲ 買い：</span> RSIが上値抵抗線（予想線）を上に超えた（+マージン）瞬間。<br>
+                                <span class="text-sell">▼ 売り：</span> RSIが下値支持線（予想線）を下に割った（-マージン）瞬間。
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- App JavaScript -->
+    <script src="rsi_breakout.js"></script>
+</body>
+</html>

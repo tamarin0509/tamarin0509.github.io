@@ -1,0 +1,985 @@
+// Lucide Icons initialization
+document.addEventListener('DOMContentLoaded', () => {
+    lucide.createIcons();
+    initApp();
+});
+
+// App State
+const state = {
+    symbol: 'USDJPY=X',
+    assetName: '米ドル / 円 (USD/JPY)',
+    period: '2y',
+    params: {
+        rsiPeriod: 14,
+        maPeriod: 50,
+        maMethod: 'EMA',
+        offset: 0,
+        margin: 1.0,
+        minGap: 2,
+        nLines: 3
+    },
+    rawData: null,
+    indicators: null,
+    charts: {
+        price: null,
+        rsi: null,
+        series: {
+            candles: null,
+            rsi: null,
+            rsiMa: null,
+            rsiDummy: null,
+            trendlines: []
+        }
+    }
+};
+
+// Presets Definition
+const PRESETS = {
+    forex: {
+        rsiPeriod: 14,
+        maPeriod: 50,
+        maMethod: 'EMA',
+        offset: 0,
+        margin: 1.0,
+        minGap: 2,
+        nLines: 3
+    },
+    stock: {
+        rsiPeriod: 9,
+        maPeriod: 25,
+        maMethod: 'EMA',
+        offset: 0,
+        margin: 1.5,
+        minGap: 3,
+        nLines: 3
+    },
+    aggressive: {
+        rsiPeriod: 14,
+        maPeriod: 30,
+        maMethod: 'EMA',
+        offset: -2,
+        margin: 0.5,
+        minGap: 1,
+        nLines: 4
+    },
+    conservative: {
+        rsiPeriod: 14,
+        maPeriod: 75,
+        maMethod: 'SMA',
+        offset: 2,
+        margin: 2.0,
+        minGap: 4,
+        nLines: 2
+    }
+};
+
+// Initialize Application
+function initApp() {
+    setupSliders();
+    setupEventListeners();
+    setupCharts();
+    loadData();
+}
+
+// Sliders Event Handlers
+function setupSliders() {
+    const sliders = [
+        { id: 'param-rsi-period', valId: 'val-rsi-period', key: 'rsiPeriod' },
+        { id: 'param-ma-period', valId: 'val-ma-period', key: 'maPeriod' },
+        { id: 'param-offset', valId: 'val-offset', key: 'offset' },
+        { id: 'param-margin', valId: 'val-margin', key: 'margin' },
+        { id: 'param-min-gap', valId: 'val-min-gap', key: 'minGap' },
+        { id: 'param-n-lines', valId: 'val-n-lines', key: 'nLines' }
+    ];
+
+    sliders.forEach(sliderInfo => {
+        const sliderEl = document.getElementById(sliderInfo.id);
+        const valEl = document.getElementById(sliderInfo.valId);
+        
+        // Sync initial values
+        sliderEl.value = state.params[sliderInfo.key];
+        valEl.textContent = state.params[sliderInfo.key];
+
+        sliderEl.addEventListener('input', (e) => {
+            const val = parseFloat(e.target.value);
+            state.params[sliderInfo.key] = val;
+            valEl.textContent = val;
+        });
+    });
+
+    const methodSelector = document.getElementById('param-ma-method');
+    methodSelector.value = state.params.maMethod;
+    methodSelector.addEventListener('change', (e) => {
+        state.params.maMethod = e.target.value;
+    });
+}
+
+// Preset and UI event listeners
+function setupEventListeners() {
+    // Preset buttons
+    const presetBtns = document.querySelectorAll('.btn-preset');
+    presetBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            presetBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            const presetName = btn.dataset.preset;
+            if (PRESETS[presetName]) {
+                state.params = { ...PRESETS[presetName] };
+                setupSliders(); // re-sync sliders visual
+                loadData();
+            }
+        });
+    });
+
+    // Asset selection
+    const assetSelector = document.getElementById('asset-selector');
+    assetSelector.addEventListener('change', (e) => {
+        state.symbol = e.target.value;
+        state.assetName = e.target.options[e.target.selectedIndex].text;
+        document.getElementById('custom-symbol').value = ''; // Clear custom input
+        loadData();
+    });
+
+    // Period selection
+    const periodSelector = document.getElementById('period-selector');
+    periodSelector.value = state.period;
+    periodSelector.addEventListener('change', (e) => {
+        state.period = e.target.value;
+        loadData();
+    });
+
+    // Custom Symbol Apply
+    document.getElementById('btn-custom-apply').addEventListener('click', applyCustomSymbol);
+    document.getElementById('custom-symbol').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') applyCustomSymbol();
+    });
+
+    // Manual Refresh
+    document.getElementById('btn-update').addEventListener('click', () => {
+        loadData();
+    });
+}
+
+function applyCustomSymbol() {
+    const inputVal = document.getElementById('custom-symbol').value.trim().toUpperCase();
+    if (!inputVal) return;
+    
+    state.symbol = inputVal;
+    state.assetName = `カスタム銘柄: ${inputVal}`;
+    document.getElementById('current-asset-name').textContent = state.assetName;
+    document.getElementById('current-asset-symbol').textContent = inputVal;
+    
+    loadData();
+}
+
+// Setup TradingView charts
+function setupCharts() {
+    const chartTheme = {
+        layout: {
+            background: { type: 'solid', color: '#111622' },
+            textColor: '#94a3b8',
+            fontSize: 11,
+            fontFamily: 'Outfit, sans-serif',
+        },
+        grid: {
+            vertLines: { color: 'rgba(148, 163, 184, 0.05)' },
+            horzLines: { color: 'rgba(148, 163, 184, 0.05)' },
+        },
+        crosshair: {
+            mode: LightweightCharts.CrosshairMode.Normal,
+            vertLine: {
+                color: '#6366f1',
+                width: 1,
+                style: 2, // Dashed
+                labelBackgroundColor: '#6366f1',
+            },
+            horzLine: {
+                color: '#6366f1',
+                width: 1,
+                style: 2,
+                labelBackgroundColor: '#6366f1',
+            },
+        },
+        timeScale: {
+            borderColor: 'rgba(148, 163, 184, 0.1)',
+            timeVisible: false,
+            secondsVisible: false,
+        },
+    };
+
+    // 1. Price Chart
+    const priceContainer = document.getElementById('chart-price-container');
+    state.charts.price = LightweightCharts.createChart(priceContainer, {
+        ...chartTheme,
+        rightPriceScale: {
+            borderColor: 'rgba(148, 163, 184, 0.1)',
+            autoScale: true,
+            minimumWidth: 80,
+        }
+    });
+
+    state.charts.series.candles = state.charts.price.addCandlestickSeries({
+        upColor: '#10b981',
+        downColor: '#f43f5e',
+        borderVisible: false,
+        wickUpColor: '#10b981',
+        wickDownColor: '#f43f5e',
+    });
+
+    // 2. RSI Chart
+    const rsiContainer = document.getElementById('chart-rsi-container');
+    state.charts.rsi = LightweightCharts.createChart(rsiContainer, {
+        ...chartTheme,
+        rightPriceScale: {
+            borderColor: 'rgba(148, 163, 184, 0.1)',
+            autoScale: true,
+            scaleMargins: {
+                top: 0.05,
+                bottom: 0.05,
+            },
+            minimumWidth: 80,
+        }
+    });
+
+    // Add RSI limits gridlines manually using line series or price lines
+    state.charts.series.rsi = state.charts.rsi.addLineSeries({
+        color: '#a855f7', // Purple
+        lineWidth: 2,
+        priceLineVisible: false,
+        autoscaleInfoProvider: () => ({
+            priceRange: {
+                minValue: 0,
+                maxValue: 100,
+            },
+        }),
+    });
+
+    state.charts.series.rsiMa = state.charts.rsi.addLineSeries({
+        color: '#eab308', // Yellow
+        lineWidth: 1.5,
+        lineStyle: 1, // Dotted
+        priceLineVisible: false,
+    });
+
+    state.charts.series.rsiDummy = state.charts.rsi.addLineSeries({
+        visible: false,
+        priceLineVisible: false,
+        lastValueVisible: false,
+    });
+
+    // Add static horizontal bounds (30, 70)
+    const rsiPriceScale = state.charts.rsi.priceScale('right');
+    state.charts.series.rsi.createPriceLine({
+        price: 70,
+        color: 'rgba(244, 63, 94, 0.3)',
+        lineWidth: 1,
+        lineStyle: 2, // Dashed
+        axisLabelVisible: true,
+        title: '70',
+    });
+    state.charts.series.rsi.createPriceLine({
+        price: 50,
+        color: 'rgba(148, 163, 184, 0.2)',
+        lineWidth: 1,
+        lineStyle: 2,
+        axisLabelVisible: true,
+        title: '50',
+    });
+    state.charts.series.rsi.createPriceLine({
+        price: 30,
+        color: 'rgba(16, 185, 129, 0.3)',
+        lineWidth: 1,
+        lineStyle: 2,
+        axisLabelVisible: true,
+        title: '30',
+    });
+
+    // Synchronization logic for crosshairs
+    let isRefPrice = false;
+    let isRefRsi = false;
+
+    state.charts.price.subscribeCrosshairMove(param => {
+        if (isRefRsi) return;
+        isRefPrice = true;
+        if (param.time) {
+            state.charts.rsi.setCrosshairPosition(param.point, param.time);
+        } else {
+            state.charts.rsi.clearCrosshairPosition();
+        }
+        isRefPrice = false;
+    });
+
+    state.charts.rsi.subscribeCrosshairMove(param => {
+        if (isRefPrice) return;
+        isRefRsi = true;
+        if (param.time) {
+            state.charts.price.setCrosshairPosition(param.point, param.time);
+        } else {
+            state.charts.price.clearCrosshairPosition();
+        }
+        isRefRsi = false;
+    });
+
+    // Synchronization logic for Visible Range
+    state.charts.price.timeScale().subscribeVisibleLogicalRangeChange(range => {
+        state.charts.rsi.timeScale().setVisibleLogicalRange(range);
+    });
+    state.charts.rsi.timeScale().subscribeVisibleLogicalRangeChange(range => {
+        state.charts.price.timeScale().setVisibleLogicalRange(range);
+    });
+
+    // Responsive charts resizing
+    const resizeObserver = new ResizeObserver(entries => {
+        if (entries.length === 0) return;
+        const width = priceContainer.clientWidth;
+        state.charts.price.resize(width, 380);
+        state.charts.rsi.resize(width, 200);
+    });
+    resizeObserver.observe(priceContainer);
+}
+
+// Fetch Market Data via CORS Proxy with Fallback
+async function loadData() {
+    showLoading(true);
+    
+    // Update Title in UI
+    document.getElementById('current-asset-name').textContent = state.assetName;
+    document.getElementById('current-asset-symbol').textContent = state.symbol;
+
+    const range = state.period;
+    const interval = '1d';
+    const targetUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${state.symbol}?range=${range}&interval=${interval}`;
+    
+    // Proxy list
+    const proxies = [
+        `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`,
+        `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`,
+        `https://thingproxy.freeboard.io/fetch/${targetUrl}`
+    ];
+
+    let lastError = null;
+    for (const proxyUrl of proxies) {
+        try {
+            console.log(`Fetching from proxy: ${proxyUrl}`);
+            const res = await fetch(proxyUrl);
+            if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+            const data = await res.json();
+            const chartResult = data.chart?.result?.[0];
+            if (!chartResult) throw new Error('No historical data in response');
+            
+            parseAndProcessData(chartResult);
+            showLoading(false);
+            return; // Success!
+        } catch (err) {
+            console.warn(`Proxy failed: ${proxyUrl}`, err);
+            lastError = err;
+        }
+    }
+
+    console.error('All proxies failed.', lastError);
+    alert(`データ取得エラー: ${state.symbol} の取得にすべてのプロキシで失敗しました。ネットワーク状況やティッカー名をご確認ください。`);
+    showLoading(false);
+}
+
+function showLoading(show) {
+    const overlay = document.getElementById('loading-overlay');
+    if (show) {
+        overlay.classList.remove('hidden');
+    } else {
+        overlay.classList.add('hidden');
+    }
+}
+
+// Parse Raw Data & Run technical analysis
+function parseAndProcessData(result) {
+    const timestamps = result.timestamp;
+    const quotes = result.indicators.quote[0];
+    const closes = quotes.close;
+    const opens = quotes.open;
+    const highs = quotes.high;
+    const lows = quotes.low;
+
+    // Convert into neat candles format
+    const candles = [];
+    for (let i = 0; i < timestamps.length; i++) {
+        // Skip incomplete candles
+        if (timestamps[i] == null || closes[i] == null || opens[i] == null || highs[i] == null || lows[i] == null) {
+            continue;
+        }
+        
+        // TradingView Lightweight Charts uses dates in 'YYYY-MM-DD' format or integer timestamps.
+        // Daily charts work best with YYYY-MM-DD strings.
+        const date = new Date(timestamps[i] * 1000);
+        const dateStr = date.toISOString().split('T')[0];
+        
+        candles.push({
+            time: dateStr,
+            open: parseFloat(opens[i].toFixed(4)),
+            high: parseFloat(highs[i].toFixed(4)),
+            low: parseFloat(lows[i].toFixed(4)),
+            close: parseFloat(closes[i].toFixed(4))
+        });
+    }
+
+    if (candles.length < 50) {
+        alert('十分なデータ量がありません。分析には最低50営業日の価格履歴が必要です。');
+        showLoading(false);
+        return;
+    }
+
+    // 1. Calculate RSI
+    const rsiValues = calculateRSI(candles, state.params.rsiPeriod);
+    // 2. Calculate RSI Moving Average
+    const rsiMaValues = calculateMA(rsiValues, state.params.maPeriod, state.params.maMethod);
+
+    // 3. Perform peak/trough analysis, fit lines, and check breakouts
+    const analysisResults = calculateRsiBreakout(candles, rsiValues, rsiMaValues, state.params);
+
+    // 4. Update UI & Charts
+    renderAnalysis(candles, rsiValues, rsiMaValues, analysisResults);
+    showLoading(false);
+}
+
+/* Indicators Math Logic */
+
+// Wilder's RSI calculation on a single price field
+function calculateSingleRSI(candles, period, priceField) {
+    const rsi = new Array(candles.length).fill(null);
+    let avgGain = 0;
+    let avgLoss = 0;
+
+    let firstGainSum = 0;
+    let firstLossSum = 0;
+    
+    for (let i = 1; i <= period; i++) {
+        const change = candles[i][priceField] - candles[i-1][priceField];
+        if (change > 0) {
+            firstGainSum += change;
+        } else {
+            firstLossSum += Math.abs(change);
+        }
+    }
+    
+    avgGain = firstGainSum / period;
+    avgLoss = firstLossSum / period;
+    
+    rsi[period] = avgLoss === 0 ? 100 : 100 - (100 / (1 + (avgGain / avgLoss)));
+
+    for (let i = period + 1; i < candles.length; i++) {
+        const change = candles[i][priceField] - candles[i-1][priceField];
+        const gain = change > 0 ? change : 0;
+        const loss = change < 0 ? Math.abs(change) : 0;
+
+        avgGain = (avgGain * (period - 1) + gain) / period;
+        avgLoss = (avgLoss * (period - 1) + loss) / period;
+
+        rsi[i] = avgLoss === 0 ? 100 : 100 - (100 / (1 + (avgGain / avgLoss)));
+    }
+
+    return rsi;
+}
+
+// Averaged Wilder's RSI calculation (Close + High + Low) / 3
+function calculateRSI(candles, period) {
+    if (candles.length <= period) {
+        return new Array(candles.length).fill(null);
+    }
+    const rsiClose = calculateSingleRSI(candles, period, 'close');
+    const rsiHigh = calculateSingleRSI(candles, period, 'high');
+    const rsiLow = calculateSingleRSI(candles, period, 'low');
+    
+    const rsi = new Array(candles.length).fill(null);
+    for (let i = 0; i < candles.length; i++) {
+        if (rsiClose[i] !== null && rsiHigh[i] !== null && rsiLow[i] !== null) {
+            rsi[i] = (rsiClose[i] + rsiHigh[i] + rsiLow[i]) / 3;
+        }
+    }
+    return rsi;
+}
+
+// Moving Average (SMA / EMA)
+function calculateMA(data, period, method) {
+    const ma = new Array(data.length).fill(null);
+
+    const firstValidIndex = data.findIndex(val => val !== null);
+    if (firstValidIndex === -1 || firstValidIndex + period > data.length) {
+        return ma;
+    }
+
+    if (method === 'SMA') {
+        let sum = 0;
+        let count = 0;
+        for (let i = firstValidIndex; i < data.length; i++) {
+            if (data[i] == null) continue;
+            sum += data[i];
+            count++;
+            if (count > period) {
+                sum -= data[i - period];
+                ma[i] = sum / period;
+            } else if (count === period) {
+                ma[i] = sum / period;
+            }
+        }
+    } else if (method === 'EMA') {
+        const k = 2 / (period + 1);
+        let ema = null;
+        let sum = 0;
+        let count = 0;
+        
+        for (let i = firstValidIndex; i < data.length; i++) {
+            if (data[i] == null) continue;
+            
+            if (ema == null) {
+                sum += data[i];
+                count++;
+                if (count === period) {
+                    ema = sum / period;
+                    ma[i] = ema;
+                }
+            } else {
+                ema = data[i] * k + ema * (1 - k);
+                ma[i] = ema;
+            }
+        }
+    }
+
+    return ma;
+}
+
+// Helpers to find MT4-style index maximums/minimums on array
+function arrayMaximum(arr, count, start) {
+    let maxVal = -Infinity;
+    let maxIdx = start;
+    const end = Math.min(arr.length, start + count);
+    for (let i = start; i < end; i++) {
+        if (arr[i] > maxVal) {
+            maxVal = arr[i];
+            maxIdx = i;
+        }
+    }
+    return maxIdx;
+}
+
+function arrayMinimum(arr, count, start) {
+    let minVal = Infinity;
+    let minIdx = start;
+    const end = Math.min(arr.length, start + count);
+    for (let i = start; i < end; i++) {
+        if (arr[i] < minVal) {
+            minVal = arr[i];
+            minIdx = i;
+        }
+    }
+    return minIdx;
+}
+
+// Calculate RSI Trendlines and Breakout Signals exactly using the MQL4 algorithm
+function calculateRsiBreakout(candles, rsi, rsiMa, params) {
+    const N = candles.length;
+    
+    // Map JS arrays to MT4-style backwards arrays (index 0 is newest, N-1 is oldest)
+    const rsi_mt4 = new Array(N).fill(0);
+    const kairi_mt4 = new Array(N).fill(0);
+
+    for (let i = 0; i < N; i++) {
+        const jsIdx = N - 1 - i;
+        rsi_mt4[i] = rsi[jsIdx] !== null ? rsi[jsIdx] : 0;
+        const maVal = rsiMa[jsIdx];
+        // Kairi_buffer[i] = (RSI[i]-mov_rsi[i])/mov_rsi[i]
+        kairi_mt4[i] = (maVal && maVal !== 0 && rsi[jsIdx] !== null) ? (rsi[jsIdx] - maVal) / maVal : 0;
+    }
+
+    // Identify waves based on Kairi buffer crossing zero
+    let j = 0;
+    const ii = [];
+    
+    // In MQL4: for(i=1; j<nLine*2+6; i++)
+    // We scan backwards up to N - 2 to prevent i+1 out of bounds
+    for (let i = 1; i < N - 1; i++) {
+        if (j >= params.nLines * 2 + 10) break;
+        
+        if (kairi_mt4[i] * kairi_mt4[i+1] <= 0) {
+            ii[j] = i;
+            j++;
+            if (j > 2) {
+                if (ii[j-1] - ii[j-3] < params.minGap) {
+                    j = j - 2;
+                }
+            }
+        }
+    }
+
+    const Hi_stack = [];
+    const Lo_stack = [];
+    const maxLL = Math.min(params.nLines + 6, Math.floor((j - 2) / 2));
+
+    if (j > 2) {
+        if (kairi_mt4[ii[0]] < 0) {
+            for (let ll = 0; ll < maxLL; ll++) {
+                const hiCount = ii[1+ll*2] - ii[0+ll*2] + 1;
+                const hiStart = ii[0+ll*2] + 1;
+                Hi_stack[ll] = arrayMaximum(rsi_mt4, hiCount, hiStart);
+
+                const loCount = ii[2+ll*2] - ii[1+ll*2] + 1;
+                const loStart = ii[1+ll*2] + 1;
+                Lo_stack[ll] = arrayMinimum(rsi_mt4, loCount, loStart);
+            }
+        } else {
+            for (let ll = 0; ll < maxLL; ll++) {
+                const hiCount = ii[2+ll*2] - ii[1+ll*2];
+                const hiStart = ii[1+ll*2] + 1;
+                Hi_stack[ll] = arrayMaximum(rsi_mt4, hiCount, hiStart);
+
+                const loCount = ii[1+ll*2] - ii[0+ll*2];
+                const loStart = ii[0+ll*2] + 1;
+                Lo_stack[ll] = arrayMinimum(rsi_mt4, loCount, loStart);
+            }
+        }
+    }
+
+    // Allocate buffers matching MT4 index space
+    const buf1_mt4 = new Array(N).fill(null);
+    const buf2_mt4 = new Array(N).fill(null);
+    const buf3_mt4 = new Array(N).fill(null);
+    const buf4_mt4 = new Array(N).fill(null);
+
+    const peakLines = [];
+    const troughLines = [];
+
+    const linesToGenerate = Math.min(params.nLines, maxLL - 1);
+    
+    for (let ll = 0; ll < linesToGenerate; ll++) {
+        const hp1 = rsi_mt4[Hi_stack[ll]];
+        const hp2 = rsi_mt4[Hi_stack[ll+1]];
+        const hp1n = Hi_stack[ll];
+        const hp2n = Hi_stack[ll+1];
+        const hp3n = ll > 0 ? Hi_stack[ll-1] : 0;
+
+        let rh = 0;
+        if (hp2n !== hp1n) {
+            rh = (hp2 - hp1) / (hp2n - hp1n);
+        }
+
+        const lp1 = rsi_mt4[Lo_stack[ll]];
+        const lp2 = rsi_mt4[Lo_stack[ll+1]];
+        const lp1n = Lo_stack[ll];
+        const lp2n = Lo_stack[ll+1];
+        const lp3n = ll > 0 ? Lo_stack[ll-1] : 0;
+
+        let rl = 0;
+        if (lp1n !== lp2n) {
+            rl = (lp1 - lp2) / (lp2n - lp1n);
+        }
+
+        for (let k = 0; k < hp2n - hp1n; k++) {
+            buf1_mt4[hp1n + k] = hp1 + rh * k;
+        }
+        for (let k = 0; k < lp2n - lp1n; k++) {
+            buf2_mt4[lp1n + k] = lp1 - rl * k;
+        }
+        for (let k = 1; k <= hp1n - hp3n; k++) {
+            buf3_mt4[hp1n - k] = hp1 - rh * k;
+        }
+        for (let k = 1; k <= lp1n - lp3n; k++) {
+            buf4_mt4[lp1n - k] = lp1 + rl * k;
+        }
+
+        // Add to return structures for rendering in JS (mapping back to JS indexes)
+        if (hp1n !== undefined && hp2n !== undefined) {
+            const tStart = N - 1 - hp2n;
+            const tEnd = N - 1 - hp1n;
+            const rsiStart = rsi_mt4[hp2n];
+            const rsiEnd = rsi_mt4[hp1n];
+            const slope = (rsiEnd - rsiStart) / (tEnd - tStart);
+            peakLines.push({ tStart, tEnd, slope, rsiStart, rsiEnd });
+        }
+
+        if (lp1n !== undefined && lp2n !== undefined) {
+            const tStart = N - 1 - lp2n;
+            const tEnd = N - 1 - lp1n;
+            const rsiStart = rsi_mt4[lp2n];
+            const rsiEnd = rsi_mt4[lp1n];
+            const slope = (rsiEnd - rsiStart) / (tEnd - tStart);
+            troughLines.push({ tStart, tEnd, slope, rsiStart, rsiEnd });
+        }
+    }
+
+    // Scan for breakout signals (using MT4 index space)
+    const buf5_mt4 = new Array(N).fill(null); // BUY
+    const buf6_mt4 = new Array(N).fill(null); // SELL
+
+    for (let i = 0; i < N - 2; i++) {
+        if (buf3_mt4[i] == null || buf3_mt4[i+1] == null || buf3_mt4[i+2] == null) continue;
+        if (rsi_mt4[i] == null || rsi_mt4[i+1] == null || rsi_mt4[i+2] == null) continue;
+
+        let isStraightBuy = false;
+        if (i > 0 && buf3_mt4[i-1] != null) {
+            if (Math.abs((buf3_mt4[i] - buf3_mt4[i+1]) - (buf3_mt4[i-1] - buf3_mt4[i])) < 0.001) {
+                isStraightBuy = true;
+            }
+        } else {
+            if (Math.abs((buf3_mt4[i+1] - buf3_mt4[i+2]) - (buf3_mt4[i] - buf3_mt4[i+1])) < 0.001) {
+                isStraightBuy = true;
+            }
+        }
+
+        if (isStraightBuy &&
+            buf3_mt4[i] <= buf3_mt4[i+1] && // Downward sloping or flat
+            rsi_mt4[i] > buf3_mt4[i] && // Current RSI is above
+            rsi_mt4[i+2] < buf3_mt4[i+2] && // 2 bars ago RSI was below
+            (rsi_mt4[i+1] - buf3_mt4[i+1]) > params.margin // 1 bar ago broke above by margin
+        ) {
+            buf5_mt4[i] = rsi_mt4[i];
+        }
+    }
+
+    for (let i = 0; i < N - 2; i++) {
+        if (buf4_mt4[i] == null || buf4_mt4[i+1] == null || buf4_mt4[i+2] == null) continue;
+        if (rsi_mt4[i] == null || rsi_mt4[i+1] == null || rsi_mt4[i+2] == null) continue;
+
+        let isStraightSell = false;
+        if (i > 0 && buf4_mt4[i-1] != null) {
+            if (Math.abs((buf4_mt4[i] - buf4_mt4[i+1]) - (buf4_mt4[i-1] - buf4_mt4[i])) < 0.001) {
+                isStraightSell = true;
+            }
+        } else {
+            if (Math.abs((buf4_mt4[i+1] - buf4_mt4[i+2]) - (buf4_mt4[i] - buf4_mt4[i+1])) < 0.001) {
+                isStraightSell = true;
+            }
+        }
+
+        if (isStraightSell &&
+            buf4_mt4[i] >= buf4_mt4[i+1] && // Upward sloping or flat
+            rsi_mt4[i] < buf4_mt4[i] && // Current RSI is below
+            rsi_mt4[i+2] > buf4_mt4[i+2] && // 2 bars ago RSI was above
+            (buf4_mt4[i+1] - rsi_mt4[i+1]) > params.margin // 1 bar ago broke below by margin
+        ) {
+            buf6_mt4[i] = rsi_mt4[i];
+        }
+    }
+
+    // Build signals list in chronological order
+    const signals = [];
+    for (let i = N - 1; i >= 0; i--) {
+        const jsIdx = N - 1 - i;
+        if (buf5_mt4[i] !== null) {
+            signals.push({
+                time: candles[jsIdx].time,
+                index: jsIdx,
+                type: 'BUY',
+                price: candles[jsIdx].close,
+                rsi: rsi[jsIdx],
+                lineValue: parseFloat(buf3_mt4[i].toFixed(2)),
+                description: `RSI抵抗線ブレイク (MQL4条件)`
+            });
+        }
+        if (buf6_mt4[i] !== null) {
+            signals.push({
+                time: candles[jsIdx].time,
+                index: jsIdx,
+                type: 'SELL',
+                price: candles[jsIdx].close,
+                rsi: rsi[jsIdx],
+                lineValue: parseFloat(buf4_mt4[i].toFixed(2)),
+                description: `RSI支持線ブレイク (MQL4条件)`
+            });
+        }
+    }
+
+    // Format peaks and troughs for return structure
+    const peaks = Hi_stack.map(idx => ({
+        index: N - 1 - idx,
+        rsi: rsi_mt4[idx],
+        time: candles[N - 1 - idx].time,
+        price: candles[N - 1 - idx].close
+    })).reverse(); // oldest to newest
+
+    const troughs = Lo_stack.map(idx => ({
+        index: N - 1 - idx,
+        rsi: rsi_mt4[idx],
+        time: candles[N - 1 - idx].time,
+        price: candles[N - 1 - idx].close
+    })).reverse(); // oldest to newest
+
+    return {
+        peaks,
+        troughs,
+        peakLines,
+        troughLines,
+        signals
+    };
+}
+
+// Render data and drawings to charts and tables
+function renderAnalysis(candles, rsi, rsiMa, analysis) {
+    // 1. Clear previous trendline series
+    state.charts.series.trendlines.forEach(series => {
+        try {
+            state.charts.rsi.removeSeries(series);
+        } catch (e) {}
+    });
+    state.charts.series.trendlines = [];
+
+    // 2. Set base series data
+    state.charts.series.candles.setData(candles);
+    state.charts.series.rsiDummy.setData(candles.map(c => ({ time: c.time, value: 50 })));
+
+    const rsiData = [];
+    const rsiMaData = [];
+
+    for (let i = 0; i < candles.length; i++) {
+        if (rsi[i] != null) {
+            rsiData.push({ time: candles[i].time, value: rsi[i] });
+        }
+        if (rsiMa[i] != null) {
+            rsiMaData.push({ time: candles[i].time, value: rsiMa[i] });
+        }
+    }
+
+    state.charts.series.rsi.setData(rsiData);
+    state.charts.series.rsiMa.setData(rsiMaData);
+
+    // 3. Draw Trendlines on RSI Chart
+    // Combine peaks and troughs trendlines
+    const renderLine = (line, colorHex) => {
+        // Realized solid segment
+        const pastSeries = state.charts.rsi.addLineSeries({
+            color: colorHex,
+            lineWidth: 1.5,
+            lineStyle: 0, // Solid
+            priceLineVisible: false,
+            lastValueVisible: false,
+        });
+        
+        const pastData = [];
+        for (let i = line.tStart; i <= line.tEnd; i++) {
+            const val = line.rsiStart + line.slope * (i - line.tStart);
+            pastData.push({ time: candles[i].time, value: val });
+        }
+        pastSeries.setData(pastData);
+        state.charts.series.trendlines.push(pastSeries);
+
+        // Extended forecast ray
+        const futureSeries = state.charts.rsi.addLineSeries({
+            color: colorHex,
+            lineWidth: 1.5,
+            lineStyle: 2, // Dashed
+            priceLineVisible: false,
+            lastValueVisible: false,
+        });
+
+        const futureData = [];
+        // Project all the way to the end of the data array, but stop if out of bounds [0, 100]
+        for (let i = line.tEnd; i < candles.length; i++) {
+            const val = line.rsiEnd + line.slope * (i - line.tEnd);
+            if (val < 0 || val > 100) {
+                break;
+            }
+            futureData.push({ time: candles[i].time, value: val });
+        }
+        futureSeries.setData(futureData);
+        state.charts.series.trendlines.push(futureSeries);
+    };
+
+    // Draw last nLine Peak lines (Resistance - glowing purple/red)
+    analysis.peakLines.forEach(line => renderLine(line, 'rgba(236, 72, 153, 0.75)')); // Hot Pink
+    // Draw last nLine Trough lines (Support - glowing blue/cyan)
+    analysis.troughLines.forEach(line => renderLine(line, 'rgba(6, 182, 212, 0.75)')); // Cyan
+
+    // 4. Apply Markers to Price & RSI Charts
+    const priceMarkers = [];
+    
+    // Sort signals by time for rendering markers
+    analysis.signals.forEach(sig => {
+        priceMarkers.push({
+            time: sig.time,
+            position: sig.type === 'BUY' ? 'belowBar' : 'aboveBar',
+            color: sig.type === 'BUY' ? '#10b981' : '#f43f5e',
+            shape: sig.type === 'BUY' ? 'arrowUp' : 'arrowDown',
+            text: sig.type === 'BUY' ? 'BUY' : 'SELL',
+        });
+    });
+
+    state.charts.series.candles.setMarkers(priceMarkers);
+
+    // Fit visible scale
+    state.charts.price.timeScale().fitContent();
+    const initialRange = state.charts.price.timeScale().getVisibleLogicalRange();
+    if (initialRange) {
+        state.charts.rsi.timeScale().setVisibleLogicalRange(initialRange);
+    }
+
+    // 5. Update Stats Cards
+    const latestCandle = candles[candles.length - 1];
+    const prevCandle = candles[candles.length - 2];
+    const latestRsi = rsi[rsi.length - 1];
+    
+    // Price
+    const priceEl = document.getElementById('stat-price');
+    const changeEl = document.getElementById('stat-change');
+    if (latestCandle) {
+        priceEl.textContent = latestCandle.close.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 });
+        if (prevCandle) {
+            const changePercent = ((latestCandle.close - prevCandle.close) / prevCandle.close) * 100;
+            const sign = changePercent >= 0 ? '+' : '';
+            changeEl.textContent = `${sign}${changePercent.toFixed(2)}%`;
+            changeEl.className = 'stat-change ' + (changePercent >= 0 ? 'up' : 'down');
+        }
+    }
+
+    // RSI
+    const rsiEl = document.getElementById('stat-rsi');
+    rsiEl.textContent = latestRsi ? latestRsi.toFixed(1) : '--.-';
+
+    // Last Signal details
+    const lastSigEl = document.getElementById('stat-signal');
+    const signalCountEl = document.getElementById('stat-signal-count');
+    signalCountEl.textContent = analysis.signals.length;
+
+    if (analysis.signals.length > 0) {
+        const lastSig = analysis.signals[analysis.signals.length - 1];
+        lastSigEl.innerHTML = `<span class="sig-badge ${lastSig.type.toLowerCase()}">${lastSig.type}</span> <span style="font-size:0.75rem; font-weight:normal; color:var(--text-muted);">${lastSig.time}</span>`;
+    } else {
+        lastSigEl.textContent = 'なし';
+    }
+
+    // 6. Populate Signals Log Table
+    const tableBody = document.getElementById('signals-table').querySelector('tbody');
+    
+    if (analysis.signals.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="6" class="no-data">このパラメータ条件ではブレイクアウトが検出されませんでした。</td></tr>`;
+    } else {
+        // Reverse array to show newest first in the log table
+        const reversedSignals = [...analysis.signals].reverse();
+        
+        tableBody.innerHTML = reversedSignals.map(sig => {
+            return `
+                <tr>
+                    <td>${sig.time}</td>
+                    <td><span class="sig-badge ${sig.type.toLowerCase()}">${sig.type}</span></td>
+                    <td style="font-weight:600;">${sig.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })}</td>
+                    <td style="font-family:monospace; color:#a855f7;">${sig.rsi.toFixed(2)}</td>
+                    <td style="font-family:monospace; color:var(--text-muted);">${sig.lineValue}</td>
+                    <td><button class="btn-chart-jump" data-time="${sig.time}">移動</button></td>
+                </tr>
+            `;
+        }).join('');
+
+        // Wire jump buttons
+        tableBody.querySelectorAll('.btn-chart-jump').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const targetTime = e.target.dataset.time;
+                // Find index
+                const idx = candles.findIndex(c => c.time === targetTime);
+                if (idx !== -1) {
+                    // Jump view scale to center targetTime
+                    state.charts.price.timeScale().setVisibleLogicalRange({
+                        from: idx - 20,
+                        to: idx + 20
+                    });
+                }
+            });
+        });
+    }
+}
