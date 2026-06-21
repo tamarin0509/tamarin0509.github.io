@@ -903,8 +903,12 @@ function renderAnalysis(candles, rsi, rsiMa, analysis) {
 
     state.charts.series.candles.setMarkers(priceMarkers);
 
-    // Fit visible scale
-    state.charts.price.timeScale().fitContent();
+    // Fit visible scale to last 150 bars so candlesticks are clearly visible
+    const totalBars = candles.length;
+    state.charts.price.timeScale().setVisibleLogicalRange({
+        from: totalBars - 150,
+        to: totalBars + 3
+    });
     const initialRange = state.charts.price.timeScale().getVisibleLogicalRange();
     if (initialRange) {
         state.charts.rsi.timeScale().setVisibleLogicalRange(initialRange);
