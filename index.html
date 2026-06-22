@@ -152,12 +152,30 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="param-peak-method">極値検出アルゴリズム</label>
+                    <select id="param-peak-method" class="form-control">
+                        <option value="kairi" selected>Kairiゼロ交差</option>
+                        <option value="swing">スイングピボット</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="group-swing-period" style="display: none;">
+                    <div class="label-row">
+                        <label for="param-swing-period">スイング期間</label>
+                        <span class="param-value" id="val-swing-period">10</span>
+                    </div>
+                    <input type="range" id="param-swing-period" min="3" max="30" value="10" class="slider">
+                    <span class="help-text">ピボット検出の前後N本のバー数</span>
+                </div>
+
+                <div class="form-group" id="group-min-gap">
                     <div class="label-row">
                         <label for="param-min-gap">ピーク検出最小間隔</label>
                         <span class="param-value" id="val-min-gap">2</span>
                     </div>
                     <input type="range" id="param-min-gap" min="1" max="10" value="2" class="slider">
                 </div>
+
 
                 <div class="form-group">
                     <div class="label-row">

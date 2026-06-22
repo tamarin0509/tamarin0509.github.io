@@ -16,7 +16,9 @@ const state = {
         offset: 0,
         margin: 1.0,
         minGap: 2,
-        nLines: 3
+        nLines: 3,
+        peakMethod: 'kairi',
+        swingPeriod: 10
     },
     rawData: null,
     indicators: null,
@@ -42,7 +44,9 @@ const PRESETS = {
         offset: 0,
         margin: 1.0,
         minGap: 2,
-        nLines: 3
+        nLines: 3,
+        peakMethod: 'kairi',
+        swingPeriod: 10
     },
     stock: {
         rsiPeriod: 9,
@@ -51,7 +55,9 @@ const PRESETS = {
         offset: 0,
         margin: 1.5,
         minGap: 3,
-        nLines: 3
+        nLines: 3,
+        peakMethod: 'kairi',
+        swingPeriod: 10
     },
     aggressive: {
         rsiPeriod: 14,
@@ -60,7 +66,9 @@ const PRESETS = {
         offset: -2,
         margin: 0.5,
         minGap: 1,
-        nLines: 4
+        nLines: 4,
+        peakMethod: 'kairi',
+        swingPeriod: 10
     },
     conservative: {
         rsiPeriod: 14,
@@ -69,7 +77,9 @@ const PRESETS = {
         offset: 2,
         margin: 2.0,
         minGap: 4,
-        nLines: 2
+        nLines: 2,
+        peakMethod: 'kairi',
+        swingPeriod: 10
     }
 };
 
@@ -89,18 +99,24 @@ function setupSliders() {
         { id: 'param-offset', valId: 'val-offset', key: 'offset' },
         { id: 'param-margin', valId: 'val-margin', key: 'margin' },
         { id: 'param-min-gap', valId: 'val-min-gap', key: 'minGap' },
-        { id: 'param-n-lines', valId: 'val-n-lines', key: 'nLines' }
+        { id: 'param-n-lines', valId: 'val-n-lines', key: 'nLines' },
+        { id: 'param-swing-period', valId: 'val-swing-period', key: 'swingPeriod' }
     ];
 
     sliders.forEach(sliderInfo => {
         const sliderEl = document.getElementById(sliderInfo.id);
         const valEl = document.getElementById(sliderInfo.valId);
+        if (!sliderEl || !valEl) return;
         
         // Sync initial values
         sliderEl.value = state.params[sliderInfo.key];
         valEl.textContent = state.params[sliderInfo.key];
 
-        sliderEl.addEventListener('input', (e) => {
+        // Clone node to clear previously bound event listeners
+        const newSlider = sliderEl.cloneNode(true);
+        sliderEl.parentNode.replaceChild(newSlider, sliderEl);
+
+        newSlider.addEventListener('input', (e) => {
             const val = parseFloat(e.target.value);
             state.params[sliderInfo.key] = val;
             valEl.textContent = val;
@@ -108,10 +124,41 @@ function setupSliders() {
     });
 
     const methodSelector = document.getElementById('param-ma-method');
-    methodSelector.value = state.params.maMethod;
-    methodSelector.addEventListener('change', (e) => {
-        state.params.maMethod = e.target.value;
-    });
+    if (methodSelector) {
+        methodSelector.value = state.params.maMethod;
+        const newMethodSelector = methodSelector.cloneNode(true);
+        methodSelector.parentNode.replaceChild(newMethodSelector, methodSelector);
+        newMethodSelector.addEventListener('change', (e) => {
+            state.params.maMethod = e.target.value;
+        });
+    }
+
+    const peakSelector = document.getElementById('param-peak-method');
+    if (peakSelector) {
+        peakSelector.value = state.params.peakMethod || 'kairi';
+        const newPeakSelector = peakSelector.cloneNode(true);
+        peakSelector.parentNode.replaceChild(newPeakSelector, peakSelector);
+
+        const toggleMethodUI = (method) => {
+            const groupSwing = document.getElementById('group-swing-period');
+            const groupMinGap = document.getElementById('group-min-gap');
+            if (method === 'swing') {
+                if (groupSwing) groupSwing.style.display = 'block';
+                if (groupMinGap) groupMinGap.style.display = 'none';
+            } else {
+                if (groupSwing) groupSwing.style.display = 'none';
+                if (groupMinGap) groupMinGap.style.display = 'block';
+            }
+        };
+
+        toggleMethodUI(state.params.peakMethod || 'kairi');
+
+        newPeakSelector.addEventListener('change', (e) => {
+            const val = e.target.value;
+            state.params.peakMethod = val;
+            toggleMethodUI(val);
+        });
+    }
 }
 
 // Preset and UI event listeners
@@ -563,8 +610,6 @@ function arrayMaximum(arr, count, start) {
         }
     }
     return maxIdx;
-}
-
 function arrayMinimum(arr, count, start) {
     let minVal = Infinity;
     let minIdx = start;
@@ -581,7 +626,125 @@ function arrayMinimum(arr, count, start) {
 // Calculate RSI Trendlines and Breakout Signals exactly using the MQL4 algorithm
 function calculateRsiBreakout(candles, rsi, rsiMa, params) {
     const N = candles.length;
-    
+    const peakMethod = params.peakMethod || 'kairi';
+
+    if (peakMethod === 'swing') {
+        const left = Math.floor(params.swingPeriod || 10);
+        const right = Math.floor(params.swingPeriod || 10);
+        const requireDirection = true; // 抵抗=下降/平ら, 支持=上昇/平ら （ダマシ抑制）
+
+        // --- スイングピボット検出（確定済みのみ。後ろRIGHT本を見て初めて確定）---
+        const highs = [];
+        const lows = [];
+        for (let i = left; i < N - right; i++) {
+            const v = rsi[i];
+            if (v == null) continue;
+            let isHigh = true, isLow = true;
+            for (let k = i - left; k <= i + right; k++) {
+                if (k === i) continue;
+                const w = rsi[k];
+                if (w == null) { isHigh = false; isLow = false; break; }
+                if (w >= v) isHigh = false;
+                if (w <= v) isLow = false;
+            }
+            if (isHigh) highs.push(i);
+            if (isLow) lows.push(i);
+        }
+
+        // ピボットがバー i 時点で確定済みか: p + right <= i
+        const confirmedUpTo = (pivots, i) => {
+            const out = [];
+            for (const p of pivots) {
+                if (p + right <= i) out.push(p); else break; // 昇順前提
+            }
+            return out;
+        };
+
+        // 直近2ピボットから線を作る
+        const lineFromLastTwo = (values, pivots) => {
+            if (pivots.length < 2) return null;
+            const b = pivots[pivots.length - 1];
+            const a = pivots[pivots.length - 2];
+            const va = values[a], vb = values[b];
+            if (va == null || vb == null) return null;
+            const slope = (vb - va) / (b - a);
+            return { a, b, slope, valAt: (x) => vb + slope * (x - b) };
+        };
+
+        // --- シグナル: as-of（確定ピボットだけ → 過去シグナルは後から動かない）---
+        // 発火条件: 「直近 lookback 本のどこかで線の下(BUY)/上(SELL)にいた」かつ
+        //          「いま線を margin 以上で突破した最初の足」。緩い抜けも拾える。
+        const lookback = right; // 確認ウィンドウ
+        const signals = [];
+        for (let i = 1; i < N; i++) {
+            if (rsi[i] == null || rsi[i - 1] == null) continue;
+
+            // BUY: 抵抗線（直近2スイング高値）を上抜け
+            const resLine = lineFromLastTwo(rsi, confirmedUpTo(highs, i));
+            if (resLine && (!requireDirection || resLine.slope <= 0)) {
+                const penI = rsi[i] - resLine.valAt(i);
+                const penPrev = rsi[i - 1] - resLine.valAt(i - 1);
+                let cameFromBelow = false;
+                for (let k = Math.max(1, i - lookback); k <= i; k++) {
+                    if (rsi[k] != null && rsi[k] - resLine.valAt(k) <= 0) { cameFromBelow = true; break; }
+                }
+                if (cameFromBelow && penI > params.margin && penPrev <= params.margin) {
+                    signals.push({
+                        time: candles[i].time,
+                        index: i,
+                        type: 'BUY',
+                        price: candles[i].close,
+                        rsi: rsi[i],
+                        lineValue: parseFloat(resLine.valAt(i).toFixed(2)),
+                        description: 'RSIスイング抵抗線ブレイク'
+                    });
+                }
+            }
+
+            // SELL: 支持線（直近2スイング安値）を下抜け
+            const supLine = lineFromLastTwo(rsi, confirmedUpTo(lows, i));
+            if (supLine && (!requireDirection || supLine.slope >= 0)) {
+                const penI = supLine.valAt(i) - rsi[i];
+                const penPrev = supLine.valAt(i - 1) - rsi[i - 1];
+                let cameFromAbove = false;
+                for (let k = Math.max(1, i - lookback); k <= i; k++) {
+                    if (rsi[k] != null && supLine.valAt(k) - rsi[k] <= 0) { cameFromAbove = true; break; }
+                }
+                if (cameFromAbove && penI > params.margin && penPrev <= params.margin) {
+                    signals.push({
+                        time: candles[i].time,
+                        index: i,
+                        type: 'SELL',
+                        price: candles[i].close,
+                        rsi: rsi[i],
+                        lineValue: parseFloat(supLine.valAt(i).toFixed(2)),
+                        description: 'RSIスイング支持線ブレイク'
+                    });
+                }
+            }
+        }
+
+        // --- 表示用ライン: 最新スナップショットの連続ピボット対 nLines本 ---
+        const pivotLines = (pivots) => {
+            const lines = [];
+            for (let m = pivots.length - 1; m >= 1 && lines.length < params.nLines; m--) {
+                const a = pivots[m - 1], b = pivots[m];
+                const va = rsi[a], vb = rsi[b];
+                if (va == null || vb == null) continue;
+                lines.push({ tStart: a, tEnd: b, slope: (vb - va) / (b - a), rsiStart: va, rsiEnd: vb });
+            }
+            return lines;
+        };
+
+        const peakLines = pivotLines(highs);
+        const troughLines = pivotLines(lows);
+
+        const peaks = highs.map(idx => ({ index: idx, rsi: rsi[idx], time: candles[idx].time, price: candles[idx].close }));
+        const troughs = lows.map(idx => ({ index: idx, rsi: rsi[idx], time: candles[idx].time, price: candles[idx].close }));
+
+        return { peaks, troughs, peakLines, troughLines, signals };
+    }
+
     // Map JS arrays to MT4-style backwards arrays (index 0 is newest, N-1 is oldest)
     const rsi_mt4 = new Array(N).fill(0);
     const kairi_mt4 = new Array(N).fill(0);
