@@ -610,6 +610,8 @@ function arrayMaximum(arr, count, start) {
         }
     }
     return maxIdx;
+}
+
 function arrayMinimum(arr, count, start) {
     let minVal = Infinity;
     let minIdx = start;
