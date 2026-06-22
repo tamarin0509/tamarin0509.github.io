@@ -409,7 +409,12 @@ async function loadData() {
     for (const proxyUrl of proxies) {
         try {
             console.log(`Fetching from proxy: ${proxyUrl}`);
-            const res = await fetch(proxyUrl);
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 4000);
+            
+            const res = await fetch(proxyUrl, { signal: controller.signal });
+            clearTimeout(timeoutId);
+            
             if (!res.ok) throw new Error(`HTTP error ${res.status}`);
             const data = await res.json();
             const chartResult = data.chart?.result?.[0];
