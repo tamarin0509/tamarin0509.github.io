@@ -1434,32 +1434,34 @@ function renderAnalysis(candles, rsi, rsiMa, analysis) {
     }
 }
 
-// パラメータ評価関数（高速バックテスト）
-function evaluateParameters(candles, testParams) {
-    const N = candles.length;
-    // 指標計算
-    const rsi = calculateRSI(candles, testParams.rsiPeriod);
-    const rsiMa = calculateMA(rsi, testParams.maPeriod, testParams.maMethod);
-    const analysis = calculateRsiBreakout(candles, rsi, rsiMa, testParams);
+// パラメータ評価関数（高速バックテスト・期待値＆回数ペナルティ版）
+function evaluateParameters(candles, rsi, rsiMa, testParams, startIdx, endIdx) {
+    // 将来リークを防ぐため、指定したendIdxまでのスライスで計算をシミュレート
+    const slicedCandles = candles.slice(0, endIdx + 1);
+    const slicedRsi = rsi.slice(0, endIdx + 1);
+    const slicedRsiMa = rsiMa.slice(0, endIdx + 1);
+
+    const analysis = calculateRsiBreakout(slicedCandles, slicedRsi, slicedRsiMa, testParams);
     
-    const signals = analysis.signals;
-    if (signals.length === 0) {
-        return -99999;
-    }
+    // 評価期間 [startIdx, endIdx] の範囲内にあるシグナルのみを抽出
+    const signals = analysis.signals.filter(sig => sig.index >= startIdx && sig.index <= endIdx);
+    if (signals.length === 0) return -99999;
     
-    // 評価期間
     const holdPeriod = 15;
+    const N = slicedCandles.length;
     let totalReturn = 0;
+    let wins = 0;
+    let losses = 0;
+    let totalGain = 0;
+    let totalLoss = 0;
     
     for (const sig of signals) {
         const entryIdx = sig.index;
         if (entryIdx >= N - 1) continue;
         
-        // 保持期間後の終値（データ長を超える場合は末尾の終値）
         const exitIdx = Math.min(N - 1, entryIdx + holdPeriod);
-        const entryPrice = candles[entryIdx].close;
-        const exitPrice = candles[exitIdx].close;
-        
+        const entryPrice = slicedCandles[entryIdx].close;
+        const exitPrice = slicedCandles[exitIdx].close;
         if (entryPrice === 0) continue;
         
         let tradeReturn = 0;
@@ -1470,13 +1472,40 @@ function evaluateParameters(candles, testParams) {
         }
         
         totalReturn += tradeReturn;
+        if (tradeReturn > 0) {
+            wins++;
+            totalGain += tradeReturn;
+        } else {
+            losses++;
+            totalLoss += Math.abs(tradeReturn);
+        }
     }
     
-    let score = totalReturn;
+    const totalTrades = wins + losses;
+    if (totalTrades === 0) return -99999;
     
-    // シグナル数が少なすぎる場合のペナルティ
-    if (signals.length < 3) {
-        score = score * 0.1;
+    const winRate = wins / totalTrades;
+    const avgGain = wins > 0 ? totalGain / wins : 0;
+    const avgLoss = losses > 0 ? totalLoss / losses : 0;
+    
+    // 期待値 (Expectancy)
+    const expectancy = (winRate * avgGain) - ((1 - winRate) * avgLoss);
+    
+    // 取引回数ペナルティの精緻化 (評価期間内の目標取引回数: 5〜25回)
+    let penalty = 1.0;
+    if (totalTrades < 3) {
+        penalty = 0.1;
+    } else if (totalTrades < 5) {
+        penalty = 0.5;
+    } else if (totalTrades > 25) {
+        penalty = 0.3;
+    } else if (totalTrades > 20) {
+        penalty = 0.7;
+    }
+    
+    let score = expectancy * penalty;
+    if (expectancy < 0) {
+        score = expectancy * (2.0 - penalty);
     }
     
     return score;
@@ -1538,13 +1567,10 @@ function optimizeParameters() {
         }
         
         // 探索空間の定義
-        const rsiPeriods = [9, 14, 21];
-        const maPeriods = [25, 50, 75];
-        const margins = [0.5, 1.0, 1.5, 2.0];
-        const offsets = [-2, 0, 2];
-        
-        let bestScore = -Infinity;
-        let bestParams = null;
+        const rsiPeriods = [7, 9, 11, 14, 18, 21, 25];
+        const maPeriods = [20, 30, 45, 60, 75, 90];
+        const margins = [0.2, 0.5, 0.8, 1.0, 1.3, 1.6, 2.0];
+        const offsets = [-3, -1.5, 0, 1.5, 3];
         
         // 極値アルゴリズムの設定、MTFフィルターの設定、表示ライン数は現在の設定を維持
         const currentPeakMethod = state.params.peakMethod || 'kairi';
@@ -1554,8 +1580,16 @@ function optimizeParameters() {
         const currentNLines = state.params.nLines || 3;
         const currentMaMethod = state.params.maMethod || 'EMA';
         
+        const N = candles.length;
+        const isEnd = Math.floor(N * 0.75); // IS ends at 75% of data (approx 1.5 years)
+        
+        const candidates = [];
+        
+        // 1. インサンプル期間でグリッドサーチ実行（RSI / MA キャッシュ最適化）
         for (const rsiP of rsiPeriods) {
+            const rsi = calculateRSI(candles, rsiP);
             for (const maP of maPeriods) {
+                const rsiMa = calculateMA(rsi, maP, currentMaMethod);
                 for (const marg of margins) {
                     for (const offs of offsets) {
                         const testParams = {
@@ -1571,14 +1605,37 @@ function optimizeParameters() {
                             mtfFilter: currentMtfFilter
                         };
                         
-                        const score = evaluateParameters(candles, testParams);
-                        if (score > bestScore) {
-                            bestScore = score;
-                            bestParams = testParams;
+                        const isScore = evaluateParameters(candles, rsi, rsiMa, testParams, 0, isEnd);
+                        if (isScore > -90000) {
+                            candidates.push({ params: testParams, isScore });
                         }
                     }
                 }
             }
+        }
+        
+        // インサンプル成績上位5候補を抽出
+        candidates.sort((a, b) => b.isScore - a.isScore);
+        const topCandidates = candidates.slice(0, 5);
+        
+        // 2. アウトサンプル期間（検証期間）で再評価
+        let bestParams = null;
+        let bestOsScore = -Infinity;
+        
+        for (const cand of topCandidates) {
+            const rsi = calculateRSI(candles, cand.params.rsiPeriod);
+            const rsiMa = calculateMA(rsi, cand.params.maPeriod, cand.params.maMethod);
+            const osScore = evaluateParameters(candles, rsi, rsiMa, cand.params, isEnd + 1, N - 1);
+            
+            if (osScore > bestOsScore) {
+                bestOsScore = osScore;
+                bestParams = cand.params;
+            }
+        }
+        
+        // フォールバック: アウトサンプル評価がすべて無効/極端に低スコアならインサンプル最良を採択
+        if (!bestParams || bestOsScore <= -90000) {
+            bestParams = topCandidates[0]?.params || null;
         }
         
         if (bestParams) {

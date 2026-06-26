@@ -537,26 +537,34 @@ function compareSignals(batchSignals, replaySignals) {
     return { confirmed, phantom, replayOnly };
 }
 
-// Backtest evaluator
-function evaluateParameters(candles, testParams) {
-    const N = candles.length;
-    const rsi = calculateRSI(candles, testParams.rsiPeriod);
-    const rsiMa = calculateMA(rsi, testParams.maPeriod, testParams.maMethod);
-    const analysis = calculateRsiBreakout(candles, rsi, rsiMa, testParams);
+// Backtest evaluator (Fast version with slicing and expectancy score)
+function evaluateParameters(candles, rsi, rsiMa, testParams, startIdx, endIdx) {
+    // Slice arrays to simulate optimization at a specific point in time (prevent future leak)
+    const slicedCandles = candles.slice(0, endIdx + 1);
+    const slicedRsi = rsi.slice(0, endIdx + 1);
+    const slicedRsiMa = rsiMa.slice(0, endIdx + 1);
+
+    const analysis = calculateRsiBreakout(slicedCandles, slicedRsi, slicedRsiMa, testParams);
     
-    const signals = analysis.signals;
+    // Filter signals within the evaluation window [startIdx, endIdx]
+    const signals = analysis.signals.filter(sig => sig.index >= startIdx && sig.index <= endIdx);
     if (signals.length === 0) return -99999;
     
     const holdPeriod = 15;
+    const N = slicedCandles.length;
     let totalReturn = 0;
+    let wins = 0;
+    let losses = 0;
+    let totalGain = 0;
+    let totalLoss = 0;
     
     for (const sig of signals) {
         const entryIdx = sig.index;
         if (entryIdx >= N - 1) continue;
         
         const exitIdx = Math.min(N - 1, entryIdx + holdPeriod);
-        const entryPrice = candles[entryIdx].close;
-        const exitPrice = candles[exitIdx].close;
+        const entryPrice = slicedCandles[entryIdx].close;
+        const exitPrice = slicedCandles[exitIdx].close;
         if (entryPrice === 0) continue;
         
         let tradeReturn = 0;
@@ -565,11 +573,44 @@ function evaluateParameters(candles, testParams) {
         } else if (sig.type === 'SELL') {
             tradeReturn = (entryPrice - exitPrice) / entryPrice;
         }
+        
         totalReturn += tradeReturn;
+        if (tradeReturn > 0) {
+            wins++;
+            totalGain += tradeReturn;
+        } else {
+            losses++;
+            totalLoss += Math.abs(tradeReturn);
+        }
     }
     
-    let score = totalReturn;
-    if (signals.length < 3) score = score * 0.1;
+    const totalTrades = wins + losses;
+    if (totalTrades === 0) return -99999;
+    
+    const winRate = wins / totalTrades;
+    const avgGain = wins > 0 ? totalGain / wins : 0;
+    const avgLoss = losses > 0 ? totalLoss / losses : 0;
+    
+    // Expectancy
+    const expectancy = (winRate * avgGain) - ((1 - winRate) * avgLoss);
+    
+    // Trade count penalty (optimal range: 5 to 25 trades in evaluation window)
+    let penalty = 1.0;
+    if (totalTrades < 3) {
+        penalty = 0.1;
+    } else if (totalTrades < 5) {
+        penalty = 0.5;
+    } else if (totalTrades > 25) {
+        penalty = 0.3;
+    } else if (totalTrades > 20) {
+        penalty = 0.7;
+    }
+    
+    let score = expectancy * penalty;
+    if (expectancy < 0) {
+        score = expectancy * (2.0 - penalty);
+    }
+    
     return score;
 }
 
@@ -629,18 +670,23 @@ async function runScreener() {
             }
             
             // Grid search optimizer (exploring both kairi and swing methods)
-            const rsiPeriods = [9, 14, 21];
-            const maPeriods = [25, 50, 75];
-            const margins = [0.5, 1.0, 1.5, 2.0];
-            const offsets = [-2, 0, 2];
+            const rsiPeriods = [7, 9, 11, 14, 18, 21, 25];
+            const maPeriods = [20, 30, 45, 60, 75, 90];
+            const margins = [0.2, 0.5, 0.8, 1.0, 1.3, 1.6, 2.0];
+            const offsets = [-3, -1.5, 0, 1.5, 3];
             const peakMethods = ['kairi', 'swing']; // Explore both!
             
-            let bestScore = -Infinity;
-            let bestParams = null;
+            const N = candles.length;
+            const isEnd = Math.floor(N * 0.75); // IS ends at 75% of data (approx 1.5 years)
             
-            for (const method of peakMethods) {
-                for (const rsiP of rsiPeriods) {
-                    for (const maP of maPeriods) {
+            const candidates = [];
+            
+            // 1. Grid search on In-Sample data (0 to isEnd) with Cache Optimization
+            for (const rsiP of rsiPeriods) {
+                const rsi = calculateRSI(candles, rsiP);
+                for (const maP of maPeriods) {
+                    const rsiMa = calculateMA(rsi, maP, 'EMA');
+                    for (const method of peakMethods) {
                         for (const marg of margins) {
                             for (const offs of offsets) {
                                 const testParams = {
@@ -656,10 +702,9 @@ async function runScreener() {
                                     mtfFilter: 'none' // evaluate base signal
                                 };
                                 
-                                const score = evaluateParameters(candles, testParams);
-                                if (score > bestScore) {
-                                    bestScore = score;
-                                    bestParams = testParams;
+                                const isScore = evaluateParameters(candles, rsi, rsiMa, testParams, 0, isEnd);
+                                if (isScore > -90000) {
+                                    candidates.push({ params: testParams, isScore });
                                 }
                             }
                         }
@@ -667,20 +712,29 @@ async function runScreener() {
                 }
             }
             
-            if (!bestParams) {
-                console.warn(`No optimal parameters found for ${item.symbol}, using defaults.`);
-                bestParams = {
-                    rsiPeriod: 14,
-                    maPeriod: 50,
-                    maMethod: 'EMA',
-                    offset: 0,
-                    margin: 1.0,
-                    nLines: 3,
-                    peakMethod: 'kairi',
-                    swingPeriod: 10,
-                    minGap: 2,
-                    mtfFilter: 'none'
-                };
+            // Sort by In-Sample score and take top 5 candidates
+            candidates.sort((a, b) => b.isScore - a.isScore);
+            const topCandidates = candidates.slice(0, 5);
+            
+            // 2. Evaluate top candidates on Out-of-Sample data (isEnd + 1 to N - 1)
+            let bestParams = null;
+            let bestOsScore = -Infinity;
+            
+            for (const cand of topCandidates) {
+                const rsi = calculateRSI(candles, cand.params.rsiPeriod);
+                const rsiMa = calculateMA(rsi, cand.params.maPeriod, cand.params.maMethod);
+                const osScore = evaluateParameters(candles, rsi, rsiMa, cand.params, isEnd + 1, N - 1);
+                
+                if (osScore > bestOsScore) {
+                    bestOsScore = osScore;
+                    bestParams = cand.params;
+                }
+            }
+            
+            // Fallback: If Out-of-Sample evaluation yielded no active trades or poor scores for all candidates,
+            // default to the best In-Sample performer.
+            if (!bestParams || bestOsScore <= -90000) {
+                bestParams = topCandidates[0]?.params || null;
             }
             
             // Apply best params to find latest signal with MTF (weekly filter enabled for actual screening)
