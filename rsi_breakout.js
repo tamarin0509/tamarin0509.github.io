@@ -18,9 +18,12 @@ const state = {
         minGap: 2,
         nLines: 3,
         peakMethod: 'kairi',
-        swingPeriod: 10
+        swingPeriod: 10,
+        mtfFilter: 'none' // 'none' or 'weekly'
     },
     rawData: null,
+    lastLoadedSymbol: null,
+    lastLoadedPeriod: null,
     indicators: null,
     charts: {
         price: null,
@@ -43,10 +46,7 @@ const PRESETS = {
         maMethod: 'EMA',
         offset: 0,
         margin: 1.0,
-        minGap: 2,
-        nLines: 3,
-        peakMethod: 'kairi',
-        swingPeriod: 10
+        nLines: 3
     },
     stock: {
         rsiPeriod: 9,
@@ -54,10 +54,7 @@ const PRESETS = {
         maMethod: 'EMA',
         offset: 0,
         margin: 1.5,
-        minGap: 3,
-        nLines: 3,
-        peakMethod: 'kairi',
-        swingPeriod: 10
+        nLines: 3
     },
     aggressive: {
         rsiPeriod: 14,
@@ -65,10 +62,7 @@ const PRESETS = {
         maMethod: 'EMA',
         offset: -2,
         margin: 0.5,
-        minGap: 1,
-        nLines: 4,
-        peakMethod: 'kairi',
-        swingPeriod: 10
+        nLines: 4
     },
     conservative: {
         rsiPeriod: 14,
@@ -76,10 +70,7 @@ const PRESETS = {
         maMethod: 'SMA',
         offset: 2,
         margin: 2.0,
-        minGap: 4,
-        nLines: 2,
-        peakMethod: 'kairi',
-        swingPeriod: 10
+        nLines: 2
     }
 };
 
@@ -159,6 +150,17 @@ function setupSliders() {
             toggleMethodUI(val);
         });
     }
+
+    const mtfSelector = document.getElementById('param-mtf-filter');
+    if (mtfSelector) {
+        mtfSelector.value = state.params.mtfFilter || 'none';
+        const newMtfSelector = mtfSelector.cloneNode(true);
+        mtfSelector.parentNode.replaceChild(newMtfSelector, mtfSelector);
+        newMtfSelector.addEventListener('change', (e) => {
+            state.params.mtfFilter = e.target.value;
+            loadData();
+        });
+    }
 }
 
 // Preset and UI event listeners
@@ -172,7 +174,17 @@ function setupEventListeners() {
             
             const presetName = btn.dataset.preset;
             if (PRESETS[presetName]) {
-                state.params = { ...PRESETS[presetName] };
+                // Keep peak parameters intact
+                const peakParams = {
+                    peakMethod: state.params.peakMethod || 'kairi',
+                    swingPeriod: state.params.swingPeriod || 10,
+                    minGap: state.params.minGap || 2
+                };
+                state.params = { 
+                    ...state.params,
+                    ...PRESETS[presetName],
+                    ...peakParams
+                };
                 setupSliders(); // re-sync sliders visual
                 loadData();
             }
@@ -206,6 +218,12 @@ function setupEventListeners() {
     document.getElementById('btn-update').addEventListener('click', () => {
         loadData();
     });
+
+    // Parameter Optimization
+    const optimizeBtn = document.getElementById('btn-optimize');
+    if (optimizeBtn) {
+        optimizeBtn.addEventListener('click', optimizeParameters);
+    }
 }
 
 function applyCustomSymbol() {
@@ -390,6 +408,13 @@ function setupCharts() {
 async function loadData() {
     showLoading(true);
     
+    // Skip request if the requested symbol and period are already loaded in rawData cache
+    if (state.rawData && state.lastLoadedSymbol === state.symbol && state.lastLoadedPeriod === state.period) {
+        console.log('Skipping API request: current state is identical to cached state.');
+        parseAndProcessData(state.rawData);
+        return;
+    }
+    
     // Update Title in UI
     document.getElementById('current-asset-name').textContent = state.assetName;
     document.getElementById('current-asset-symbol').textContent = state.symbol;
@@ -445,6 +470,7 @@ function showLoading(show) {
 
 // Parse Raw Data & Run technical analysis
 function parseAndProcessData(result) {
+    state.rawData = result;
     const timestamps = result.timestamp;
     const quotes = result.indicators.quote[0];
     const closes = quotes.close;
@@ -479,6 +505,9 @@ function parseAndProcessData(result) {
         showLoading(false);
         return;
     }
+
+    state.lastLoadedSymbol = state.symbol;
+    state.lastLoadedPeriod = state.period;
 
     // 1. Calculate RSI
     const rsiValues = calculateRSI(candles, state.params.rsiPeriod);
@@ -630,10 +659,96 @@ function arrayMinimum(arr, count, start) {
     return minIdx;
 }
 
+// 日足データから週足データを合成する
+function buildWeeklyCandles(dailyCandles) {
+    if (!dailyCandles || dailyCandles.length === 0) return [];
+    const weekly = [];
+    
+    // 週の特定キー：その週の月曜日の日付を返す
+    const getMondayDateStr = (dateStr) => {
+        const d = new Date(dateStr);
+        const day = d.getDay();
+        const diff = d.getDate() - day + (day === 0 ? -6 : 1); // 月曜日
+        const monday = new Date(d.setDate(diff));
+        return monday.toISOString().split('T')[0];
+    };
+    
+    let currentWeekKey = null;
+    let currentWeekCandle = null;
+    
+    for (let i = 0; i < dailyCandles.length; i++) {
+        const d = dailyCandles[i];
+        const weekKey = getMondayDateStr(d.time);
+        
+        if (currentWeekKey !== weekKey) {
+            if (currentWeekCandle) {
+                weekly.push(currentWeekCandle);
+            }
+            currentWeekKey = weekKey;
+            currentWeekCandle = {
+                time: weekKey, // 週を代表する日付として月曜日の日付を使用
+                open: d.open,
+                high: d.high,
+                low: d.low,
+                close: d.close,
+                rawDates: [d.time]
+            };
+        } else {
+            currentWeekCandle.high = Math.max(currentWeekCandle.high, d.high);
+            currentWeekCandle.low = Math.min(currentWeekCandle.low, d.low);
+            currentWeekCandle.close = d.close; // 週の最後の営業日の終値
+            currentWeekCandle.rawDates.push(d.time);
+        }
+    }
+    
+    if (currentWeekCandle) {
+        weekly.push(currentWeekCandle);
+    }
+    
+    return weekly;
+}
+
+// 指定日に対応する前週の確定週足RSIを取得する
+function getPrecedingWeeklyRsi(dailyTimeStr, weeklyCandles, weeklyRsi) {
+    const getMondayTime = (dateStr) => {
+        const d = new Date(dateStr);
+        const day = d.getDay();
+        const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+        const monday = new Date(d.setDate(diff));
+        return monday.getTime();
+    };
+    const dailyMondayTime = getMondayTime(dailyTimeStr);
+    
+    let bestRsi = null;
+    for (let w = 0; w < weeklyCandles.length; w++) {
+        const wCandle = weeklyCandles[w];
+        const wMondayTime = new Date(wCandle.time).getTime();
+        
+        // 週足キャンドルの月曜日が、日足キャンドルの週の月曜日よりも過去なら確定済み
+        if (wMondayTime < dailyMondayTime) {
+            if (weeklyRsi[w] !== null && weeklyRsi[w] !== undefined) {
+                bestRsi = weeklyRsi[w];
+            }
+        } else {
+            break; // これ以降は未来の週
+        }
+    }
+    
+    return bestRsi;
+}
+
 // Calculate RSI Trendlines and Breakout Signals exactly using the MQL4 algorithm
 function calculateRsiBreakout(candles, rsi, rsiMa, params) {
     const N = candles.length;
     const peakMethod = params.peakMethod || 'kairi';
+
+    // --- 週足合成とRSI計算 ---
+    let weeklyCandles = [];
+    let weeklyRsi = [];
+    if (params.mtfFilter === 'weekly') {
+        weeklyCandles = buildWeeklyCandles(candles);
+        weeklyRsi = calculateRSI(weeklyCandles, params.rsiPeriod);
+    }
 
     if (peakMethod === 'swing') {
         const left = Math.floor(params.swingPeriod || 10);
@@ -696,15 +811,22 @@ function calculateRsiBreakout(candles, rsi, rsiMa, params) {
                     if (rsi[k] != null && rsi[k] - resLine.valAt(k) <= 0) { cameFromBelow = true; break; }
                 }
                 if (cameFromBelow && penI > params.margin && penPrev <= params.margin) {
-                    signals.push({
-                        time: candles[i].time,
-                        index: i,
-                        type: 'BUY',
-                        price: candles[i].close,
-                        rsi: rsi[i],
-                        lineValue: parseFloat(resLine.valAt(i).toFixed(2)),
-                        description: 'RSIスイング抵抗線ブレイク'
-                    });
+                    let passedFilter = true;
+                    if (params.mtfFilter === 'weekly') {
+                        const wRsi = getPrecedingWeeklyRsi(candles[i].time, weeklyCandles, weeklyRsi);
+                        if (wRsi !== null && wRsi < 50) passedFilter = false;
+                    }
+                    if (passedFilter) {
+                        signals.push({
+                            time: candles[i].time,
+                            index: i,
+                            type: 'BUY',
+                            price: candles[i].close,
+                            rsi: rsi[i],
+                            lineValue: parseFloat(resLine.valAt(i).toFixed(2)),
+                            description: 'RSIスイング抵抗線ブレイク'
+                        });
+                    }
                 }
             }
 
@@ -718,15 +840,22 @@ function calculateRsiBreakout(candles, rsi, rsiMa, params) {
                     if (rsi[k] != null && supLine.valAt(k) - rsi[k] <= 0) { cameFromAbove = true; break; }
                 }
                 if (cameFromAbove && penI > params.margin && penPrev <= params.margin) {
-                    signals.push({
-                        time: candles[i].time,
-                        index: i,
-                        type: 'SELL',
-                        price: candles[i].close,
-                        rsi: rsi[i],
-                        lineValue: parseFloat(supLine.valAt(i).toFixed(2)),
-                        description: 'RSIスイング支持線ブレイク'
-                    });
+                    let passedFilter = true;
+                    if (params.mtfFilter === 'weekly') {
+                        const wRsi = getPrecedingWeeklyRsi(candles[i].time, weeklyCandles, weeklyRsi);
+                        if (wRsi !== null && wRsi >= 50) passedFilter = false;
+                    }
+                    if (passedFilter) {
+                        signals.push({
+                            time: candles[i].time,
+                            index: i,
+                            type: 'SELL',
+                            price: candles[i].close,
+                            rsi: rsi[i],
+                            lineValue: parseFloat(supLine.valAt(i).toFixed(2)),
+                            description: 'RSIスイング支持線ブレイク'
+                        });
+                    }
                 }
             }
         }
@@ -916,26 +1045,40 @@ function calculateRsiBreakout(candles, rsi, rsiMa, params) {
     for (let i = N - 1; i >= 0; i--) {
         const jsIdx = N - 1 - i;
         if (buf5_mt4[i] !== null) {
-            signals.push({
-                time: candles[jsIdx].time,
-                index: jsIdx,
-                type: 'BUY',
-                price: candles[jsIdx].close,
-                rsi: rsi[jsIdx],
-                lineValue: parseFloat(buf3_mt4[i].toFixed(2)),
-                description: `RSI抵抗線ブレイク (MQL4条件)`
-            });
+            let passedFilter = true;
+            if (params.mtfFilter === 'weekly') {
+                const wRsi = getPrecedingWeeklyRsi(candles[jsIdx].time, weeklyCandles, weeklyRsi);
+                if (wRsi !== null && wRsi < 50) passedFilter = false;
+            }
+            if (passedFilter) {
+                signals.push({
+                    time: candles[jsIdx].time,
+                    index: jsIdx,
+                    type: 'BUY',
+                    price: candles[jsIdx].close,
+                    rsi: rsi[jsIdx],
+                    lineValue: parseFloat(buf3_mt4[i].toFixed(2)),
+                    description: `RSI抵抗線ブレイク (MQL4条件)`
+                });
+            }
         }
         if (buf6_mt4[i] !== null) {
-            signals.push({
-                time: candles[jsIdx].time,
-                index: jsIdx,
-                type: 'SELL',
-                price: candles[jsIdx].close,
-                rsi: rsi[jsIdx],
-                lineValue: parseFloat(buf4_mt4[i].toFixed(2)),
-                description: `RSI支持線ブレイク (MQL4条件)`
-            });
+            let passedFilter = true;
+            if (params.mtfFilter === 'weekly') {
+                const wRsi = getPrecedingWeeklyRsi(candles[jsIdx].time, weeklyCandles, weeklyRsi);
+                if (wRsi !== null && wRsi >= 50) passedFilter = false;
+            }
+            if (passedFilter) {
+                signals.push({
+                    time: candles[jsIdx].time,
+                    index: jsIdx,
+                    type: 'SELL',
+                    price: candles[jsIdx].close,
+                    rsi: rsi[jsIdx],
+                    lineValue: parseFloat(buf4_mt4[i].toFixed(2)),
+                    description: `RSI支持線ブレイク (MQL4条件)`
+                });
+            }
         }
     }
 
@@ -1281,3 +1424,177 @@ function renderAnalysis(candles, rsi, rsiMa, analysis) {
         }
     }
 }
+
+// パラメータ評価関数（高速バックテスト）
+function evaluateParameters(candles, testParams) {
+    const N = candles.length;
+    // 指標計算
+    const rsi = calculateRSI(candles, testParams.rsiPeriod);
+    const rsiMa = calculateMA(rsi, testParams.maPeriod, testParams.maMethod);
+    const analysis = calculateRsiBreakout(candles, rsi, rsiMa, testParams);
+    
+    const signals = analysis.signals;
+    if (signals.length === 0) {
+        return -99999;
+    }
+    
+    // 評価期間
+    const holdPeriod = 15;
+    let totalReturn = 0;
+    
+    for (const sig of signals) {
+        const entryIdx = sig.index;
+        if (entryIdx >= N - 1) continue;
+        
+        // 保持期間後の終値（データ長を超える場合は末尾の終値）
+        const exitIdx = Math.min(N - 1, entryIdx + holdPeriod);
+        const entryPrice = candles[entryIdx].close;
+        const exitPrice = candles[exitIdx].close;
+        
+        if (entryPrice === 0) continue;
+        
+        let tradeReturn = 0;
+        if (sig.type === 'BUY') {
+            tradeReturn = (exitPrice - entryPrice) / entryPrice;
+        } else if (sig.type === 'SELL') {
+            tradeReturn = (entryPrice - exitPrice) / entryPrice;
+        }
+        
+        totalReturn += tradeReturn;
+    }
+    
+    let score = totalReturn;
+    
+    // シグナル数が少なすぎる場合のペナルティ
+    if (signals.length < 3) {
+        score = score * 0.1;
+    }
+    
+    return score;
+}
+
+// パラメータ最適化実行メイン処理
+function optimizeParameters() {
+    const optimizeBtn = document.getElementById('btn-optimize');
+    if (optimizeBtn) {
+        optimizeBtn.disabled = true;
+        optimizeBtn.innerHTML = '<i data-lucide="refresh-cw" class="spin"></i> 最適化中...';
+        if (window.lucide) window.lucide.createIcons();
+    }
+    
+    // UIをブロックしないように setTimeout で非同期に処理を実行
+    setTimeout(() => {
+        if (!state.rawData || !state.rawData.timestamp) {
+            alert('最適化するのに十分なデータがありません。先にチャートデータを読み込んでください。');
+            if (optimizeBtn) {
+                optimizeBtn.disabled = false;
+                optimizeBtn.innerHTML = '<i data-lucide="zap"></i> パラメータ最適化';
+                if (window.lucide) window.lucide.createIcons();
+            }
+            return;
+        }
+        
+        const rawResult = state.rawData;
+        const timestamps = rawResult.timestamp;
+        const quotes = rawResult.indicators.quote[0];
+        const closes = quotes.close;
+        const opens = quotes.open;
+        const highs = quotes.high;
+        const lows = quotes.low;
+        
+        const candles = [];
+        for (let i = 0; i < timestamps.length; i++) {
+            if (timestamps[i] == null || closes[i] == null || opens[i] == null || highs[i] == null || lows[i] == null) {
+                continue;
+            }
+            const date = new Date(timestamps[i] * 1000);
+            const dateStr = date.toISOString().split('T')[0];
+            candles.push({
+                time: dateStr,
+                open: parseFloat(opens[i].toFixed(4)),
+                high: parseFloat(highs[i].toFixed(4)),
+                low: parseFloat(lows[i].toFixed(4)),
+                close: parseFloat(closes[i].toFixed(4))
+            });
+        }
+        
+        if (candles.length < 50) {
+            alert('最適化するのに十分なデータ量がありません。');
+            if (optimizeBtn) {
+                optimizeBtn.disabled = false;
+                optimizeBtn.innerHTML = '<i data-lucide="zap"></i> パラメータ最適化';
+                if (window.lucide) window.lucide.createIcons();
+            }
+            return;
+        }
+        
+        // 探索空間の定義
+        const rsiPeriods = [9, 14, 21];
+        const maPeriods = [25, 50, 75];
+        const margins = [0.5, 1.0, 1.5, 2.0];
+        const offsets = [-2, 0, 2];
+        
+        let bestScore = -Infinity;
+        let bestParams = null;
+        
+        // 極値アルゴリズムの設定、MTFフィルターの設定、表示ライン数は現在の設定を維持
+        const currentPeakMethod = state.params.peakMethod || 'kairi';
+        const currentSwingPeriod = state.params.swingPeriod || 10;
+        const currentMinGap = state.params.minGap || 2;
+        const currentMtfFilter = state.params.mtfFilter || 'none';
+        const currentNLines = state.params.nLines || 3;
+        const currentMaMethod = state.params.maMethod || 'EMA';
+        
+        for (const rsiP of rsiPeriods) {
+            for (const maP of maPeriods) {
+                for (const marg of margins) {
+                    for (const offs of offsets) {
+                        const testParams = {
+                            rsiPeriod: rsiP,
+                            maPeriod: maP,
+                            maMethod: currentMaMethod,
+                            offset: offs,
+                            margin: marg,
+                            nLines: currentNLines,
+                            peakMethod: currentPeakMethod,
+                            swingPeriod: currentSwingPeriod,
+                            minGap: currentMinGap,
+                            mtfFilter: currentMtfFilter
+                        };
+                        
+                        const score = evaluateParameters(candles, testParams);
+                        if (score > bestScore) {
+                            bestScore = score;
+                            bestParams = testParams;
+                        }
+                    }
+                }
+            }
+        }
+        
+        if (bestParams) {
+            // パラメータを更新
+            state.params.rsiPeriod = bestParams.rsiPeriod;
+            state.params.maPeriod = bestParams.maPeriod;
+            state.params.offset = bestParams.offset;
+            state.params.margin = bestParams.margin;
+            
+            // スライダーなどのUIを再同期
+            setupSliders();
+            
+            // チャート・分析のリロード
+            parseAndProcessData(state.rawData);
+            
+            alert(`最適化完了！\nRSI基準値: ${state.params.rsiPeriod}\nRSI移動平均期間: ${state.params.maPeriod}\nMAオフセット: ${state.params.offset}\n判定マージン: ${state.params.margin}`);
+        } else {
+            alert('最適なパラメータの探索に失敗しました。');
+        }
+        
+        if (optimizeBtn) {
+            optimizeBtn.disabled = false;
+            optimizeBtn.innerHTML = '<i data-lucide="zap"></i> パラメータ最適化';
+            if (window.lucide) window.lucide.createIcons();
+        }
+    }, 50);
+}
+
