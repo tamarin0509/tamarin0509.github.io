@@ -197,6 +197,9 @@
                 <button type="button" class="tab-btn" data-tab="tab-screener">
                     <i data-lucide="layout-grid"></i> 自動スクリーナー
                 </button>
+                <button type="button" class="tab-btn" data-tab="tab-changelog">
+                    <i data-lucide="history"></i> バージョン履歴
+                </button>
             </div>
 
             <!-- Tab 1: Chart Analysis -->
@@ -369,6 +372,53 @@
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 3: Version History -->
+            <div id="tab-changelog" class="tab-content">
+                <div class="changelog-card card-glass" style="padding: 1.5rem 2rem; border-radius: 12px; margin-bottom: 1.5rem;">
+                    <h2 style="display: flex; align-items: center; gap: 8px; font-size: 1.35rem; color: #f1f5f9; margin-bottom: 1.5rem; margin-top: 0;">
+                        <i data-lucide="history" style="color: #6366f1;"></i> バージョン履歴 & 更新情報
+                    </h2>
+                    
+                    <div class="changelog-timeline" style="display: flex; flex-direction: column; gap: 1.5rem;">
+                        <!-- Version 1.2.0 -->
+                        <div class="changelog-item" style="border-left: 2px solid #6366f1; padding-left: 1.25rem; position: relative; padding-bottom: 0.5rem;">
+                            <div style="font-weight: 600; font-size: 1.1rem; color: #f1f5f9; display: flex; align-items: center; gap: 8px;">
+                                <span>v1.2.0 - 自動スクリーナーの導入 (GitHub Actionsバックエンド)</span>
+                                <span style="font-size: 0.72rem; background: rgba(99, 102, 241, 0.2); color: #818cf8; padding: 2px 6px; border-radius: 4px; font-weight: 500;">Latest</span>
+                            </div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted); margin: 4px 0 8px 0;">2026年6月27日 更新</div>
+                            <ul style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; padding-left: 1.2rem; margin: 0; display: flex; flex-direction: column; gap: 4px;">
+                                <li><strong>自動一括スクリーニング:</strong> 全16銘柄をバックグラウンドで毎日早朝に自動スキャンする仕組みを導入。</li>
+                                <li><strong>極値アルゴリズムの自動選出:</strong> 各銘柄で「Kairiゼロ交差」と「スイングピボット」の双方を最適化バックテストし、より利益期待値の高い手法を自動フィッティング。</li>
+                                <li><strong>UIの完全同期:</strong> スクリーナーで銘柄を選択すると、チャートへ自動切り替え＋最適パラメータをスライダーに自動同期して再描画。</li>
+                            </ul>
+                        </div>
+
+                        <!-- Version 1.1.0 -->
+                        <div class="changelog-item" style="border-left: 2px solid #94a3b8; padding-left: 1.25rem; position: relative; padding-bottom: 0.5rem;">
+                            <div style="font-weight: 600; font-size: 1.1rem; color: #cbd5e1;">v1.1.0 - パラメータ最適化 ＆ MTFフィルター</div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted); margin: 4px 0 8px 0;">2026年6月27日 更新</div>
+                            <ul style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; padding-left: 1.2rem; margin: 0; display: flex; flex-direction: column; gap: 4px;">
+                                <li><strong>極値パラメータの分離:</strong> プリセット変更時に極値検出パラメータ（kairi/swing）が破壊されるバグを修正。</li>
+                                <li><strong>手動パラメータ最適化（フィッティング）:</strong> 過去2年データに基づき期待値を最大化するRSI・MAパラメータをワンクリックで探索するエンジンをUIに統合。</li>
+                                <li><strong>マルチタイムフレーム（MTF）フィルター:</strong> 週足RSIのトレンド方向（50基準）に合致するシグナルのみを厳選する上位足同調ロジックを追加。</li>
+                                <li><strong>同一条件キャッシュ（冪等性担保）:</strong> パラメータ変更時、不要なAPI通信をスキップしてローカル再計算のみにすることで描画速度をミリ秒単位へ高速化。</li>
+                            </ul>
+                        </div>
+
+                        <!-- Version 1.0.0 -->
+                        <div class="changelog-item" style="border-left: 2px solid #475569; padding-left: 1.25rem; position: relative;">
+                            <div style="font-weight: 600; font-size: 1.1rem; color: #94a3b8;">v1.0.0 - 初期リリース (RSI Breakout Analyzer)</div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted); margin: 4px 0 8px 0;">2026年6月26日</div>
+                            <ul style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; padding-left: 1.2rem; margin: 0; display: flex; flex-direction: column; gap: 4px;">
+                                <li><strong>RSIブレイクアウト分析:</strong> RSIに対するトレンドライン自動描画およびブレイクアウト自動検知ロジックの実装。</li>
+                                <li><strong>リペイント検証 (Walk-Forward Replay):</strong> バッチ計算と実戦リプレイを対比し、「確定」「消滅(ダマシ)」「実戦のみ」を可視化するバックテスト機能。</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
