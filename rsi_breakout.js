@@ -99,12 +99,12 @@ function setupSliders() {
         const valEl = document.getElementById(sliderInfo.valId);
         if (!sliderEl || !valEl) return;
         
-        // Sync initial values
-        sliderEl.value = state.params[sliderInfo.key];
-        valEl.textContent = state.params[sliderInfo.key];
-
         // Clone node to clear previously bound event listeners
         const newSlider = sliderEl.cloneNode(true);
+        // Sync value to the new cloned element to prevent reverting to HTML default value
+        newSlider.value = state.params[sliderInfo.key];
+        valEl.textContent = state.params[sliderInfo.key];
+        
         sliderEl.parentNode.replaceChild(newSlider, sliderEl);
 
         newSlider.addEventListener('input', (e) => {
@@ -116,8 +116,8 @@ function setupSliders() {
 
     const methodSelector = document.getElementById('param-ma-method');
     if (methodSelector) {
-        methodSelector.value = state.params.maMethod;
         const newMethodSelector = methodSelector.cloneNode(true);
+        newMethodSelector.value = state.params.maMethod;
         methodSelector.parentNode.replaceChild(newMethodSelector, methodSelector);
         newMethodSelector.addEventListener('change', (e) => {
             state.params.maMethod = e.target.value;
@@ -126,8 +126,8 @@ function setupSliders() {
 
     const peakSelector = document.getElementById('param-peak-method');
     if (peakSelector) {
-        peakSelector.value = state.params.peakMethod || 'kairi';
         const newPeakSelector = peakSelector.cloneNode(true);
+        newPeakSelector.value = state.params.peakMethod || 'kairi';
         peakSelector.parentNode.replaceChild(newPeakSelector, peakSelector);
 
         const toggleMethodUI = (method) => {
@@ -153,8 +153,8 @@ function setupSliders() {
 
     const mtfSelector = document.getElementById('param-mtf-filter');
     if (mtfSelector) {
-        mtfSelector.value = state.params.mtfFilter || 'none';
         const newMtfSelector = mtfSelector.cloneNode(true);
+        newMtfSelector.value = state.params.mtfFilter || 'none';
         mtfSelector.parentNode.replaceChild(newMtfSelector, mtfSelector);
         newMtfSelector.addEventListener('change', (e) => {
             state.params.mtfFilter = e.target.value;
