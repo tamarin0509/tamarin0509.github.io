@@ -211,15 +211,22 @@ function setupEventListeners() {
     });
 
     // Custom Symbol Apply
-    document.getElementById('btn-custom-apply').addEventListener('click', applyCustomSymbol);
-    document.getElementById('custom-symbol').addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') applyCustomSymbol();
-    });
+    const btnCustomApply = document.getElementById('btn-custom-apply');
+    const customSymbolInput = document.getElementById('custom-symbol');
+    if (btnCustomApply && customSymbolInput) {
+        btnCustomApply.addEventListener('click', applyCustomSymbol);
+        customSymbolInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') applyCustomSymbol();
+        });
+    }
 
     // Manual Refresh
-    document.getElementById('btn-update').addEventListener('click', () => {
-        loadData();
-    });
+    const btnUpdate = document.getElementById('btn-update');
+    if (btnUpdate) {
+        btnUpdate.addEventListener('click', () => {
+            loadData();
+        });
+    }
 
     // Parameter Optimization
     const optimizeBtn = document.getElementById('btn-optimize');

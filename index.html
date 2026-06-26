@@ -187,7 +187,31 @@
 
                 <div class="form-group" id="group-min-gap">
                     <div class="label-row">
-           <!-- Main Dashboard -->
+                        <label for="param-min-gap">ピーク検出最小間隔</label>
+                        <span class="param-value" id="val-min-gap">2</span>
+                    </div>
+                    <input type="range" id="param-min-gap" min="1" max="10" value="2" class="slider">
+                </div>
+
+                <div class="form-group">
+                    <div class="label-row">
+                        <label for="param-n-lines">表示ライン数</label>
+                        <span class="param-value" id="val-n-lines">3</span>
+                    </div>
+                    <input type="range" id="param-n-lines" min="1" max="10" value="3" class="slider">
+                </div>
+
+                <button type="button" id="btn-update" class="btn-primary" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 600; padding: 10px; margin-top: 10px;">
+                    <i data-lucide="refresh-cw"></i> チャートを更新
+                </button>
+            </div>
+            
+            <div class="sidebar-footer">
+                <p>&copy; 2026 tamarin0509-art</p>
+            </div>
+        </aside>
+
+        <!-- Main Dashboard -->
         <main class="main-dashboard">
             <!-- Navigation Tabs -->
             <div class="dashboard-tabs">
