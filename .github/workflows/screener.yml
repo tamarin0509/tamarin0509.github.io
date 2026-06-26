@@ -1,0 +1,40 @@
+name: Auto Screener
+
+on:
+  schedule:
+    # 毎日 UTC 21:00 (日本時間 毎朝 6:00) に実行
+    - cron: '0 21 * * *'
+  workflow_dispatch: # 手動実行にも対応
+
+permissions:
+  contents: write # リポジトリへのコミット＆プッシュ権限を付与
+
+jobs:
+  run-screener:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Run Screener Script
+        run: node scripts/screener.js
+
+      - name: Commit and Push results
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # 差分がある場合のみコミット＆プッシュ
+          if ! git diff --quiet screener_results.json; then
+            git add screener_results.json
+            git commit -m "chore: update screener results [skip ci]"
+            git push origin main
+          else
+            echo "No changes in screener results."
+          fi

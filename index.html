@@ -187,156 +187,191 @@
 
                 <div class="form-group" id="group-min-gap">
                     <div class="label-row">
-                        <label for="param-min-gap">ピーク検出最小間隔</label>
-                        <span class="param-value" id="val-min-gap">2</span>
-                    </div>
-                    <input type="range" id="param-min-gap" min="1" max="10" value="2" class="slider">
-                </div>
-
-
-                <div class="form-group">
-                    <div class="label-row">
-                        <label for="param-n-lines">表示ライン数</label>
-                        <span class="param-value" id="val-n-lines">3</span>
-                    </div>
-                    <input type="range" id="param-n-lines" min="1" max="10" value="3" class="slider">
-                </div>
-
-                <button type="button" id="btn-update" class="btn-primary">
-                    <i data-lucide="refresh-cw"></i> チャートを更新
+           <!-- Main Dashboard -->
+        <main class="main-dashboard">
+            <!-- Navigation Tabs -->
+            <div class="dashboard-tabs">
+                <button type="button" class="tab-btn active" data-tab="tab-analysis">
+                    <i data-lucide="line-chart"></i> 個別チャート分析
+                </button>
+                <button type="button" class="tab-btn" data-tab="tab-screener">
+                    <i data-lucide="layout-grid"></i> 自動スクリーナー
                 </button>
             </div>
-            
-            <div class="sidebar-footer">
-                <p>&copy; 2026 tamarin0509-art</p>
-            </div>
-        </aside>
 
-        <!-- Main Dashboard -->
-        <main class="main-dashboard">
-            <!-- Top Summary Stats -->
-            <header class="dashboard-header">
-                <div class="asset-title-block">
-                    <h2 id="current-asset-name">米ドル / 円 (USD/JPY)</h2>
-                    <span id="current-asset-symbol" class="badge-symbol">USDJPY=X</span>
-                </div>
-                
-                <div class="stats-grid">
-                    <div class="stat-card card-glass">
-                        <span class="stat-label">現在値 (終値)</span>
-                        <div class="stat-value-container">
-                            <span class="stat-value" id="stat-price">---</span>
-                            <span class="stat-change" id="stat-change">--%</span>
+            <!-- Tab 1: Chart Analysis -->
+            <div id="tab-analysis" class="tab-content active">
+                <!-- Top Summary Stats -->
+                <header class="dashboard-header">
+                    <div class="asset-title-block">
+                        <h2 id="current-asset-name">米ドル / 円 (USD/JPY)</h2>
+                        <span id="current-asset-symbol" class="badge-symbol">USDJPY=X</span>
+                    </div>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card card-glass">
+                            <span class="stat-label">現在値 (終値)</span>
+                            <div class="stat-value-container">
+                                <span class="stat-value" id="stat-price">---</span>
+                                <span class="stat-change" id="stat-change">--%</span>
+                            </div>
+                        </div>
+                        <div class="stat-card card-glass">
+                            <span class="stat-label">現在のRSI</span>
+                            <div class="stat-value" id="stat-rsi">--.-</div>
+                        </div>
+                        <div class="stat-card card-glass">
+                            <span class="stat-label">最新シグナル</span>
+                            <div class="stat-value" id="stat-signal">---</div>
+                        </div>
+                        <div class="stat-card card-glass">
+                            <span class="stat-label">総シグナル (後知恵)</span>
+                            <div class="stat-value" id="stat-signal-count">0</div>
+                        </div>
+                        <div class="stat-card card-glass">
+                            <span class="stat-label">実戦シグナル (確定)</span>
+                            <div class="stat-value" id="stat-replay-count">0</div>
+                        </div>
+                        <div class="stat-card card-glass">
+                            <span class="stat-label">消滅したダマシ</span>
+                            <div class="stat-value" id="stat-phantom-count">0 (0%)</div>
                         </div>
                     </div>
-                    <div class="stat-card card-glass">
-                        <span class="stat-label">現在のRSI</span>
-                        <div class="stat-value" id="stat-rsi">--.-</div>
-                    </div>
-                    <div class="stat-card card-glass">
-                        <span class="stat-label">最新シグナル</span>
-                        <div class="stat-value" id="stat-signal">---</div>
-                    </div>
-                    <div class="stat-card card-glass">
-                        <span class="stat-label">総シグナル (後知恵)</span>
-                        <div class="stat-value" id="stat-signal-count">0</div>
-                    </div>
-                    <div class="stat-card card-glass">
-                        <span class="stat-label">実戦シグナル (確定)</span>
-                        <div class="stat-value" id="stat-replay-count">0</div>
-                    </div>
-                    <div class="stat-card card-glass">
-                        <span class="stat-label">消滅したダマシ</span>
-                        <div class="stat-value" id="stat-phantom-count">0 (0%)</div>
-                    </div>
-                </div>
-            </header>
+                </header>
 
-            <!-- Loading overlay -->
-            <div id="loading-overlay" class="loading-overlay hidden">
-                <div class="spinner"></div>
-                <p>データを読み込んでいます...</p>
+                <!-- Loading overlay -->
+                <div id="loading-overlay" class="loading-overlay hidden">
+                    <div class="spinner"></div>
+                    <p>データを読み込んでいます...</p>
+                </div>
+
+                <!-- Charts Container -->
+                <section class="charts-section card-glass">
+                    <div id="chart-price-container" class="chart-container"></div>
+                    <div id="chart-rsi-container" class="chart-container"></div>
+                </section>
+
+                <!-- Bottom Signals Log & Explanations -->
+                <section class="bottom-section">
+                    <!-- Breakout Logs -->
+                    <div class="log-card card-glass">
+                        <div class="card-header">
+                            <h3><i data-lucide="bell"></i> ブレイクアウト シグナル履歴</h3>
+                        </div>
+                        <div class="table-wrapper">
+                            <table id="signals-table">
+                                <thead>
+                                    <tr>
+                                        <th>日時</th>
+                                        <th>シグナル</th>
+                                        <th>状態 (検証)</th>
+                                        <th>ブレイクアウト価格</th>
+                                        <th>RSI値</th>
+                                        <th>ブレイク目標線値</th>
+                                        <th>チャートへ</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="7" class="no-data">チャートのデータを読み込んでください。</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Explanation Panel -->
+                    <div class="info-card card-glass">
+                        <div class="card-header">
+                            <h3><i data-lucide="help-circle"></i> RSIブレイクアウトについて</h3>
+                        </div>
+                        <div class="info-content">
+                            <p><strong>MTブレイクアウト法</strong>は、価格の移動平均乖離ではなく、オシレーターである<strong>RSI（相対力指数）</strong>の波形に着目したインジケータです。</p>
+                            <ul>
+                                <li>
+                                    <strong>極大・極小点（ピーク）検出アルゴリズムの違い</strong><br>
+                                    トレンドラインを引くための「山（極大）」と「谷（極小）」の検出方法を2種類から選択可能です。
+                                    <ul style="margin-top: 5px; list-style-type: circle; padding-left: 1.5rem; margin-bottom: 5px;">
+                                        <li><strong>Kairiゼロ交差（乖離率方式）:</strong> RSIとRSI移動平均線（MA）のクロス（ゴールデン/デッド）の間の「波」の中で最高値・最安値を極値とします。ダイナミックなトレンドの波の頂点を捉えるのに適しています。</li>
+                                        <li><strong>スイングピボット（左右比較方式）:</strong> 基準となる足のRSI値が、前後指定したスイング期間（左右10本など）の中で最高・最低である山や谷を厳密に検出します。局所的な値幅の反転ポイントを的確に捉えられます。</li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <strong>トレンドラインの形成（実体線）</strong><br>
+                                    過去に検出された直近の極大点どうしを結んで上値抵抗線、極小点どうしを結んで下値支持線を描きます。
+                                </li>
+                                <li>
+                                    <strong>ブレイク予想ライン（予想線）</strong><br>
+                                    トレンドラインを未来へ向けて延長投影した境界線です。
+                                </li>
+                                <li>
+                                    <strong>売買シグナル</strong><br>
+                                    <span class="text-buy">▲ 買い：</span> RSIが上値抵抗線（予想線）を上に超えた（+マージン）瞬間。<br>
+                                    <span class="text-sell">▼ 売り：</span> RSIが下値支持線（予想線）を下に割った（-マージン）瞬間.
+                                </li>
+                                <li>
+                                    <strong>マルチタイムフレーム（MTF）フィルター</strong><br>
+                                    週足の確定RSIトレンドをフィルターとして適用します。週足RSIが強気（50以上）の時は買いシグナルのみ、弱気（50未満）の時は売りシグナルのみに取引を限定することで、上位トレンドに逆らう無駄なトレード（ダマシ）を抑制します。
+                                </li>
+                                <li>
+                                    <strong>リペイント検証（Walk-Forward Replay）</strong><br>
+                                    チャートを後から一括計算した「後知恵の線」と、過去にタイムスリップして1日ずつ進めて計算した「実戦の線」を比較検証しています。<br>
+                                    <span style="color:#10b981; font-weight:600;">確定 (確)：</span> リアルタイムでも発生し、現在もチャートに残っている信頼性の高いシグナル。<br>
+                                    <span style="color:#64748b; text-decoration:line-through;">消滅 (消)：</span> リアルタイムで一度画面に出たものの、その後の波形変化（リペイント）でトレンドラインが引き直されて歴史から消えたダマシシグナル。<br>
+                                    <span style="color:#f59e0b; font-weight:600;">実戦のみ (実)：</span> 当時の波形でブレイクしたが、最新のライン描画制限などで過去チャートから見えなくなっているシグナル。
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
             </div>
 
-            <!-- Charts Container -->
-            <section class="charts-section card-glass">
-                <div id="chart-price-container" class="chart-container"></div>
-                <div id="chart-rsi-container" class="chart-container"></div>
-            </section>
-
-            <!-- Bottom Signals Log & Explanations -->
-            <section class="bottom-section">
-                <!-- Breakout Logs -->
-                <div class="log-card card-glass">
-                    <div class="card-header">
-                        <h3><i data-lucide="bell"></i> ブレイクアウト シグナル履歴</h3>
+            <!-- Tab 2: Screener -->
+            <div id="tab-screener" class="tab-content">
+                <div class="screener-header card-glass" style="padding: 1.25rem 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;">
+                    <div>
+                        <h2 style="display: flex; align-items: center; gap: 8px; font-size: 1.35rem; color: #f1f5f9;"><i data-lucide="layout-grid" style="color: #6366f1;"></i> 自動スクリーナー</h2>
+                        <p style="margin: 4px 0 0 0; font-size: 0.85rem; color: var(--text-muted);">為替・国内株式の全銘柄のパラメータを自動で最適化し、現在サインが出ている銘柄を一覧化します。(毎日更新)</p>
                     </div>
+                    <span class="screener-update-time" id="screener-updated-at">更新日時: ---</span>
+                </div>
+                
+                <div class="screener-summary-cards" style="margin-bottom: 1.5rem;">
+                    <div class="stat-card card-glass" style="border-left: 4px solid var(--color-buy);">
+                        <span class="stat-label">買いシグナル発動銘柄</span>
+                        <div class="stat-value" id="screener-buy-count" style="color: var(--color-buy);">0</div>
+                    </div>
+                    <div class="stat-card card-glass" style="border-left: 4px solid var(--color-sell);">
+                        <span class="stat-label">売りシグナル発動銘柄</span>
+                        <div class="stat-value" id="screener-sell-count" style="color: var(--color-sell);">0</div>
+                    </div>
+                </div>
+
+                <div class="screener-table-card card-glass">
                     <div class="table-wrapper">
-                        <table id="signals-table">
+                        <table id="screener-table">
                             <thead>
                                 <tr>
-                                    <th>日時</th>
-                                    <th>シグナル</th>
-                                    <th>状態 (検証)</th>
-                                    <th>ブレイクアウト価格</th>
-                                    <th>RSI値</th>
-                                    <th>ブレイク目標線値</th>
-                                    <th>チャートへ</th>
+                                    <th>銘柄名</th>
+                                    <th>ティッカー</th>
+                                    <th>現在値</th>
+                                    <th>前日比</th>
+                                    <th>RSI</th>
+                                    <th>検出方式</th>
+                                    <th>最適パラメータ (RSI/MA/オフセット/マージン)</th>
+                                    <th>最新シグナル (週足MTFフィルタ適用済)</th>
+                                    <th>操作</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td colspan="7" class="no-data">チャートのデータを読み込んでください。</td>
+                                    <td colspan="9" class="no-data">スクリーニングデータを読み込んでいます...</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
-
-                <!-- Explanation Panel -->
-                <div class="info-card card-glass">
-                    <div class="card-header">
-                        <h3><i data-lucide="help-circle"></i> RSIブレイクアウトについて</h3>
-                    </div>
-                    <div class="info-content">
-                        <p><strong>MTブレイクアウト法</strong>は、価格の移動平均乖離ではなく、オシレーターである<strong>RSI（相対力指数）</strong>の波形に着目したインジケータです。</p>
-                        <ul>
-                            <li>
-                                <strong>極大・極小点（ピーク）検出アルゴリズムの違い</strong><br>
-                                トレンドラインを引くための「山（極大）」と「谷（極小）」の検出方法を2種類から選択可能です。
-                                <ul style="margin-top: 5px; list-style-type: circle; padding-left: 1.5rem; margin-bottom: 5px;">
-                                    <li><strong>Kairiゼロ交差（乖離率方式）:</strong> RSIとRSI移動平均線（MA）のクロス（ゴールデン/デッド）の間の「波」の中で最高値・最安値を極値とします。ダイナミックなトレンドの波の頂点を捉えるのに適しています。</li>
-                                    <li><strong>スイングピボット（左右比較方式）:</strong> 基準となる足のRSI値が、前後指定したスイング期間（左右10本など）の中で最高・最低である山や谷を厳密に検出します。局所的な値幅の反転ポイントを的確に捉えられます。</li>
-                                </ul>
-                            </li>
-                            <li>
-                                <strong>トレンドラインの形成（実体線）</strong><br>
-                                過去に検出された直近の極大点どうしを結んで上値抵抗線、極小点どうしを結んで下値支持線を描きます。
-                            </li>
-                            <li>
-                                <strong>ブレイク予想ライン（予想線）</strong><br>
-                                トレンドラインを未来へ向けて延長投影した境界線です。
-                            </li>
-                            <li>
-                                <strong>売買シグナル</strong><br>
-                                <span class="text-buy">▲ 買い：</span> RSIが上値抵抗線（予想線）を上に超えた（+マージン）瞬間。<br>
-                                <span class="text-sell">▼ 売り：</span> RSIが下値支持線（予想線）を下に割った（-マージン）瞬間.
-                            </li>
-                            <li>
-                                <strong>マルチタイムフレーム（MTF）フィルター</strong><br>
-                                週足の確定RSIトレンドをフィルターとして適用します。週足RSIが強気（50以上）の時は買いシグナルのみ、弱気（50未満）の時は売りシグナルのみに取引を限定することで、上位トレンドに逆らう無駄なトレード（ダマシ）を抑制します。
-                            </li>
-                            <li>
-                                <strong>リペイント検証（Walk-Forward Replay）</strong><br>
-                                チャートを後から一括計算した「後知恵の線」と、過去にタイムスリップして1日ずつ進めて計算した「実戦の線」を比較検証しています。<br>
-                                <span style="color:#10b981; font-weight:600;">確定 (確)：</span> リアルタイムでも発生し、現在もチャートに残っている信頼性の高いシグナル。<br>
-                                <span style="color:#64748b; text-decoration:line-through;">消滅 (消)：</span> リアルタイムで一度画面に出たものの、その後の波形変化（リペイント）でトレンドラインが引き直されて歴史から消えたダマシシグナル。<br>
-                                <span style="color:#f59e0b; font-weight:600;">実戦のみ (実)：</span> 当時の波形でブレイクしたが、最新のライン描画制限などで過去チャートから見えなくなっているシグナル。
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </section>
+            </div>
         </main>
     </div>
 

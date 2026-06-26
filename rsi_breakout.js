@@ -79,6 +79,8 @@ function initApp() {
     setupSliders();
     setupEventListeners();
     setupCharts();
+    setupTabs();
+    loadScreenerData();
     loadData();
 }
 
@@ -1597,4 +1599,145 @@ function optimizeParameters() {
         }
     }, 50);
 }
+
+// タブ切り替え制御の初期化
+function setupTabs() {
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const targetTab = btn.dataset.tab;
+            
+            // 全てのタブボタンとコンテンツのアクティブ状態をクリア
+            tabBtns.forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            // クリックされたタブをアクティブにする
+            btn.classList.add('active');
+            const targetContent = document.getElementById(targetTab);
+            if (targetContent) {
+                targetContent.classList.add('active');
+            }
+        });
+    });
+}
+
+// スクリーナーデータのロードと描画
+async function loadScreenerData() {
+    try {
+        const res = await fetch('screener_results.json');
+        if (!res.ok) throw new Error('Screener data file not found');
+        const data = await res.json();
+        
+        // 更新時刻の表示
+        const updatedTime = new Date(data.updatedAt);
+        document.getElementById('screener-updated-at').textContent = `更新日時: ${updatedTime.toLocaleString()}`;
+        
+        // サインのカウント
+        let buyCount = 0;
+        let sellCount = 0;
+        
+        const tableBody = document.getElementById('screener-table').querySelector('tbody');
+        if (data.results && data.results.length > 0) {
+            tableBody.innerHTML = data.results.map(item => {
+                let changeClass = 'stat-change';
+                let changeSign = '';
+                if (item.changePercent > 0) {
+                    changeClass += ' up';
+                    changeSign = '+';
+                } else if (item.changePercent < 0) {
+                    changeClass += ' down';
+                }
+                
+                let signalText = 'なし';
+                if (item.latestSignal) {
+                    const sigType = item.latestSignal.type;
+                    const bars = item.latestSignal.barsAgo;
+                    if (sigType === 'BUY') {
+                        buyCount++;
+                        signalText = `<span class="sig-badge buy">BUY</span> <span style="font-size:0.8rem; color:var(--text-muted); font-weight:normal;">(${bars}日前)</span>`;
+                    } else if (sigType === 'SELL') {
+                        sellCount++;
+                        signalText = `<span class="sig-badge sell">SELL</span> <span style="font-size:0.8rem; color:var(--text-muted); font-weight:normal;">(${bars}日前)</span>`;
+                    }
+                }
+                
+                const bp = item.bestParams;
+                const paramStr = `RSI:${bp.rsiPeriod} / MA:${bp.maPeriod} / 偏:${bp.offset} / 差:${bp.margin}`;
+                
+                return `
+                    <tr data-symbol="${item.symbol}">
+                        <td style="font-weight:600; color:#f1f5f9;">${item.name}</td>
+                        <td style="font-family:monospace; color:#94a3b8;">${item.symbol}</td>
+                        <td style="font-weight:600;">${item.close.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })}</td>
+                        <td class="${changeClass}">${changeSign}${item.changePercent}%</td>
+                        <td style="font-family:monospace; color:#a855f7;">${item.rsi.toFixed(2)}</td>
+                        <td><span class="badge-method">${bp.peakMethod}</span></td>
+                        <td><span class="badge-param">${paramStr}</span></td>
+                        <td>${signalText}</td>
+                        <td><button class="btn-screener-view" data-symbol="${item.symbol}">表示</button></td>
+                    </tr>
+                `;
+            }).join('');
+            
+            // カウントカードに値を反映
+            document.getElementById('screener-buy-count').textContent = buyCount;
+            document.getElementById('screener-sell-count').textContent = sellCount;
+            
+            // 行および表示ボタンのクリックイベントを設定
+            tableBody.querySelectorAll('tr').forEach(row => {
+                const symbol = row.dataset.symbol;
+                const itemData = data.results.find(r => r.symbol === symbol);
+                if (!itemData) return;
+                
+                const loadTarget = () => {
+                    // 個別分析タブに切り替える
+                    const analysisTabBtn = document.querySelector('.tab-btn[data-tab="tab-analysis"]');
+                    if (analysisTabBtn) analysisTabBtn.click();
+                    
+                    // シンボルとパラメータを更新
+                    state.symbol = itemData.symbol;
+                    state.assetName = itemData.name;
+                    
+                    // 最適パラメータをstateに代入
+                    state.params = {
+                        ...state.params,
+                        ...itemData.bestParams
+                    };
+                    
+                    // 銘柄選択セレクトボックスの表示も同期
+                    const assetSelector = document.getElementById('asset-selector');
+                    if (assetSelector) {
+                        assetSelector.value = itemData.symbol;
+                    }
+                    
+                    // スライダー表示を同期
+                    setupSliders();
+                    
+                    // チャートデータのロード
+                    loadData();
+                };
+                
+                // ボタンのクリック
+                row.querySelector('.btn-screener-view').addEventListener('click', (e) => {
+                    e.stopPropagation(); // 行全体のクリックイベント発火を防ぐ
+                    loadTarget();
+                });
+                
+                // 行全体のクリック
+                row.addEventListener('click', loadTarget);
+            });
+            
+            if (window.lucide) window.lucide.createIcons();
+        } else {
+            tableBody.innerHTML = `<tr><td colspan="9" class="no-data">スクリーニング結果が見つかりませんでした。</td></tr>`;
+        }
+    } catch (err) {
+        console.error('Error loading screener data:', err);
+        const tableBody = document.getElementById('screener-table')?.querySelector('tbody');
+        if (tableBody) {
+            tableBody.innerHTML = `<tr><td colspan="9" class="no-data" style="color:var(--color-sell);">スクリーニングデータの読み込みに失敗しました。まだ Actions が実行されていないか、JSONファイルがありません。</td></tr>`;
+        }
+    }
+}
+
 
