@@ -80,6 +80,7 @@ function initApp() {
     setupEventListeners();
     setupCharts();
     setupTabs();
+    setupHeatmapViewToggle();
     loadScreenerData();
     loadData();
 }
@@ -1683,6 +1684,352 @@ function setupTabs() {
             }
         });
     });
+
+    // URLハッシュで直接タブを開く (例: index.html#tab-heatmap)
+    if (location.hash) {
+        const hashBtn = document.querySelector(`.tab-btn[data-tab="${location.hash.slice(1)}"]`);
+        if (hashBtn) hashBtn.click();
+    }
+}
+
+// スクリーナー/ヒートマップから個別チャート分析タブへジャンプ（最適パラメータを同期）
+function jumpToAnalysis(itemData) {
+    // 個別分析タブに切り替える
+    const analysisTabBtn = document.querySelector('.tab-btn[data-tab="tab-analysis"]');
+    if (analysisTabBtn) analysisTabBtn.click();
+
+    // シンボルとパラメータを更新
+    state.symbol = itemData.symbol;
+    state.assetName = itemData.name;
+
+    // 最適パラメータをstateに代入
+    state.params = {
+        ...state.params,
+        ...itemData.bestParams
+    };
+
+    // 銘柄選択セレクトボックスの表示も同期
+    const assetSelector = document.getElementById('asset-selector');
+    if (assetSelector) {
+        assetSelector.value = itemData.symbol;
+    }
+
+    // スライダー表示を同期
+    setupSliders();
+
+    // チャートデータのロード
+    loadData();
+}
+
+// RSI値 → ヒートマップタイル色（発散スケール: 青=売られすぎ ↔ 中立グレー ↔ 赤=買われすぎ）
+// 中立点はRSI 50、両極はRSI 20 / 80 で飽和
+function rsiToHeatColor(rsi) {
+    const neutral = [54, 58, 70];    // #363A46
+    const oversold = [31, 95, 181];  // #1F5FB5 (RSI <= 20)
+    const overbought = [194, 59, 59]; // #C23B3B (RSI >= 80)
+
+    const t = Math.max(-1, Math.min(1, (rsi - 50) / 30));
+    const pole = t < 0 ? oversold : overbought;
+    const k = Math.abs(t);
+    const c = neutral.map((v, i) => Math.round(v + (pole[i] - v) * k));
+    return `rgb(${c[0]},${c[1]},${c[2]})`;
+}
+
+// ティッカーからタイル表示用の短縮シンボルを生成 (例: "7011.T"→"7011", "USDJPY=X"→"USDJPY", "^N225"→"N225")
+function shortSymbol(symbol) {
+    return symbol.replace(/\.T$/, '').replace(/=X$/, '').replace(/^\^/, '');
+}
+
+// ===== Market Galaxy（軌道マップ）=====
+// 極座標マッピング: 中心からの距離 = RSI (0-100)、扇形の星域 = セクター、
+// 星の大きさ = 前日比変動率、星の色 = RSI発散スケール、シグナル発生中の星は明滅
+function renderOrbitMap(data) {
+    const container = document.getElementById('heatmap-orbit');
+    if (!container) return;
+
+    if (!data.results || data.results.length === 0) {
+        container.innerHTML = `<div class="no-data" style="padding: 2rem;">スクリーニング結果が見つかりませんでした。</div>`;
+        return;
+    }
+
+    const fallbackSector = (item) => {
+        if (item.type === 'forex') return '為替';
+        if (item.type === 'index') return '指数';
+        if (item.type === 'crypto') return '暗号資産';
+        return 'その他';
+    };
+    const groups = new Map();
+    data.results.forEach(item => {
+        const sector = item.sector || fallbackSector(item);
+        if (!groups.has(sector)) groups.set(sector, []);
+        groups.get(sector).push(item);
+    });
+    groups.forEach(items => items.sort((a, b) => a.rsi - b.rsi));
+
+    // ジオメトリ定義
+    const VB = 1100;             // viewBox 一辺
+    const cx = VB / 2, cy = VB / 2;
+    const rHub = 78;             // 中心コア半径 (= RSI 0 の位置)
+    const rMax = 425;            // RSI 100 の軌道半径
+    const rsiToRadius = (rsi) => rHub + (Math.max(0, Math.min(100, rsi)) / 100) * (rMax - rHub);
+    const polar = (angleRad, r) => [cx + r * Math.cos(angleRad), cy + r * Math.sin(angleRad)];
+
+    const total = data.results.length;
+    const marketAvgRsi = data.results.reduce((s, it) => s + it.rsi, 0) / total;
+
+    // 背景の星屑（データとは無関係の演出レイヤー）
+    let stars = '';
+    for (let i = 0; i < 130; i++) {
+        const sx = Math.random() * VB;
+        const sy = Math.random() * VB;
+        const sr = (0.5 + Math.random() * 1.1).toFixed(2);
+        const delay = (Math.random() * 6).toFixed(2);
+        const dur = (2.5 + Math.random() * 4).toFixed(2);
+        stars += `<circle class="galaxy-star" cx="${sx.toFixed(1)}" cy="${sy.toFixed(1)}" r="${sr}" style="animation-delay:${delay}s; animation-duration:${dur}s;"/>`;
+    }
+
+    // RSI軌道リング (30 / 50 / 70)
+    const rings = [
+        { rsi: 30, label: '30 売られすぎ', cls: 'ring-oversold' },
+        { rsi: 50, label: '50 中立', cls: 'ring-neutral' },
+        { rsi: 70, label: '70 買われすぎ', cls: 'ring-overbought' }
+    ].map(ring => {
+        const r = rsiToRadius(ring.rsi);
+        return `
+            <circle class="orbit-ring ${ring.cls}" cx="${cx}" cy="${cy}" r="${r}"/>
+            <text class="orbit-ring-label" x="${cx}" y="${(cy - r - 6).toFixed(1)}">${ring.label}</text>
+        `;
+    }).join('');
+
+    // セクター星域（扇形）と惑星の配置
+    let sectorArcs = '';
+    let sectorLabels = '';
+    let planets = '';
+    let angleCursor = -Math.PI / 2; // 12時方向から時計回り
+
+    groups.forEach((items, sector) => {
+        const span = (items.length / total) * Math.PI * 2;
+        const midAngle = angleCursor + span / 2;
+        const avgRsi = items.reduce((s, it) => s + it.rsi, 0) / items.length;
+
+        // 星域の境界線
+        const [dx1, dy1] = polar(angleCursor, rHub + 4);
+        const [dx2, dy2] = polar(angleCursor, rMax + 18);
+        sectorArcs += `<line class="sector-divider" x1="${dx1.toFixed(1)}" y1="${dy1.toFixed(1)}" x2="${dx2.toFixed(1)}" y2="${dy2.toFixed(1)}"/>`;
+
+        // 星域ラベル（外周） - セクター名と平均RSI
+        const [lx, ly] = polar(midAngle, rMax + 44);
+        sectorLabels += `
+            <text class="sector-label" x="${lx.toFixed(1)}" y="${ly.toFixed(1)}">${sector}</text>
+            <text class="sector-label-rsi" x="${lx.toFixed(1)}" y="${(ly + 17).toFixed(1)}" fill="${rsiToHeatColor(avgRsi)}" style="filter: brightness(1.7);">Ø ${avgRsi.toFixed(0)}</text>
+        `;
+
+        // 惑星たち
+        items.forEach((item, i) => {
+            const angle = angleCursor + span * ((i + 0.5) / items.length);
+            const r = rsiToRadius(item.rsi);
+            const [px, py] = polar(angle, r);
+            const magnitude = Math.min(Math.abs(item.changePercent), 8);
+            const pr = 8 + magnitude * 1.1; // 星の半径: 8 - 16.8
+            const color = rsiToHeatColor(item.rsi);
+
+            let pulse = '';
+            let sigMark = '';
+            if (item.latestSignal) {
+                const sigCls = item.latestSignal.type === 'BUY' ? 'buy' : 'sell';
+                const arrow = item.latestSignal.type === 'BUY' ? '▲' : '▼';
+                pulse = `<circle class="planet-pulse ${sigCls}" r="${(pr + 5).toFixed(1)}"/>`;
+                sigMark = `<text class="planet-sig ${sigCls}" y="${(-pr - 9).toFixed(1)}">${arrow}</text>`;
+            }
+
+            // ラベルの重なり軽減: シグナル矢印が無い星は交互に上側へラベルを逃がす
+            const labelAbove = !item.latestSignal && i % 2 === 1;
+            const labelY = labelAbove ? -(pr + 7) : pr + 15;
+
+            planets += `
+                <g class="orbit-planet" data-symbol="${item.symbol}" transform="translate(${px.toFixed(1)},${py.toFixed(1)})">
+                    <circle class="planet-glow" r="${(pr * 1.9).toFixed(1)}" fill="${color}"/>
+                    ${pulse}
+                    <circle class="planet-body" r="${pr.toFixed(1)}" fill="${color}"/>
+                    <text class="planet-label" y="${labelY.toFixed(1)}">${shortSymbol(item.symbol)}</text>
+                    ${sigMark}
+                </g>
+            `;
+        });
+
+        angleCursor += span;
+    });
+
+    // 中心コア（市場平均RSI）
+    const core = `
+        <circle class="galaxy-core-glow" cx="${cx}" cy="${cy}" r="${rHub * 1.7}"/>
+        <circle class="galaxy-core" cx="${cx}" cy="${cy}" r="${rHub - 8}"/>
+        <text class="core-caption" x="${cx}" y="${cy - 22}">市場平均RSI</text>
+        <text class="core-value" x="${cx}" y="${cy + 14}" fill="${rsiToHeatColor(marketAvgRsi)}" style="filter: brightness(1.8);">${marketAvgRsi.toFixed(1)}</text>
+        <text class="core-caption" x="${cx}" y="${cy + 38}">${total}銘柄</text>
+    `;
+
+    container.innerHTML = `
+        <svg class="galaxy-svg" viewBox="0 0 ${VB} ${VB}" role="img" aria-label="セクター別RSI軌道マップ">
+            <defs>
+                <radialGradient id="galaxy-bg" cx="50%" cy="50%" r="65%">
+                    <stop offset="0%" stop-color="#141b2e"/>
+                    <stop offset="55%" stop-color="#0c1220"/>
+                    <stop offset="100%" stop-color="#080c15"/>
+                </radialGradient>
+            </defs>
+            <rect x="0" y="0" width="${VB}" height="${VB}" fill="url(#galaxy-bg)" rx="12"/>
+            <g class="galaxy-starfield">${stars}</g>
+            ${rings}
+            ${sectorArcs}
+            ${sectorLabels}
+            ${core}
+            <g class="galaxy-planets">${planets}</g>
+        </svg>
+        <div id="orbit-tooltip" class="orbit-tooltip" hidden></div>
+    `;
+
+    // インタラクション: ツールチップ & クリックでチャートへ
+    const tooltip = container.querySelector('#orbit-tooltip');
+    container.querySelectorAll('.orbit-planet').forEach(node => {
+        const itemData = data.results.find(r => r.symbol === node.dataset.symbol);
+        if (!itemData) return;
+
+        node.addEventListener('click', () => jumpToAnalysis(itemData));
+
+        node.addEventListener('mouseenter', () => {
+            // 最前面に持ち上げる（SVGは後勝ち描画のため）
+            node.parentNode.appendChild(node);
+
+            let sigLine = '';
+            if (itemData.latestSignal) {
+                const sig = itemData.latestSignal;
+                const cls = sig.type === 'BUY' ? 'buy' : 'sell';
+                sigLine = `<div class="tt-row"><span class="heat-sig ${cls}">${sig.type === 'BUY' ? '▲' : '▼'} ${sig.type}</span> <span>${sig.barsAgo}日前 (${sig.time})</span></div>`;
+            }
+            const chgSign = itemData.changePercent > 0 ? '+' : '';
+            tooltip.innerHTML = `
+                <div class="tt-name">${itemData.name}</div>
+                <div class="tt-row"><span>RSI</span><strong style="color:${rsiToHeatColor(itemData.rsi)}; filter: brightness(1.7);">${itemData.rsi.toFixed(1)}</strong></div>
+                <div class="tt-row"><span>終値</span><strong>${itemData.close.toLocaleString(undefined, { maximumFractionDigits: 4 })}</strong></div>
+                <div class="tt-row"><span>前日比</span><strong class="${itemData.changePercent >= 0 ? 'tt-up' : 'tt-down'}">${chgSign}${itemData.changePercent}%</strong></div>
+                ${sigLine}
+                <div class="tt-hint">クリックでチャート分析へ</div>
+            `;
+            tooltip.hidden = false;
+        });
+
+        node.addEventListener('mousemove', (e) => {
+            const rect = container.getBoundingClientRect();
+            let x = e.clientX - rect.left + 16;
+            let y = e.clientY - rect.top + 16;
+            // 右端・下端でのはみ出しを防ぐ
+            if (x + 240 > rect.width) x -= 260;
+            if (y + 160 > rect.height) y -= 170;
+            tooltip.style.left = `${x}px`;
+            tooltip.style.top = `${y}px`;
+        });
+
+        node.addEventListener('mouseleave', () => {
+            tooltip.hidden = true;
+        });
+    });
+}
+
+// 軌道ビュー / タイルビューの切り替え
+function setupHeatmapViewToggle() {
+    const buttons = document.querySelectorAll('.heatmap-view-toggle .view-btn');
+    buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            buttons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const orbitEl = document.getElementById('heatmap-orbit');
+            const tilesEl = document.getElementById('heatmap-container');
+            const showOrbit = btn.dataset.view === 'orbit';
+            if (orbitEl) orbitEl.style.display = showOrbit ? '' : 'none';
+            if (tilesEl) tilesEl.style.display = showOrbit ? 'none' : '';
+        });
+    });
+}
+
+// セクター別RSIヒートマップの描画
+function renderSectorHeatmap(data) {
+    const container = document.getElementById('heatmap-container');
+    if (!container) return;
+
+    const updatedEl = document.getElementById('heatmap-updated-at');
+    if (updatedEl && data.updatedAt) {
+        updatedEl.textContent = `更新日時: ${new Date(data.updatedAt).toLocaleString()}`;
+    }
+
+    if (!data.results || data.results.length === 0) {
+        container.innerHTML = `<div class="no-data card-glass" style="padding: 2rem; border-radius: 12px;">スクリーニング結果が見つかりませんでした。</div>`;
+        return;
+    }
+
+    // セクターごとにグルーピング（旧フォーマットのJSONにはsectorが無いためtypeから補完）
+    const fallbackSector = (item) => {
+        if (item.type === 'forex') return '為替';
+        if (item.type === 'index') return '指数';
+        if (item.type === 'crypto') return '暗号資産';
+        return 'その他';
+    };
+    const groups = new Map();
+    data.results.forEach(item => {
+        const sector = item.sector || fallbackSector(item);
+        if (!groups.has(sector)) groups.set(sector, []);
+        groups.get(sector).push(item);
+    });
+
+    // セクター内はRSI昇順（売られすぎ→買われすぎ）で並べる
+    groups.forEach(items => items.sort((a, b) => a.rsi - b.rsi));
+
+    container.innerHTML = Array.from(groups.entries()).map(([sector, items]) => {
+        const avgRsi = items.reduce((s, it) => s + it.rsi, 0) / items.length;
+
+        const tiles = items.map(item => {
+            let sigBadge = '';
+            if (item.latestSignal) {
+                const sig = item.latestSignal;
+                const cls = sig.type === 'BUY' ? 'buy' : 'sell';
+                const arrow = sig.type === 'BUY' ? '▲' : '▼';
+                sigBadge = `<span class="heat-sig ${cls}">${arrow} ${sig.type} <small>${sig.barsAgo}日前</small></span>`;
+            }
+
+            let changeClass = '';
+            let changeSign = '';
+            if (item.changePercent > 0) { changeClass = 'up'; changeSign = '+'; }
+            else if (item.changePercent < 0) { changeClass = 'down'; }
+
+            return `
+                <div class="heat-tile" data-symbol="${item.symbol}" title="${item.name}" style="background:${rsiToHeatColor(item.rsi)};">
+                    <div class="heat-tile-head">
+                        <span class="heat-symbol">${shortSymbol(item.symbol)}</span>
+                        ${sigBadge}
+                    </div>
+                    <div class="heat-rsi">${item.rsi.toFixed(1)}</div>
+                    <div class="heat-change ${changeClass}">${changeSign}${item.changePercent}%</div>
+                </div>
+            `;
+        }).join('');
+
+        return `
+            <section class="heat-sector card-glass">
+                <div class="heat-sector-header">
+                    <h3>${sector}</h3>
+                    <span class="heat-sector-meta">平均RSI <strong style="color:${rsiToHeatColor(avgRsi)}; filter: brightness(1.6);">${avgRsi.toFixed(1)}</strong> ・ ${items.length}銘柄</span>
+                </div>
+                <div class="heat-grid">${tiles}</div>
+            </section>
+        `;
+    }).join('');
+
+    // タイルクリックで個別チャートへ（最適パラメータ適用）
+    container.querySelectorAll('.heat-tile').forEach(tile => {
+        const itemData = data.results.find(r => r.symbol === tile.dataset.symbol);
+        if (!itemData) return;
+        tile.addEventListener('click', () => jumpToAnalysis(itemData));
+    });
 }
 
 // スクリーナーデータのロードと描画
@@ -1691,10 +2038,14 @@ async function loadScreenerData() {
         const res = await fetch('screener_results.json');
         if (!res.ok) throw new Error('Screener data file not found');
         const data = await res.json();
-        
+
         // 更新時刻の表示
         const updatedTime = new Date(data.updatedAt);
         document.getElementById('screener-updated-at').textContent = `更新日時: ${updatedTime.toLocaleString()}`;
+
+        // セクターマップ（軌道ビュー & タイルビュー）の描画
+        renderOrbitMap(data);
+        renderSectorHeatmap(data);
         
         // サインのカウント
         let buyCount = 0;
@@ -1753,42 +2104,14 @@ async function loadScreenerData() {
                 const itemData = data.results.find(r => r.symbol === symbol);
                 if (!itemData) return;
                 
-                const loadTarget = () => {
-                    // 個別分析タブに切り替える
-                    const analysisTabBtn = document.querySelector('.tab-btn[data-tab="tab-analysis"]');
-                    if (analysisTabBtn) analysisTabBtn.click();
-                    
-                    // シンボルとパラメータを更新
-                    state.symbol = itemData.symbol;
-                    state.assetName = itemData.name;
-                    
-                    // 最適パラメータをstateに代入
-                    state.params = {
-                        ...state.params,
-                        ...itemData.bestParams
-                    };
-                    
-                    // 銘柄選択セレクトボックスの表示も同期
-                    const assetSelector = document.getElementById('asset-selector');
-                    if (assetSelector) {
-                        assetSelector.value = itemData.symbol;
-                    }
-                    
-                    // スライダー表示を同期
-                    setupSliders();
-                    
-                    // チャートデータのロード
-                    loadData();
-                };
-                
                 // ボタンのクリック
                 row.querySelector('.btn-screener-view').addEventListener('click', (e) => {
                     e.stopPropagation(); // 行全体のクリックイベント発火を防ぐ
-                    loadTarget();
+                    jumpToAnalysis(itemData);
                 });
-                
+
                 // 行全体のクリック
-                row.addEventListener('click', loadTarget);
+                row.addEventListener('click', () => jumpToAnalysis(itemData));
             });
             
             if (window.lucide) window.lucide.createIcons();
@@ -1800,6 +2123,10 @@ async function loadScreenerData() {
         const tableBody = document.getElementById('screener-table')?.querySelector('tbody');
         if (tableBody) {
             tableBody.innerHTML = `<tr><td colspan="9" class="no-data" style="color:var(--color-sell);">スクリーニングデータの読み込みに失敗しました。まだ Actions が実行されていないか、JSONファイルがありません。</td></tr>`;
+        }
+        const heatmapContainer = document.getElementById('heatmap-container');
+        if (heatmapContainer) {
+            heatmapContainer.innerHTML = `<div class="no-data card-glass" style="padding: 2rem; border-radius: 12px; color:var(--color-sell);">スクリーニングデータの読み込みに失敗しました。</div>`;
         }
     }
 }

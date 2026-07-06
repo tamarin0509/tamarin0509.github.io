@@ -5,26 +5,86 @@ const path = require('path');
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 const WATCH_SYMBOLS = [
+    // 主要指数
+    { symbol: '^N225', name: '日経平均株価 (Nikkei 225)', type: 'index', sector: '指数' },
+    { symbol: '^GSPC', name: 'S&P 500 Index', type: 'index', sector: '指数' },
+    { symbol: '^DJI', name: 'NYダウ (Dow Jones)', type: 'index', sector: '指数' },
+    { symbol: '^IXIC', name: 'ナスダック総合 (NASDAQ)', type: 'index', sector: '指数' },
     // 主要為替
-    { symbol: 'USDJPY=X', name: '米ドル / 円 (USD/JPY)', type: 'forex' },
-    { symbol: 'EURUSD=X', name: 'ユーロ / 米ドル (EUR/USD)', type: 'forex' },
-    { symbol: 'GBPJPY=X', name: '英ポンド / 円 (GBP/JPY)', type: 'forex' },
-    { symbol: 'AUDUSD=X', name: '豪ドル / 米ドル (AUD/USD)', type: 'forex' },
+    { symbol: 'USDJPY=X', name: '米ドル / 円 (USD/JPY)', type: 'forex', sector: '為替' },
+    { symbol: 'EURUSD=X', name: 'ユーロ / 米ドル (EUR/USD)', type: 'forex', sector: '為替' },
+    { symbol: 'GBPJPY=X', name: '英ポンド / 円 (GBP/JPY)', type: 'forex', sector: '為替' },
+    { symbol: 'AUDUSD=X', name: '豪ドル / 米ドル (AUD/USD)', type: 'forex', sector: '為替' },
     // テクノロジー
-    { symbol: 'NVDA', name: 'エヌビディア (NVDA)', type: 'stock' },
-    { symbol: 'MSFT', name: 'マイクロソフト (MSFT)', type: 'stock' },
-    { symbol: 'AAPL', name: 'アップル (AAPL)', type: 'stock' },
-    { symbol: 'GOOGL', name: 'アルファベット (GOOGL)', type: 'stock' },
-    { symbol: '9984.T', name: 'ソフトバンクグループ (9984)', type: 'stock' },
-    // エネルギー・重工業
-    { symbol: '1605.T', name: 'INPEX (1605)', type: 'stock' },
-    { symbol: '5020.T', name: 'ENEOSホールディングス (5020)', type: 'stock' },
-    { symbol: '7011.T', name: '三菱重工業 (7011)', type: 'stock' },
-    { symbol: '7012.T', name: '川崎重工業 (7012)', type: 'stock' },
-    { symbol: '7013.T', name: 'IHI (7013)', type: 'stock' },
-    // 指数
-    { symbol: '^N225', name: '日経平均株価 (Nikkei 225)', type: 'index' },
-    { symbol: '^GSPC', name: 'S&P 500 Index', type: 'index' }
+    { symbol: 'MSFT', name: 'マイクロソフト (MSFT)', type: 'stock', sector: 'テクノロジー' },
+    { symbol: 'AAPL', name: 'アップル (AAPL)', type: 'stock', sector: 'テクノロジー' },
+    { symbol: 'GOOGL', name: 'アルファベット (GOOGL)', type: 'stock', sector: 'テクノロジー' },
+    { symbol: 'AMZN', name: 'アマゾン (AMZN)', type: 'stock', sector: 'テクノロジー' },
+    { symbol: 'META', name: 'メタ・プラットフォームズ (META)', type: 'stock', sector: 'テクノロジー' },
+    { symbol: '9984.T', name: 'ソフトバンクグループ (9984)', type: 'stock', sector: 'テクノロジー' },
+    { symbol: '6758.T', name: 'ソニーグループ (6758)', type: 'stock', sector: 'テクノロジー' },
+    // 半導体
+    { symbol: 'NVDA', name: 'エヌビディア (NVDA)', type: 'stock', sector: '半導体' },
+    { symbol: 'AMD', name: 'アドバンスト・マイクロ・デバイセズ (AMD)', type: 'stock', sector: '半導体' },
+    { symbol: 'AVGO', name: 'ブロードコム (AVGO)', type: 'stock', sector: '半導体' },
+    { symbol: '8035.T', name: '東京エレクトロン (8035)', type: 'stock', sector: '半導体' },
+    { symbol: '6857.T', name: 'アドバンテスト (6857)', type: 'stock', sector: '半導体' },
+    { symbol: '6146.T', name: 'ディスコ (6146)', type: 'stock', sector: '半導体' },
+    { symbol: '285A.T', name: 'キオクシアホールディングス (285A)', type: 'stock', sector: '半導体' },
+    // エネルギー
+    { symbol: '1605.T', name: 'INPEX (1605)', type: 'stock', sector: 'エネルギー' },
+    { symbol: '5020.T', name: 'ENEOSホールディングス (5020)', type: 'stock', sector: 'エネルギー' },
+    { symbol: '5019.T', name: '出光興産 (5019)', type: 'stock', sector: 'エネルギー' },
+    { symbol: 'XOM', name: 'エクソンモービル (XOM)', type: 'stock', sector: 'エネルギー' },
+    { symbol: 'CVX', name: 'シェブロン (CVX)', type: 'stock', sector: 'エネルギー' },
+    // 防衛・重工
+    { symbol: '7011.T', name: '三菱重工業 (7011)', type: 'stock', sector: '防衛・重工' },
+    { symbol: '7012.T', name: '川崎重工業 (7012)', type: 'stock', sector: '防衛・重工' },
+    { symbol: '7013.T', name: 'IHI (7013)', type: 'stock', sector: '防衛・重工' },
+    { symbol: 'LMT', name: 'ロッキード・マーティン (LMT)', type: 'stock', sector: '防衛・重工' },
+    { symbol: 'RTX', name: 'RTX (旧レイセオン)', type: 'stock', sector: '防衛・重工' },
+    // 金融
+    { symbol: '8306.T', name: '三菱UFJフィナンシャルG (8306)', type: 'stock', sector: '金融' },
+    { symbol: '8316.T', name: '三井住友フィナンシャルG (8316)', type: 'stock', sector: '金融' },
+    { symbol: '8411.T', name: 'みずほフィナンシャルG (8411)', type: 'stock', sector: '金融' },
+    { symbol: 'JPM', name: 'JPモルガン・チェース (JPM)', type: 'stock', sector: '金融' },
+    { symbol: 'GS', name: 'ゴールドマン・サックス (GS)', type: 'stock', sector: '金融' },
+    { symbol: '8729.T', name: 'ソニーフィナンシャルグループ (8729)', type: 'stock', sector: '金融' },
+    // 自動車
+    { symbol: '7203.T', name: 'トヨタ自動車 (7203)', type: 'stock', sector: '自動車' },
+    { symbol: '7267.T', name: 'ホンダ (7267)', type: 'stock', sector: '自動車' },
+    { symbol: '7269.T', name: 'スズキ (7269)', type: 'stock', sector: '自動車' },
+    { symbol: '7201.T', name: '日産自動車 (7201)', type: 'stock', sector: '自動車' },
+    { symbol: 'TSLA', name: 'テスラ (TSLA)', type: 'stock', sector: '自動車' },
+    // 素材・非鉄
+    { symbol: '5401.T', name: '日本製鉄 (5401)', type: 'stock', sector: '素材・非鉄' },
+    { symbol: '5803.T', name: 'フジクラ (5803)', type: 'stock', sector: '素材・非鉄' },
+    { symbol: '5016.T', name: 'JX金属 (5016)', type: 'stock', sector: '素材・非鉄' },
+    // 商社
+    { symbol: '8001.T', name: '伊藤忠商事 (8001)', type: 'stock', sector: '商社' },
+    { symbol: '8031.T', name: '三井物産 (8031)', type: 'stock', sector: '商社' },
+    { symbol: '8058.T', name: '三菱商事 (8058)', type: 'stock', sector: '商社' },
+    { symbol: '8053.T', name: '住友商事 (8053)', type: 'stock', sector: '商社' },
+    { symbol: '8002.T', name: '丸紅 (8002)', type: 'stock', sector: '商社' },
+    // 医薬品
+    { symbol: '4502.T', name: '武田薬品工業 (4502)', type: 'stock', sector: '医薬品' },
+    { symbol: '4568.T', name: '第一三共 (4568)', type: 'stock', sector: '医薬品' },
+    { symbol: 'JNJ', name: 'ジョンソン・エンド・ジョンソン (JNJ)', type: 'stock', sector: '医薬品' },
+    { symbol: 'LLY', name: 'イーライリリー (LLY)', type: 'stock', sector: '医薬品' },
+    // 通信
+    { symbol: '9432.T', name: 'NTT (9432)', type: 'stock', sector: '通信' },
+    { symbol: '9433.T', name: 'KDDI (9433)', type: 'stock', sector: '通信' },
+    { symbol: '9434.T', name: 'ソフトバンク (9434)', type: 'stock', sector: '通信' },
+    { symbol: 'VZ', name: 'ベライゾン (VZ)', type: 'stock', sector: '通信' },
+    // 消費・小売
+    { symbol: '9983.T', name: 'ファーストリテイリング (9983)', type: 'stock', sector: '消費・小売' },
+    { symbol: '7974.T', name: '任天堂 (7974)', type: 'stock', sector: '消費・小売' },
+    { symbol: 'WMT', name: 'ウォルマート (WMT)', type: 'stock', sector: '消費・小売' },
+    { symbol: 'COST', name: 'コストコ (COST)', type: 'stock', sector: '消費・小売' },
+    // 暗号資産
+    { symbol: 'BTC-USD', name: 'ビットコイン (BTC/USD)', type: 'crypto', sector: '暗号資産' },
+    { symbol: 'ETH-USD', name: 'イーサリアム (ETH/USD)', type: 'crypto', sector: '暗号資産' },
+    { symbol: '3350.T', name: 'メタプラネット (3350)', type: 'stock', sector: '暗号資産' }
 ];
 
 // Wilder's RSI calculation
@@ -785,6 +845,7 @@ async function runScreener() {
                 symbol: item.symbol,
                 name: item.name,
                 type: item.type,
+                sector: item.sector,
                 close: latestCandle.close,
                 changePercent: parseFloat(changePercent.toFixed(2)),
                 rsi: parseFloat(rsi[rsi.length - 1].toFixed(2)),

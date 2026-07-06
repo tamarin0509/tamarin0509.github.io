@@ -756,3 +756,481 @@ tr:hover td {
     background-color: #4f46e5;
 }
 
+
+/* ===== Sector RSI Heatmap ===== */
+.heatmap-legend {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 2rem;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.legend-title {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+}
+
+.legend-gradient-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.legend-gradient {
+    position: relative;
+    width: 220px;
+    height: 12px;
+    border-radius: 6px;
+    /* rsiToHeatColor() と同一アンカー: #1F5FB5 (RSI20) - #363A46 (RSI50) - #C23B3B (RSI80) */
+    background: linear-gradient(to right, #1F5FB5, #363A46 50%, #C23B3B);
+    border: 1px solid var(--border-color);
+}
+
+.legend-tick {
+    position: absolute;
+    top: 16px;
+    transform: translateX(-50%);
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    font-family: monospace;
+}
+
+.legend-end-label {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.legend-gradient-row, .legend-badges {
+    padding-bottom: 14px;
+}
+
+.legend-badges {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.legend-badge-note {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+}
+
+.heatmap-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.heat-sector {
+    padding: 1rem 1.25rem 1.25rem 1.25rem;
+}
+
+.heat-sector-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.heat-sector-header h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+.heat-sector-meta {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.heat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 8px;
+}
+
+.heat-tile {
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    padding: 10px 12px;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    min-height: 92px;
+    display: flex;
+    flex-direction: column;
+}
+
+.heat-tile:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 0 2px var(--accent), 0 8px 20px rgba(0, 0, 0, 0.4);
+    z-index: 1;
+}
+
+.heat-tile-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 4px 6px;
+    margin-bottom: 6px;
+}
+
+.heat-symbol {
+    font-weight: 700;
+    font-size: 0.88rem;
+    color: #ffffff;
+    font-family: monospace;
+    letter-spacing: 0.02em;
+}
+
+.heat-rsi {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-top: auto;
+    line-height: 1.1;
+}
+
+.heat-change {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.75);
+    font-family: monospace;
+}
+
+.heat-change.up {
+    color: #6ee7b7;
+}
+
+.heat-change.down {
+    color: #fda4af;
+}
+
+.heat-sig {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    white-space: nowrap;
+    background: rgba(10, 14, 23, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.heat-sig small {
+    font-weight: 400;
+    color: var(--text-muted);
+}
+
+.heat-sig.buy {
+    color: #34d399;
+}
+
+.heat-sig.sell {
+    color: #fb7185;
+}
+
+@media (max-width: 640px) {
+    .heat-grid {
+        grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+    }
+    .heatmap-legend {
+        gap: 1rem;
+    }
+}
+
+/* ===== Market Galaxy (Orbit View) ===== */
+.heatmap-view-toggle {
+    display: inline-flex;
+    gap: 4px;
+    padding: 3px;
+    background: rgba(10, 14, 23, 0.6);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+}
+
+.view-btn {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+    gap: 6px;
+    padding: 5px 12px;
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    color: var(--text-muted);
+    font-family: var(--font-primary);
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color var(--transition-speed), color var(--transition-speed);
+}
+
+.view-btn i, .view-btn svg {
+    width: 14px;
+    height: 14px;
+}
+
+.view-btn:hover {
+    color: var(--text-main);
+}
+
+.view-btn.active {
+    background: var(--accent);
+    color: #ffffff;
+}
+
+.heatmap-orbit {
+    position: relative;
+    padding: 12px;
+    overflow: hidden;
+}
+
+.galaxy-svg {
+    display: block;
+    width: 100%;
+    max-width: 980px;
+    height: auto;
+    margin: 0 auto;
+}
+
+.galaxy-star {
+    fill: #ffffff;
+    opacity: 0.25;
+    animation: star-twinkle 4s ease-in-out infinite;
+}
+
+@keyframes star-twinkle {
+    0%, 100% { opacity: 0.12; }
+    50% { opacity: 0.55; }
+}
+
+.orbit-ring {
+    fill: none;
+    stroke-width: 1;
+}
+
+.orbit-ring.ring-oversold {
+    stroke: rgba(96, 165, 250, 0.35);
+    stroke-dasharray: 5 7;
+}
+
+.orbit-ring.ring-neutral {
+    stroke: rgba(148, 163, 184, 0.4);
+}
+
+.orbit-ring.ring-overbought {
+    stroke: rgba(248, 113, 113, 0.35);
+    stroke-dasharray: 5 7;
+}
+
+.orbit-ring-label {
+    fill: var(--text-dim);
+    font-size: 15px;
+    font-family: var(--font-primary);
+    text-anchor: middle;
+    paint-order: stroke;
+    stroke: #0c1220;
+    stroke-width: 4px;
+}
+
+.sector-divider {
+    stroke: rgba(255, 255, 255, 0.07);
+    stroke-width: 1;
+}
+
+.sector-label {
+    fill: #cbd5e1;
+    font-size: 17px;
+    font-weight: 600;
+    font-family: var(--font-primary);
+    text-anchor: middle;
+    paint-order: stroke;
+    stroke: #080c15;
+    stroke-width: 4px;
+}
+
+.sector-label-rsi {
+    font-size: 14px;
+    font-weight: 700;
+    font-family: monospace;
+    text-anchor: middle;
+    paint-order: stroke;
+    stroke: #080c15;
+    stroke-width: 4px;
+}
+
+.galaxy-core-glow {
+    fill: rgba(99, 102, 241, 0.10);
+}
+
+.galaxy-core {
+    fill: #0e1424;
+    stroke: rgba(99, 102, 241, 0.45);
+    stroke-width: 1.5;
+}
+
+.core-caption {
+    fill: var(--text-muted);
+    font-size: 14px;
+    font-family: var(--font-primary);
+    text-anchor: middle;
+}
+
+.core-value {
+    font-size: 34px;
+    font-weight: 700;
+    font-family: var(--font-primary);
+    text-anchor: middle;
+}
+
+.orbit-planet {
+    cursor: pointer;
+}
+
+.planet-glow {
+    opacity: 0.22;
+    pointer-events: none;
+}
+
+.planet-body {
+    stroke: rgba(255, 255, 255, 0.35);
+    stroke-width: 1;
+    transition: stroke-width 0.15s ease;
+}
+
+.orbit-planet:hover .planet-body {
+    stroke: #ffffff;
+    stroke-width: 2.5;
+}
+
+.orbit-planet:hover .planet-glow {
+    opacity: 0.5;
+}
+
+.planet-label {
+    fill: #e2e8f0;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: monospace;
+    text-anchor: middle;
+    pointer-events: none;
+    paint-order: stroke;
+    stroke: #080c15;
+    stroke-width: 3.5px;
+}
+
+.planet-sig {
+    font-size: 15px;
+    font-weight: 700;
+    text-anchor: middle;
+    pointer-events: none;
+    paint-order: stroke;
+    stroke: #080c15;
+    stroke-width: 3px;
+}
+
+.planet-sig.buy {
+    fill: #34d399;
+}
+
+.planet-sig.sell {
+    fill: #fb7185;
+}
+
+.planet-pulse {
+    fill: none;
+    stroke-width: 2;
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: planet-pulse 2s ease-out infinite;
+    pointer-events: none;
+}
+
+.planet-pulse.buy {
+    stroke: #34d399;
+}
+
+.planet-pulse.sell {
+    stroke: #fb7185;
+}
+
+@keyframes planet-pulse {
+    0% { transform: scale(1); opacity: 0.9; }
+    70% { transform: scale(1.8); opacity: 0; }
+    100% { transform: scale(1.8); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .galaxy-star, .planet-pulse {
+        animation: none;
+    }
+}
+
+/* Orbit tooltip */
+.orbit-tooltip {
+    position: absolute;
+    z-index: 10;
+    width: 240px;
+    padding: 12px 14px;
+    background: rgba(13, 18, 32, 0.95);
+    border: 1px solid rgba(99, 102, 241, 0.4);
+    border-radius: 10px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.55);
+    pointer-events: none;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+}
+
+.orbit-tooltip .tt-name {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--text-main);
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.orbit-tooltip .tt-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin: 3px 0;
+}
+
+.orbit-tooltip .tt-row strong {
+    color: var(--text-main);
+    font-family: monospace;
+}
+
+.orbit-tooltip .tt-up {
+    color: var(--color-buy) !important;
+}
+
+.orbit-tooltip .tt-down {
+    color: var(--color-sell) !important;
+}
+
+.orbit-tooltip .tt-hint {
+    margin-top: 8px;
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    text-align: center;
+}
