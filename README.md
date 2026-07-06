@@ -52,6 +52,7 @@ GitHub Actionsを利用したサーバーレスバックエンドによる自動
 - `scripts/screener.js`: バックエンド用スクリーニング・最適化Node.jsスクリプト
 - `.github/workflows/screener.yml`: GitHub Actions 定期実行用設定ファイル
 - `screener_results.json`: スクリーナーの計算結果データ (Actionsによって自動更新)
+- `data/candles/*.json`: 監視銘柄の日足ローソク足データ約2年分 (Actionsによって自動更新)。フロントエンドはこれを直接読み込むため、監視銘柄のチャート表示に外部CORSプロキシを必要としません
 
 ---
 

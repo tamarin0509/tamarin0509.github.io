@@ -30,9 +30,9 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           
-          # 差分がある場合のみコミット＆プッシュ
-          if ! git diff --quiet screener_results.json; then
-            git add screener_results.json
+          # 差分がある場合のみコミット＆プッシュ (スクリーナー結果＋ローソク足データ)
+          git add screener_results.json data
+          if ! git diff --cached --quiet; then
             git commit -m "chore: update screener results [skip ci]"
             git push origin main
           else

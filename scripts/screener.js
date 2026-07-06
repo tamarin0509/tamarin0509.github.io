@@ -674,6 +674,11 @@ function evaluateParameters(candles, rsi, rsiMa, testParams, startIdx, endIdx) {
     return score;
 }
 
+// Symbol to safe filename (must match sanitizeSymbolForFile in rsi_breakout.js)
+function sanitizeSymbolForFile(symbol) {
+    return symbol.replace(/[^A-Za-z0-9._-]/g, '_');
+}
+
 // Fetch helper with User-Agent to satisfy Yahoo Finance
 async function fetchHistoricalData(symbol, period = '2y') {
     const url = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?range=${period}&interval=1d`;
@@ -697,7 +702,11 @@ async function fetchHistoricalData(symbol, period = '2y') {
 async function runScreener() {
     const results = [];
     const timestamp = new Date().toISOString();
-    
+
+    // フロントエンドがプロキシ無しでチャートを描画できるよう、銘柄ごとのローソク足データを書き出す
+    const candlesDir = path.join(__dirname, '..', 'data', 'candles');
+    fs.mkdirSync(candlesDir, { recursive: true });
+
     for (const item of WATCH_SYMBOLS) {
         try {
             const rawResult = await fetchHistoricalData(item.symbol);
@@ -728,6 +737,15 @@ async function runScreener() {
                 console.warn(`Skipping ${item.symbol}: insufficient data length (${candles.length})`);
                 continue;
             }
+
+            // ローソク足データをフロントエンド用に保存
+            const candleFile = path.join(candlesDir, `${sanitizeSymbolForFile(item.symbol)}.json`);
+            fs.writeFileSync(candleFile, JSON.stringify({
+                symbol: item.symbol,
+                name: item.name,
+                updatedAt: timestamp,
+                candles: candles
+            }));
             
             // Grid search optimizer (exploring both kairi and swing methods)
             const rsiPeriods = [7, 9, 11, 14, 18, 21, 25];

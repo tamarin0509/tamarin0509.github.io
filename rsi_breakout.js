@@ -414,30 +414,49 @@ function setupCharts() {
     resizeObserver.observe(priceContainer);
 }
 
-// Fetch Market Data via CORS Proxy with Fallback
-async function loadData() {
-    showLoading(true);
-    
-    // Skip request if the requested symbol and period are already loaded in rawData cache
-    if (state.rawData && state.lastLoadedSymbol === state.symbol && state.lastLoadedPeriod === state.period) {
-        console.log('Skipping API request: current state is identical to cached state.');
-        parseAndProcessData(state.rawData);
-        return;
-    }
-    
-    // Update Title in UI
-    document.getElementById('current-asset-name').textContent = state.assetName;
-    document.getElementById('current-asset-symbol').textContent = state.symbol;
+// 銘柄シンボル→ローカルデータファイル名（scripts/screener.js の sanitizeSymbolForFile と一致させること）
+function sanitizeSymbolForFile(symbol) {
+    return symbol.replace(/[^A-Za-z0-9._-]/g, '_');
+}
 
-    const range = state.period;
-    const interval = '1d';
-    const targetUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${state.symbol}?range=${range}&interval=${interval}`;
-    
-    // Proxy list
+// リポジトリ内に日次バッチが保存したローソク足データを取得し、Yahoo chart API形式に変換する
+// (監視銘柄はCORSプロキシ無しで描画できる。データは約2年分・毎朝更新)
+async function fetchLocalCandles(symbol) {
+    const res = await fetch(`data/candles/${sanitizeSymbolForFile(symbol)}.json`);
+    if (!res.ok) throw new Error(`No local candle data (HTTP ${res.status})`);
+    const data = await res.json();
+    if (!data.candles || data.candles.length === 0) throw new Error('Empty local candle data');
+
+    // 表示期間に応じて末尾からスライス（保存データは約2年分）
+    const periodDays = { '6mo': 183, '1y': 366 };
+    let candles = data.candles;
+    const days = periodDays[state.period];
+    if (days) {
+        const cutoff = new Date(candles[candles.length - 1].time + 'T00:00:00Z');
+        cutoff.setUTCDate(cutoff.getUTCDate() - days);
+        const cutoffStr = cutoff.toISOString().split('T')[0];
+        candles = candles.filter(c => c.time >= cutoffStr);
+    }
+
+    return {
+        timestamp: candles.map(c => Math.floor(new Date(c.time + 'T00:00:00Z').getTime() / 1000)),
+        indicators: {
+            quote: [{
+                open: candles.map(c => c.open),
+                high: candles.map(c => c.high),
+                low: candles.map(c => c.low),
+                close: candles.map(c => c.close)
+            }]
+        }
+    };
+}
+
+// CORSプロキシ経由でYahoo Financeから取得（カスタムシンボルや5年表示のフォールバック用）
+async function fetchViaProxies(targetUrl) {
     const proxies = [
-        `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`,
         `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`,
-        `https://thingproxy.freeboard.io/fetch/${targetUrl}`
+        `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(targetUrl)}`,
+        `https://corsproxy.io/?${encodeURIComponent(targetUrl)}` // localhost開発時のみ有効
     ];
 
     let lastError = null;
@@ -445,27 +464,78 @@ async function loadData() {
         try {
             console.log(`Fetching from proxy: ${proxyUrl}`);
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 4000);
-            
+            const timeoutId = setTimeout(() => controller.abort(), 10000);
+
             const res = await fetch(proxyUrl, { signal: controller.signal });
             clearTimeout(timeoutId);
-            
+
             if (!res.ok) throw new Error(`HTTP error ${res.status}`);
             const data = await res.json();
             const chartResult = data.chart?.result?.[0];
             if (!chartResult) throw new Error('No historical data in response');
-            
-            parseAndProcessData(chartResult);
-            showLoading(false);
-            return; // Success!
+            return chartResult;
         } catch (err) {
             console.warn(`Proxy failed: ${proxyUrl}`, err);
             lastError = err;
         }
     }
+    throw lastError || new Error('All proxies failed');
+}
 
-    console.error('All proxies failed.', lastError);
-    alert(`データ取得エラー: ${state.symbol} の取得にすべてのプロキシで失敗しました。ネットワーク状況やティッカー名をご確認ください。`);
+// Fetch Market Data (ローカルデータ優先 → CORSプロキシfallback)
+async function loadData() {
+    showLoading(true);
+
+    // Skip request if the requested symbol and period are already loaded in rawData cache
+    if (state.rawData && state.lastLoadedSymbol === state.symbol && state.lastLoadedPeriod === state.period) {
+        console.log('Skipping API request: current state is identical to cached state.');
+        parseAndProcessData(state.rawData);
+        return;
+    }
+
+    // Update Title in UI
+    document.getElementById('current-asset-name').textContent = state.assetName;
+    document.getElementById('current-asset-symbol').textContent = state.symbol;
+
+    const targetUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${state.symbol}?range=${state.period}&interval=1d`;
+    const wantsLongRange = state.period === '5y'; // ローカルデータは2年分しか無い
+
+    // 1. 監視銘柄はローカルデータを最優先（5年表示を除く）
+    if (!wantsLongRange) {
+        try {
+            const localResult = await fetchLocalCandles(state.symbol);
+            parseAndProcessData(localResult);
+            showLoading(false);
+            return;
+        } catch (err) {
+            console.warn(`Local candle data unavailable for ${state.symbol}, falling back to proxies.`, err);
+        }
+    }
+
+    // 2. CORSプロキシ経由のライブ取得
+    try {
+        const chartResult = await fetchViaProxies(targetUrl);
+        parseAndProcessData(chartResult);
+        showLoading(false);
+        return;
+    } catch (err) {
+        console.error('All proxies failed.', err);
+    }
+
+    // 3. 5年表示でプロキシ全滅の場合、最後の手段としてローカル2年分にフォールバック
+    if (wantsLongRange) {
+        try {
+            const localResult = await fetchLocalCandles(state.symbol);
+            alert('外部データ取得に失敗したため、リポジトリ内の約2年分のデータで表示します。');
+            parseAndProcessData(localResult);
+            showLoading(false);
+            return;
+        } catch (err2) {
+            console.warn('Local fallback also failed.', err2);
+        }
+    }
+
+    alert(`データ取得エラー: ${state.symbol} を取得できませんでした。\n監視リスト内の銘柄は毎朝の自動更新データで表示できますが、カスタムシンボルは外部プロキシの状況に依存します。時間をおいて再試行してください。`);
     showLoading(false);
 }
 
