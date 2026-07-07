@@ -747,12 +747,12 @@ async function runScreener() {
                 candles: candles
             }));
             
-            // Grid search optimizer (exploring both kairi and swing methods)
+            // Grid search optimizer (kairi method only as requested by user)
             const rsiPeriods = [7, 9, 11, 14, 18, 21, 25];
             const maPeriods = [20, 30, 45, 60, 75, 90];
             const margins = [0.2, 0.5, 0.8, 1.0, 1.3, 1.6, 2.0];
             const offsets = [-3, -1.5, 0, 1.5, 3];
-            const peakMethods = ['kairi', 'swing']; // Explore both!
+            const peakMethods = ['kairi']; // Enforce kairi peak method (kairi交差ゼロ) only
             
             const N = candles.length;
             const isEnd = Math.floor(N * 0.75); // IS ends at 75% of data (approx 1.5 years)
