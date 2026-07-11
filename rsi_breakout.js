@@ -29,13 +29,17 @@ const state = {
     charts: {
         price: null,
         rsi: null,
+        weekly: null,
+        weeklyRsi: null,
         series: {
             candles: null,
-            weeklyCandles: null,
             rsi: null,
             rsiMa: null,
             rsiDummy: null,
-            trendlines: []
+            trendlines: [],
+            weeklyCandles: null,
+            weeklyRsiLine: null,
+            weeklyRsiMa: null
         }
     }
 };
@@ -231,18 +235,22 @@ function setupEventListeners() {
         });
     }
 
-    // Weekly overlay toggle
-    const weeklyToggle = document.getElementById('toggle-weekly-overlay');
-    if (weeklyToggle) {
-        weeklyToggle.addEventListener('change', (e) => {
-            const show = e.target.checked;
-            if (show && state.candles) {
-                const wc = buildWeeklyOverlayCandles(state.candles);
-                state.charts.series.weeklyCandles.setData(wc);
-                state.charts.series.weeklyCandles.applyOptions({ visible: true });
+    // Weekly chart toggle
+    const btnWeeklyChart = document.getElementById('btn-toggle-weekly-chart');
+    if (btnWeeklyChart) {
+        btnWeeklyChart.addEventListener('click', () => {
+            const section = document.getElementById('weekly-chart-section');
+            const isHidden = section.style.display === 'none';
+            if (isHidden) {
+                if (!state.charts.weekly) setupWeeklyCharts();
+                section.style.display = 'block';
+                btnWeeklyChart.innerHTML = '<i data-lucide="x" style="width:13px;height:13px;"></i> 週足チャートを非表示';
+                if (window.lucide) window.lucide.createIcons();
+                if (state.candles) renderWeeklyCharts(state.candles);
             } else {
-                state.charts.series.weeklyCandles.setData([]);
-                state.charts.series.weeklyCandles.applyOptions({ visible: false });
+                section.style.display = 'none';
+                btnWeeklyChart.innerHTML = '<i data-lucide="calendar-range" style="width:13px;height:13px;"></i> 週足チャートを表示';
+                if (window.lucide) window.lucide.createIcons();
             }
         });
     }
@@ -311,20 +319,6 @@ function setupCharts() {
             minimumWidth: 80,
         }
     });
-
-    // 週足オーバーレイ（日足の下レイヤー）
-    state.charts.series.weeklyCandles = state.charts.price.addCandlestickSeries({
-        upColor: 'rgba(99, 102, 241, 0.18)',
-        downColor: 'rgba(244, 63, 94, 0.18)',
-        borderVisible: true,
-        borderUpColor: 'rgba(99, 102, 241, 0.75)',
-        borderDownColor: 'rgba(244, 63, 94, 0.75)',
-        wickUpColor: 'rgba(99, 102, 241, 0.55)',
-        wickDownColor: 'rgba(244, 63, 94, 0.55)',
-        priceLineVisible: false,
-        lastValueVisible: false,
-    });
-    state.charts.series.weeklyCandles.applyOptions({ visible: false });
 
     state.charts.series.candles = state.charts.price.addCandlestickSeries({
         upColor: '#10b981',
@@ -444,6 +438,95 @@ function setupCharts() {
         state.charts.rsi.resize(width, 200);
     });
     resizeObserver.observe(priceContainer);
+}
+
+// 週足チャートの初期化（初回表示時にのみ呼ばれる）
+function setupWeeklyCharts() {
+    const chartTheme = {
+        layout: { background: { type: 'solid', color: '#111622' }, textColor: '#94a3b8', fontSize: 11, fontFamily: 'Outfit, sans-serif' },
+        grid: { vertLines: { color: 'rgba(148, 163, 184, 0.05)' }, horzLines: { color: 'rgba(148, 163, 184, 0.05)' } },
+        crosshair: {
+            mode: LightweightCharts.CrosshairMode.Normal,
+            vertLine: { color: '#6366f1', width: 1, style: 2, labelBackgroundColor: '#6366f1' },
+            horzLine: { color: '#6366f1', width: 1, style: 2, labelBackgroundColor: '#6366f1' },
+        },
+        timeScale: { borderColor: 'rgba(148, 163, 184, 0.1)', timeVisible: false, secondsVisible: false },
+    };
+
+    const wPriceContainer = document.getElementById('chart-weekly-price-container');
+    state.charts.weekly = LightweightCharts.createChart(wPriceContainer, {
+        ...chartTheme,
+        rightPriceScale: { borderColor: 'rgba(148, 163, 184, 0.1)', autoScale: true, minimumWidth: 80 }
+    });
+    state.charts.series.weeklyCandles = state.charts.weekly.addCandlestickSeries({
+        upColor: '#10b981', downColor: '#f43f5e', borderVisible: false, wickUpColor: '#10b981', wickDownColor: '#f43f5e',
+    });
+
+    const wRsiContainer = document.getElementById('chart-weekly-rsi-container');
+    state.charts.weeklyRsi = LightweightCharts.createChart(wRsiContainer, {
+        ...chartTheme,
+        rightPriceScale: { borderColor: 'rgba(148, 163, 184, 0.1)', autoScale: true, scaleMargins: { top: 0.05, bottom: 0.05 }, minimumWidth: 80 }
+    });
+    state.charts.series.weeklyRsiLine = state.charts.weeklyRsi.addLineSeries({
+        color: '#a855f7', lineWidth: 2, priceLineVisible: false,
+        autoscaleInfoProvider: () => ({ priceRange: { minValue: 0, maxValue: 100 } }),
+    });
+    state.charts.series.weeklyRsiMa = state.charts.weeklyRsi.addLineSeries({
+        color: '#eab308', lineWidth: 1.5, lineStyle: 1, priceLineVisible: false,
+    });
+    [70, 50, 30].forEach((lvl, i) => {
+        const colors = ['rgba(244, 63, 94, 0.3)', 'rgba(148, 163, 184, 0.2)', 'rgba(16, 185, 129, 0.3)'];
+        state.charts.series.weeklyRsiLine.createPriceLine({ price: lvl, color: colors[i], lineWidth: 1, lineStyle: 2, axisLabelVisible: true, title: String(lvl) });
+    });
+
+    // 週足内チャート同士のクロスヘアと時間軸を同期
+    let isRefW = false, isRefWR = false;
+    state.charts.weekly.subscribeCrosshairMove(param => {
+        if (isRefWR) return;
+        isRefW = true;
+        if (param.time) state.charts.weeklyRsi.setCrosshairPosition(param.point, param.time);
+        else state.charts.weeklyRsi.clearCrosshairPosition();
+        isRefW = false;
+    });
+    state.charts.weeklyRsi.subscribeCrosshairMove(param => {
+        if (isRefW) return;
+        isRefWR = true;
+        if (param.time) state.charts.weekly.setCrosshairPosition(param.point, param.time);
+        else state.charts.weekly.clearCrosshairPosition();
+        isRefWR = false;
+    });
+    state.charts.weekly.timeScale().subscribeVisibleLogicalRangeChange(range => {
+        state.charts.weeklyRsi.timeScale().setVisibleLogicalRange(range);
+    });
+    state.charts.weeklyRsi.timeScale().subscribeVisibleLogicalRangeChange(range => {
+        state.charts.weekly.timeScale().setVisibleLogicalRange(range);
+    });
+
+    const resizeObserver = new ResizeObserver(entries => {
+        if (entries.length === 0) return;
+        const width = wPriceContainer.clientWidth;
+        state.charts.weekly.resize(width, 280);
+        state.charts.weeklyRsi.resize(width, 150);
+    });
+    resizeObserver.observe(wPriceContainer);
+}
+
+// 週足チャートにデータをセット
+function renderWeeklyCharts(candles) {
+    if (!state.charts.weekly) return;
+    const wc = buildWeeklyOverlayCandles(candles);
+    state.charts.series.weeklyCandles.setData(wc);
+
+    const wRsi = calculateRSI(wc, state.params.rsiPeriod);
+    const wRsiMa = calculateMA(wRsi, state.params.maPeriod, state.params.maMethod);
+    const wRsiData = [], wMaData = [];
+    wc.forEach((c, i) => {
+        if (wRsi[i] != null) wRsiData.push({ time: c.time, value: wRsi[i] });
+        if (wRsiMa[i] != null) wMaData.push({ time: c.time, value: wRsiMa[i] });
+    });
+    state.charts.series.weeklyRsiLine.setData(wRsiData);
+    state.charts.series.weeklyRsiMa.setData(wMaData);
+    state.charts.weekly.timeScale().fitContent();
 }
 
 // 銘柄シンボル→ローカルデータファイル名（scripts/screener.js の sanitizeSymbolForFile と一致させること）
@@ -1383,19 +1466,14 @@ function renderAnalysis(candles, rsi, rsiMa, analysis) {
     });
     state.charts.series.trendlines = [];
 
-    // 週足データを事前計算（根拠表示および週足オーバーレイ用）
+    // 週足データを事前計算（根拠表示用）
     const weeklyCandles = buildWeeklyCandles(candles);
     const weeklyRsiValues = calculateRSI(weeklyCandles, state.params.rsiPeriod);
 
-    // 週足オーバーレイの更新
-    const weeklyToggle = document.getElementById('toggle-weekly-overlay');
-    if (weeklyToggle && weeklyToggle.checked) {
-        const overlayCandles = buildWeeklyOverlayCandles(candles);
-        state.charts.series.weeklyCandles.setData(overlayCandles);
-        state.charts.series.weeklyCandles.applyOptions({ visible: true });
-    } else {
-        state.charts.series.weeklyCandles.setData([]);
-        state.charts.series.weeklyCandles.applyOptions({ visible: false });
+    // 週足チャートが表示中であれば更新
+    const weeklySectionEl = document.getElementById('weekly-chart-section');
+    if (weeklySectionEl && weeklySectionEl.style.display !== 'none') {
+        renderWeeklyCharts(candles);
     }
 
     // 2. Set base series data

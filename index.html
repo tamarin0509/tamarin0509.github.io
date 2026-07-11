@@ -346,16 +346,22 @@
 
                 <!-- Charts Container -->
                 <section class="charts-section card-glass">
-                    <div style="display:flex;align-items:center;gap:16px;padding:6px 12px;border-bottom:1px solid rgba(148,163,184,0.08);background:rgba(255,255,255,0.02);">
-                        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:0.78rem;color:var(--text-muted);user-select:none;" title="日足チャートに週足ローソク足を半透明で重ねて表示します">
-                            <input type="checkbox" id="toggle-weekly-overlay" style="width:13px;height:13px;accent-color:#6366f1;">
-                            <i data-lucide="layers" style="width:13px;height:13px;color:#6366f1;"></i>
-                            週足オーバーレイ
-                        </label>
-                        <span style="font-size:0.72rem;color:rgba(148,163,184,0.45);">週足ローソク足を日足チャートに重ねて上位足トレンドを確認</span>
+                    <div style="display:flex;align-items:center;padding:6px 12px;border-bottom:1px solid rgba(148,163,184,0.08);">
+                        <button id="btn-toggle-weekly-chart" type="button" class="btn-secondary" style="font-size:0.78rem;padding:4px 12px;display:flex;align-items:center;gap:5px;">
+                            <i data-lucide="calendar-range" style="width:13px;height:13px;"></i>
+                            週足チャートを表示
+                        </button>
                     </div>
                     <div id="chart-price-container" class="chart-container"></div>
                     <div id="chart-rsi-container" class="chart-container"></div>
+                    <!-- Weekly chart section (hidden by default) -->
+                    <div id="weekly-chart-section" style="display:none; border-top:2px solid rgba(99,102,241,0.25);">
+                        <div style="padding:5px 12px;font-size:0.72rem;color:#818cf8;background:rgba(99,102,241,0.06);letter-spacing:0.03em;">
+                            週足 — Weekly Candlesticks &amp; RSI
+                        </div>
+                        <div id="chart-weekly-price-container" class="chart-container"></div>
+                        <div id="chart-weekly-rsi-container" class="chart-container"></div>
+                    </div>
                 </section>
 
                 <!-- Bottom Signals Log & Explanations -->
