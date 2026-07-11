@@ -81,6 +81,10 @@ const WATCH_SYMBOLS = [
     { symbol: '7974.T', name: '任天堂 (7974)', type: 'stock', sector: '消費・小売' },
     { symbol: 'WMT', name: 'ウォルマート (WMT)', type: 'stock', sector: '消費・小売' },
     { symbol: 'COST', name: 'コストコ (COST)', type: 'stock', sector: '消費・小売' },
+    // 電子部品
+    { symbol: '6981.T', name: '村田製作所 (6981)', type: 'stock', sector: '電子部品' },
+    // 不動産
+    { symbol: '3003.T', name: 'ヒューリック (3003)', type: 'stock', sector: '不動産' },
     // 暗号資産
     { symbol: 'BTC-USD', name: 'ビットコイン (BTC/USD)', type: 'crypto', sector: '暗号資産' },
     { symbol: 'ETH-USD', name: 'イーサリアム (ETH/USD)', type: 'crypto', sector: '暗号資産' },

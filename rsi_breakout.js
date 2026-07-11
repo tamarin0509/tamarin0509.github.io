@@ -22,6 +22,7 @@ const state = {
         mtfFilter: 'none' // 'none' or 'weekly'
     },
     rawData: null,
+    candles: null,
     lastLoadedSymbol: null,
     lastLoadedPeriod: null,
     indicators: null,
@@ -30,6 +31,7 @@ const state = {
         rsi: null,
         series: {
             candles: null,
+            weeklyCandles: null,
             rsi: null,
             rsiMa: null,
             rsiDummy: null,
@@ -229,6 +231,22 @@ function setupEventListeners() {
         });
     }
 
+    // Weekly overlay toggle
+    const weeklyToggle = document.getElementById('toggle-weekly-overlay');
+    if (weeklyToggle) {
+        weeklyToggle.addEventListener('change', (e) => {
+            const show = e.target.checked;
+            if (show && state.candles) {
+                const wc = buildWeeklyOverlayCandles(state.candles);
+                state.charts.series.weeklyCandles.setData(wc);
+                state.charts.series.weeklyCandles.applyOptions({ visible: true });
+            } else {
+                state.charts.series.weeklyCandles.setData([]);
+                state.charts.series.weeklyCandles.applyOptions({ visible: false });
+            }
+        });
+    }
+
     // Parameter Optimization
     const optimizeBtn = document.getElementById('btn-optimize');
     if (optimizeBtn) {
@@ -293,6 +311,20 @@ function setupCharts() {
             minimumWidth: 80,
         }
     });
+
+    // 週足オーバーレイ（日足の下レイヤー）
+    state.charts.series.weeklyCandles = state.charts.price.addCandlestickSeries({
+        upColor: 'rgba(99, 102, 241, 0.18)',
+        downColor: 'rgba(244, 63, 94, 0.18)',
+        borderVisible: true,
+        borderUpColor: 'rgba(99, 102, 241, 0.75)',
+        borderDownColor: 'rgba(244, 63, 94, 0.75)',
+        wickUpColor: 'rgba(99, 102, 241, 0.55)',
+        wickDownColor: 'rgba(244, 63, 94, 0.55)',
+        priceLineVisible: false,
+        lastValueVisible: false,
+    });
+    state.charts.series.weeklyCandles.applyOptions({ visible: false });
 
     state.charts.series.candles = state.charts.price.addCandlestickSeries({
         upColor: '#10b981',
@@ -588,6 +620,7 @@ function parseAndProcessData(result) {
 
     state.lastLoadedSymbol = state.symbol;
     state.lastLoadedPeriod = state.period;
+    state.candles = candles;
 
     // 1. Calculate RSI
     const rsiValues = calculateRSI(candles, state.params.rsiPeriod);
@@ -786,6 +819,86 @@ function buildWeeklyCandles(dailyCandles) {
     }
     
     return weekly;
+}
+
+// 日足チャートへの週足オーバーレイ用（各週の最初の取引日を時刻キーに使用）
+function buildWeeklyOverlayCandles(dailyCandles) {
+    if (!dailyCandles || dailyCandles.length === 0) return [];
+    const weekly = [];
+
+    const getWeekKey = (dateStr) => {
+        const d = new Date(dateStr + 'T00:00:00Z');
+        const day = d.getUTCDay();
+        const diff = day === 0 ? -6 : 1 - day;
+        d.setUTCDate(d.getUTCDate() + diff);
+        return d.toISOString().split('T')[0];
+    };
+
+    let currentWeekKey = null;
+    let currentWeekCandle = null;
+
+    for (const d of dailyCandles) {
+        const weekKey = getWeekKey(d.time);
+        if (currentWeekKey !== weekKey) {
+            if (currentWeekCandle) weekly.push(currentWeekCandle);
+            currentWeekKey = weekKey;
+            currentWeekCandle = { time: d.time, open: d.open, high: d.high, low: d.low, close: d.close };
+        } else {
+            currentWeekCandle.high = Math.max(currentWeekCandle.high, d.high);
+            currentWeekCandle.low = Math.min(currentWeekCandle.low, d.low);
+            currentWeekCandle.close = d.close;
+        }
+    }
+    if (currentWeekCandle) weekly.push(currentWeekCandle);
+    return weekly;
+}
+
+// シグナルの根拠テキストを生成（日足RSI水準・MA方向・週足RSI整合）
+function getSignalRationale(sig, rsi, rsiMa, weeklyCandles, weeklyRsiValues) {
+    const i = sig.index;
+    const rsiVal = sig.rsi;
+    const maVal = rsiMa ? rsiMa[i] : null;
+    const reasons = [];
+
+    // 日足RSIの水準判定
+    if (sig.type === 'BUY') {
+        if (rsiVal < 35) reasons.push(`売られすぎ(${rsiVal.toFixed(1)})回復`);
+        else if (rsiVal < 50) reasons.push(`中立圏下(${rsiVal.toFixed(1)})上抜け`);
+        else reasons.push(`強気圏(${rsiVal.toFixed(1)})抵抗突破`);
+    } else {
+        if (rsiVal > 65) reasons.push(`買われすぎ(${rsiVal.toFixed(1)})反落`);
+        else if (rsiVal > 50) reasons.push(`中立圏上(${rsiVal.toFixed(1)})下抜け`);
+        else reasons.push(`弱気圏(${rsiVal.toFixed(1)})支持割れ`);
+    }
+
+    // RSI MA方向（5本前との比較）
+    if (maVal != null && i >= 5 && rsiMa[i - 5] != null) {
+        const slope = maVal - rsiMa[i - 5];
+        const aligned = (sig.type === 'BUY' && slope > 0.3) || (sig.type === 'SELL' && slope < -0.3);
+        const counter = (sig.type === 'BUY' && slope < -0.3) || (sig.type === 'SELL' && slope > 0.3);
+        if (aligned) reasons.push('MA順張');
+        else if (counter) reasons.push('MA逆張⚠');
+    }
+
+    // RSIとMAの位置関係
+    if (maVal != null) {
+        const diff = rsiVal - maVal;
+        if (sig.type === 'BUY' && diff > 1.5) reasons.push('RSI>MA✓');
+        else if (sig.type === 'SELL' && diff < -1.5) reasons.push('RSI<MA✓');
+    }
+
+    // 週足RSIの整合確認
+    if (weeklyCandles && weeklyRsiValues) {
+        const wRsi = getPrecedingWeeklyRsi(sig.time, weeklyCandles, weeklyRsiValues);
+        if (wRsi != null) {
+            const wAligned = (sig.type === 'BUY' && wRsi >= 50) || (sig.type === 'SELL' && wRsi < 50);
+            const wCounter = (sig.type === 'BUY' && wRsi < 50) || (sig.type === 'SELL' && wRsi >= 50);
+            if (wAligned) reasons.push(`週足RSI${wRsi.toFixed(0)}同調✓`);
+            else if (wCounter) reasons.push(`週足RSI${wRsi.toFixed(0)}逆行⚠`);
+        }
+    }
+
+    return reasons.join(' / ');
 }
 
 // 指定日に対応する前週の確定週足RSIを取得する
@@ -1270,6 +1383,21 @@ function renderAnalysis(candles, rsi, rsiMa, analysis) {
     });
     state.charts.series.trendlines = [];
 
+    // 週足データを事前計算（根拠表示および週足オーバーレイ用）
+    const weeklyCandles = buildWeeklyCandles(candles);
+    const weeklyRsiValues = calculateRSI(weeklyCandles, state.params.rsiPeriod);
+
+    // 週足オーバーレイの更新
+    const weeklyToggle = document.getElementById('toggle-weekly-overlay');
+    if (weeklyToggle && weeklyToggle.checked) {
+        const overlayCandles = buildWeeklyOverlayCandles(candles);
+        state.charts.series.weeklyCandles.setData(overlayCandles);
+        state.charts.series.weeklyCandles.applyOptions({ visible: true });
+    } else {
+        state.charts.series.weeklyCandles.setData([]);
+        state.charts.series.weeklyCandles.applyOptions({ visible: false });
+    }
+
     // 2. Set base series data
     state.charts.series.candles.setData(candles);
     state.charts.series.rsiDummy.setData(candles.map(c => ({ time: c.time, value: 50 })));
@@ -1450,16 +1578,16 @@ function renderAnalysis(candles, rsi, rsiMa, analysis) {
     const tableBody = document.getElementById('signals-table').querySelector('tbody');
     
     if (allSignalsChronological.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="7" class="no-data">このパラメータ条件ではブレイクアウトが検出されませんでした。</td></tr>`;
+        tableBody.innerHTML = `<tr><td colspan="8" class="no-data">このパラメータ条件ではブレイクアウトが検出されませんでした。</td></tr>`;
     } else {
         // Reverse array to show newest first in the log table
         const reversedSignals = [...allSignalsChronological].reverse();
-        
+
         tableBody.innerHTML = reversedSignals.map(sig => {
             let statusText = '';
             let rowStyle = '';
             let sigBadgeClass = sig.type.toLowerCase();
-            
+
             if (sig.status === 'confirmed') {
                 statusText = '<span style="color:#10b981; font-weight:600;"><i data-lucide="check-circle" style="width:14px;height:14px;vertical-align:middle;margin-right:4px;"></i>確定 (実戦+後知恵)</span>';
             } else if (sig.status === 'phantom') {
@@ -1469,6 +1597,9 @@ function renderAnalysis(candles, rsi, rsiMa, analysis) {
                 statusText = '<span style="color:#f59e0b; font-weight:600;"><i data-lucide="info" style="width:14px;height:14px;vertical-align:middle;margin-right:4px;"></i>実戦のみ (遅延確定)</span>';
             }
 
+            const rationale = getSignalRationale(sig, rsi, rsiMa, weeklyCandles, weeklyRsiValues);
+            const rationaleColor = sig.type === 'BUY' ? 'rgba(16,185,129,0.85)' : 'rgba(244,63,94,0.85)';
+
             return `
                 <tr ${rowStyle}>
                     <td>${sig.time}</td>
@@ -1477,6 +1608,7 @@ function renderAnalysis(candles, rsi, rsiMa, analysis) {
                     <td style="font-weight:600;">${sig.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })}</td>
                     <td style="font-family:monospace; color:#a855f7;">${sig.rsi.toFixed(2)}</td>
                     <td style="font-family:monospace; color:var(--text-muted);">${sig.lineValue ? sig.lineValue.toFixed(2) : '--'}</td>
+                    <td style="font-size:0.75rem; color:${rationaleColor};">${rationale || '--'}</td>
                     <td><button class="btn-chart-jump" data-time="${sig.time}">移動</button></td>
                 </tr>
             `;
