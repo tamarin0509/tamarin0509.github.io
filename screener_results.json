@@ -1,17 +1,17 @@
 {
-  "updatedAt": "2026-07-10T22:10:55.013Z",
+  "updatedAt": "2026-07-11T21:56:07.883Z",
   "results": [
     {
       "symbol": "^N225",
       "name": "日経平均株価 (Nikkei 225)",
       "type": "index",
       "sector": "指数",
-      "close": 67743.8516,
-      "changePercent": 1.38,
-      "rsi": 52.4,
+      "close": 68557.7266,
+      "changePercent": 1.2,
+      "rsi": 55.41,
       "bestParams": {
-        "rsiPeriod": 21,
-        "maPeriod": 90,
+        "rsiPeriod": 25,
+        "maPeriod": 20,
         "maMethod": "EMA",
         "offset": -3,
         "margin": 1.6,
@@ -22,12 +22,12 @@
         "mtfFilter": "weekly"
       },
       "latestSignal": {
-        "time": "2026-07-01",
+        "time": "2026-07-09",
         "type": "BUY",
-        "price": 70474.9609,
-        "rsi": 61.05935182573227,
+        "price": 67743.8516,
+        "rsi": 53.58877332695553,
         "status": "confirmed",
-        "barsAgo": 6
+        "barsAgo": 1
       }
     },
     {
@@ -93,7 +93,7 @@
       "name": "ナスダック総合 (NASDAQ)",
       "type": "index",
       "sector": "指数",
-      "close": 26281.6074,
+      "close": 26281.6094,
       "changePercent": 0.29,
       "rsi": 54.6,
       "bestParams": {
@@ -204,7 +204,7 @@
       "sector": "為替",
       "close": 0.6955,
       "changePercent": 0.16,
-      "rsi": 55.6,
+      "rsi": 54.93,
       "bestParams": {
         "rsiPeriod": 7,
         "maPeriod": 20,
@@ -226,7 +226,7 @@
       "sector": "テクノロジー",
       "close": 385.1,
       "changePercent": 0.19,
-      "rsi": 48.25,
+      "rsi": 48.26,
       "bestParams": {
         "rsiPeriod": 14,
         "maPeriod": 75,
@@ -314,7 +314,7 @@
       "sector": "テクノロジー",
       "close": 669.21,
       "changePercent": 5.97,
-      "rsi": 75.8,
+      "rsi": 75.81,
       "bestParams": {
         "rsiPeriod": 7,
         "maPeriod": 45,
@@ -635,7 +635,7 @@
       "sector": "エネルギー",
       "close": 138.88,
       "changePercent": 1.03,
-      "rsi": 46.34,
+      "rsi": 46.32,
       "bestParams": {
         "rsiPeriod": 7,
         "maPeriod": 30,
@@ -657,7 +657,7 @@
       "sector": "エネルギー",
       "close": 176.4,
       "changePercent": 1.35,
-      "rsi": 45.82,
+      "rsi": 45.83,
       "bestParams": {
         "rsiPeriod": 21,
         "maPeriod": 45,
@@ -1431,7 +1431,7 @@
       "sector": "通信",
       "close": 42.12,
       "changePercent": -0.28,
-      "rsi": 34.97,
+      "rsi": 34.98,
       "bestParams": {
         "rsiPeriod": 21,
         "maPeriod": 30,
@@ -1563,13 +1563,64 @@
       }
     },
     {
+      "symbol": "6981.T",
+      "name": "村田製作所 (6981)",
+      "type": "stock",
+      "sector": "電子部品",
+      "close": 9860,
+      "changePercent": 4.06,
+      "rsi": 46.5,
+      "bestParams": {
+        "rsiPeriod": 11,
+        "maPeriod": 30,
+        "maMethod": "EMA",
+        "offset": -3,
+        "margin": 0.2,
+        "nLines": 3,
+        "peakMethod": "kairi",
+        "swingPeriod": 10,
+        "minGap": 2,
+        "mtfFilter": "weekly"
+      },
+      "latestSignal": {
+        "time": "2026-06-22",
+        "type": "BUY",
+        "price": 12250,
+        "rsi": 75.11974016148883,
+        "status": "confirmed",
+        "barsAgo": 14
+      }
+    },
+    {
+      "symbol": "3003.T",
+      "name": "ヒューリック (3003)",
+      "type": "stock",
+      "sector": "不動産",
+      "close": 1755,
+      "changePercent": -0.17,
+      "rsi": 51.49,
+      "bestParams": {
+        "rsiPeriod": 25,
+        "maPeriod": 90,
+        "maMethod": "EMA",
+        "offset": -3,
+        "margin": 0.5,
+        "nLines": 3,
+        "peakMethod": "kairi",
+        "swingPeriod": 10,
+        "minGap": 2,
+        "mtfFilter": "weekly"
+      },
+      "latestSignal": null
+    },
+    {
       "symbol": "BTC-USD",
       "name": "ビットコイン (BTC/USD)",
       "type": "crypto",
       "sector": "暗号資産",
-      "close": 63978.7109,
-      "changePercent": 1.24,
-      "rsi": 63.37,
+      "close": 64301.2891,
+      "changePercent": 0.27,
+      "rsi": 65.17,
       "bestParams": {
         "rsiPeriod": 7,
         "maPeriod": 20,
@@ -1589,9 +1640,9 @@
       "name": "イーサリアム (ETH/USD)",
       "type": "crypto",
       "sector": "暗号資産",
-      "close": 1794.23,
-      "changePercent": 2.85,
-      "rsi": 64.65,
+      "close": 1822.74,
+      "changePercent": 1.51,
+      "rsi": 70.2,
       "bestParams": {
         "rsiPeriod": 7,
         "maPeriod": 20,
@@ -1610,7 +1661,7 @@
         "price": 1744.4846,
         "rsi": 56.99180991099178,
         "status": "confirmed",
-        "barsAgo": 1
+        "barsAgo": 2
       }
     },
     {
