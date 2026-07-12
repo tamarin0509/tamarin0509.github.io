@@ -164,6 +164,21 @@
                     </select>
                 </div>
 
+                <!-- Backtest Mode (Time Slide) -->
+                <div class="form-group">
+                    <div class="label-row">
+                        <label for="param-backtest"><i data-lucide="rewind"></i> バックテストモード</label>
+                        <span class="param-value" id="val-backtest">最新</span>
+                    </div>
+                    <input type="range" id="param-backtest" min="0" max="250" value="0" class="slider">
+                    <div class="backtest-step-row">
+                        <button type="button" id="btn-backtest-back" class="btn-secondary btn-step">◀ 1日戻る</button>
+                        <button type="button" id="btn-backtest-fwd" class="btn-secondary btn-step">1日進む ▶</button>
+                        <button type="button" id="btn-backtest-reset" class="btn-secondary btn-step">リセット</button>
+                    </div>
+                    <span class="help-text">指定した営業日数だけ過去にタイムスライドし、その時点で見えていたチャート・トレンドライン・シグナルを再現します。</span>
+                </div>
+
                 <div class="form-group">
                     <label for="custom-symbol"><i data-lucide="search"></i> カスタムシンボル入力</label>
                     <div class="input-with-button">
@@ -302,8 +317,11 @@
             <div id="tab-analysis" class="tab-content active">
                 <!-- Top Summary Stats -->
                 <header class="dashboard-header">
-                    <div class="asset-title-block">
-                        <h2 id="current-asset-name">米ドル / 円 (USD/JPY)</h2>
+                    <div class="asset-title-block" style="cursor: pointer;" title="Yahoo Financeで外部チャートを開く (別窓)">
+                        <h2 style="display: inline-flex; align-items: center; gap: 6px;">
+                            <span id="current-asset-name">米ドル / 円 (USD/JPY)</span>
+                            <i data-lucide="external-link" style="width: 16px; height: 16px; color: var(--text-muted);"></i>
+                        </h2>
                         <span id="current-asset-symbol" class="badge-symbol">USDJPY=X</span>
                     </div>
                     
@@ -346,11 +364,12 @@
 
                 <!-- Charts Container -->
                 <section class="charts-section card-glass">
-                    <div style="display:flex;align-items:center;padding:6px 12px;border-bottom:1px solid rgba(148,163,184,0.08);">
-                        <button id="btn-toggle-weekly-chart" type="button" class="btn-secondary" style="font-size:0.78rem;padding:4px 12px;display:flex;align-items:center;gap:5px;">
+                    <div style="display:flex;align-items:center;gap:10px;padding:6px 12px;border-bottom:1px solid rgba(148,163,184,0.08);">
+                        <button id="btn-toggle-weekly-chart" type="button" class="btn-secondary" style="font-size:0.78rem;padding:4px 12px;display:flex;align-items:center;gap:5px;flex-shrink:0;">
                             <i data-lucide="calendar-range" style="width:13px;height:13px;"></i>
                             週足チャートを表示
                         </button>
+                        <div id="backtest-banner" class="backtest-banner" style="display:none;"></div>
                     </div>
                     <div id="chart-price-container" class="chart-container"></div>
                     <div id="chart-rsi-container" class="chart-container"></div>
@@ -552,11 +571,24 @@
                     </h2>
                     
                     <div class="changelog-timeline" style="display: flex; flex-direction: column; gap: 1.5rem;">
-                        <!-- Version 1.3.1 -->
+                        <!-- Version 1.4.0 -->
                         <div class="changelog-item" style="border-left: 2px solid #6366f1; padding-left: 1.25rem; position: relative; padding-bottom: 0.5rem;">
                             <div style="font-weight: 600; font-size: 1.1rem; color: #f1f5f9; display: flex; align-items: center; gap: 8px;">
-                                <span>v1.3.1 - チャートデータ取得のプロキシレス化</span>
+                                <span>v1.4.0 - バックテストモード（タイムスライド）</span>
                                 <span style="font-size: 0.72rem; background: rgba(99, 102, 241, 0.2); color: #818cf8; padding: 2px 6px; border-radius: 4px; font-weight: 500;">Latest</span>
+                            </div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted); margin: 4px 0 8px 0;">2026年7月11日 更新</div>
+                            <ul style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; padding-left: 1.2rem; margin: 0; display: flex; flex-direction: column; gap: 4px;">
+                                <li><strong>過去へのタイムスライド:</strong> サイドバーのスライダーで最大250営業日前まで遡り、「当時の最新データ」だけでチャート・トレンドライン・シグナル・統計を完全再現。未来のデータは一切参照しません。</li>
+                                <li><strong>1日ステップ送り:</strong> 「◀ 1日戻る / 1日進む ▶」ボタンで日々のシグナル出現・消滅（リペイント）の様子をコマ送りで検証可能。</li>
+                                <li><strong>最適化も時点整合:</strong> バックテスト中の「銘柄パラメータ最適化」は当時のデータのみで実行され、未来データのリークを防止。</li>
+                            </ul>
+                        </div>
+
+                        <!-- Version 1.3.1 -->
+                        <div class="changelog-item" style="border-left: 2px solid #94a3b8; padding-left: 1.25rem; position: relative; padding-bottom: 0.5rem;">
+                            <div style="font-weight: 600; font-size: 1.1rem; color: #cbd5e1; display: flex; align-items: center; gap: 8px;">
+                                <span>v1.3.1 - チャートデータ取得のプロキシレス化</span>
                             </div>
                             <div style="font-size: 0.8rem; color: var(--text-muted); margin: 4px 0 8px 0;">2026年7月7日 更新</div>
                             <ul style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; padding-left: 1.2rem; margin: 0; display: flex; flex-direction: column; gap: 4px;">

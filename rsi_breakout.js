@@ -9,6 +9,7 @@ const state = {
     symbol: 'USDJPY=X',
     assetName: '米ドル / 円 (USD/JPY)',
     period: '2y',
+    backtestOffset: 0, // バックテストモード: n営業日前にタイムスライド（0=最新）
     params: {
         rsiPeriod: 14,
         maPeriod: 50,
@@ -84,11 +85,64 @@ const PRESETS = {
 function initApp() {
     setupSliders();
     setupEventListeners();
+    setupBacktestControls();
     setupCharts();
     setupTabs();
     setupHeatmapViewToggle();
     loadScreenerData();
     loadData();
+}
+
+// バックテストモード用コントロール（スライダー・1日ステップ・リセット）
+function setupBacktestControls() {
+    const slider = document.getElementById('param-backtest');
+    const valEl = document.getElementById('val-backtest');
+    if (!slider || !valEl) return;
+
+    const renderValue = () => {
+        valEl.textContent = state.backtestOffset === 0 ? '最新' : `${state.backtestOffset}日前`;
+    };
+
+    const applyOffset = (newOffset) => {
+        const max = parseInt(slider.max, 10);
+        state.backtestOffset = Math.max(0, Math.min(max, newOffset));
+        slider.value = state.backtestOffset;
+        renderValue();
+        // rawDataがキャッシュ済みならAPIを叩かずローカル再計算のみ実行される
+        loadData();
+    };
+
+    // ドラッグ中はラベルのみ更新し、離した時点で再計算（リプレイ計算が重いため）
+    slider.addEventListener('input', (e) => {
+        state.backtestOffset = parseInt(e.target.value, 10);
+        renderValue();
+    });
+    slider.addEventListener('change', (e) => {
+        applyOffset(parseInt(e.target.value, 10));
+    });
+
+    const btnBack = document.getElementById('btn-backtest-back');
+    const btnFwd = document.getElementById('btn-backtest-fwd');
+    const btnReset = document.getElementById('btn-backtest-reset');
+    if (btnBack) btnBack.addEventListener('click', () => applyOffset(state.backtestOffset + 1));
+    if (btnFwd) btnFwd.addEventListener('click', () => applyOffset(state.backtestOffset - 1));
+    if (btnReset) btnReset.addEventListener('click', () => applyOffset(0));
+
+    renderValue();
+}
+
+// バックテストバナーの表示更新（オフセット有効時のみ表示）
+function updateBacktestBanner(candles, effectiveOffset) {
+    const banner = document.getElementById('backtest-banner');
+    if (!banner) return;
+    if (effectiveOffset > 0 && candles.length > 0) {
+        const asOfDate = candles[candles.length - 1].time;
+        banner.innerHTML = `<i data-lucide="rewind" style="width:14px;height:14px;"></i> バックテストモード: <strong>${asOfDate}</strong> 時点（${effectiveOffset}営業日前）のデータで分析中`;
+        banner.style.display = 'flex';
+        if (window.lucide) window.lucide.createIcons();
+    } else {
+        banner.style.display = 'none';
+    }
 }
 
 // Sliders Event Handlers
@@ -259,6 +313,14 @@ function setupEventListeners() {
     const optimizeBtn = document.getElementById('btn-optimize');
     if (optimizeBtn) {
         optimizeBtn.addEventListener('click', optimizeParameters);
+    }
+
+    // Asset title block click to open external chart
+    const titleBlock = document.querySelector('.asset-title-block');
+    if (titleBlock) {
+        titleBlock.addEventListener('click', () => {
+            window.open(getExternalChartUrl(state.symbol), '_blank');
+        });
     }
 }
 
@@ -529,6 +591,14 @@ function renderWeeklyCharts(candles) {
     state.charts.weekly.timeScale().fitContent();
 }
 
+// 外部チャートURLを取得 (別窓動作用)
+function getExternalChartUrl(symbol) {
+    if (symbol.endsWith('.T')) {
+        return `https://finance.yahoo.co.jp/quote/${symbol}`;
+    }
+    return `https://finance.yahoo.com/quote/${encodeURIComponent(symbol)}`;
+}
+
 // 銘柄シンボル→ローカルデータファイル名（scripts/screener.js の sanitizeSymbolForFile と一致させること）
 function sanitizeSymbolForFile(symbol) {
     return symbol.replace(/[^A-Za-z0-9._-]/g, '_');
@@ -703,22 +773,35 @@ function parseAndProcessData(result) {
 
     state.lastLoadedSymbol = state.symbol;
     state.lastLoadedPeriod = state.period;
-    state.candles = candles;
+
+    // バックテストモード: 末尾 n 営業日を切り落とし、「当時の最新データ」として以降の全分析を行う
+    // （分析に最低50本を残すため、オフセットはデータ長に応じてクランプされる）
+    let effectiveCandles = candles;
+    let effectiveOffset = 0;
+    if (state.backtestOffset > 0) {
+        effectiveOffset = Math.min(state.backtestOffset, candles.length - 50);
+        if (effectiveOffset > 0) {
+            effectiveCandles = candles.slice(0, candles.length - effectiveOffset);
+        }
+    }
+    updateBacktestBanner(effectiveCandles, effectiveOffset);
+
+    state.candles = effectiveCandles;
 
     // 1. Calculate RSI
-    const rsiValues = calculateRSI(candles, state.params.rsiPeriod);
+    const rsiValues = calculateRSI(effectiveCandles, state.params.rsiPeriod);
     // 2. Calculate RSI Moving Average
     const rsiMaValues = calculateMA(rsiValues, state.params.maPeriod, state.params.maMethod);
 
     // 3. Perform peak/trough analysis, fit lines, and check breakouts
-    const analysisResults = calculateRsiBreakout(candles, rsiValues, rsiMaValues, state.params);
+    const analysisResults = calculateRsiBreakout(effectiveCandles, rsiValues, rsiMaValues, state.params);
 
     // Run Walk-Forward Replay to find which signals were real in real-time
-    const replaySignals = calculateWalkForwardReplay(candles, state.params);
+    const replaySignals = calculateWalkForwardReplay(effectiveCandles, state.params);
     analysisResults.comparedSignals = compareSignals(analysisResults.signals, replaySignals);
 
     // 4. Update UI & Charts
-    renderAnalysis(candles, rsiValues, rsiMaValues, analysisResults);
+    renderAnalysis(effectiveCandles, rsiValues, rsiMaValues, analysisResults);
     showLoading(false);
 }
 
@@ -1821,7 +1904,7 @@ function optimizeParameters() {
         const highs = quotes.high;
         const lows = quotes.low;
         
-        const candles = [];
+        let candles = [];
         for (let i = 0; i < timestamps.length; i++) {
             if (timestamps[i] == null || closes[i] == null || opens[i] == null || highs[i] == null || lows[i] == null) {
                 continue;
@@ -1836,7 +1919,13 @@ function optimizeParameters() {
                 close: parseFloat(closes[i].toFixed(4))
             });
         }
-        
+
+        // バックテストモード時は当時のデータのみで最適化する（未来データのリーク防止）
+        if (state.backtestOffset > 0) {
+            const cut = Math.min(state.backtestOffset, candles.length - 50);
+            if (cut > 0) candles = candles.slice(0, candles.length - cut);
+        }
+
         if (candles.length < 50) {
             alert('最適化するのに十分なデータ量がありません。');
             if (optimizeBtn) {
@@ -2131,7 +2220,9 @@ function renderOrbitMap(data) {
                     <circle class="planet-glow" r="${(pr * 1.9).toFixed(1)}" fill="${color}"/>
                     ${pulse}
                     <circle class="planet-body" r="${pr.toFixed(1)}" fill="${color}"/>
-                    <text class="planet-label" y="${labelY.toFixed(1)}">${shortSymbol(item.symbol)}</text>
+                    <a href="${getExternalChartUrl(item.symbol)}" target="_blank" class="planet-label-link" onclick="event.stopPropagation();">
+                        <text class="planet-label" y="${labelY.toFixed(1)}">${shortSymbol(item.symbol)} ↗</text>
+                    </a>
                     ${sigMark}
                 </g>
             `;
@@ -2194,7 +2285,7 @@ function renderOrbitMap(data) {
                 <div class="tt-row"><span>終値</span><strong>${itemData.close.toLocaleString(undefined, { maximumFractionDigits: 4 })}</strong></div>
                 <div class="tt-row"><span>前日比</span><strong class="${itemData.changePercent >= 0 ? 'tt-up' : 'tt-down'}">${chgSign}${itemData.changePercent}%</strong></div>
                 ${sigLine}
-                <div class="tt-hint">クリックでチャート分析へ</div>
+                <div class="tt-hint">クリック：アプリ内分析 / シンボル名クリック：別窓表示</div>
             `;
             tooltip.hidden = false;
         });
@@ -2284,7 +2375,10 @@ function renderSectorHeatmap(data) {
             return `
                 <div class="heat-tile" data-symbol="${item.symbol}" title="${item.name}" style="background:${rsiToHeatColor(item.rsi)};">
                     <div class="heat-tile-head">
-                        <span class="heat-symbol">${shortSymbol(item.symbol)}</span>
+                        <a href="${getExternalChartUrl(item.symbol)}" target="_blank" class="heat-external-link" onclick="event.stopPropagation();" title="Yahoo Financeで外部チャートを開く (別窓)">
+                            <span class="heat-symbol">${shortSymbol(item.symbol)}</span>
+                            <i data-lucide="external-link" style="width:12px;height:12px;margin-left:2px;"></i>
+                        </a>
                         ${sigBadge}
                     </div>
                     <div class="heat-rsi">${item.rsi.toFixed(1)}</div>
@@ -2362,7 +2456,12 @@ async function loadScreenerData() {
                 return `
                     <tr data-symbol="${item.symbol}">
                         <td style="font-weight:600; color:#f1f5f9;">${item.name}</td>
-                        <td style="font-family:monospace; color:#94a3b8;">${item.symbol}</td>
+                        <td style="font-family:monospace;">
+                            <a href="${getExternalChartUrl(item.symbol)}" target="_blank" class="screener-ticker-link" onclick="event.stopPropagation();" title="Yahoo Financeで外部チャートを開く (別窓)">
+                                ${item.symbol}
+                                <i data-lucide="external-link" style="width:12px;height:12px;"></i>
+                            </a>
+                        </td>
                         <td style="font-weight:600;">${item.close.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })}</td>
                         <td class="${changeClass}">${changeSign}${item.changePercent}%</td>
                         <td style="font-family:monospace; color:#a855f7;">${item.rsi.toFixed(2)}</td>
