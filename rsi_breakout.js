@@ -27,11 +27,13 @@ const state = {
     lastLoadedSymbol: null,
     lastLoadedPeriod: null,
     indicators: null,
+    lastComputed: null, // 直近の解析結果 { candles, analysis } — シミュレーション再計算用
     charts: {
         price: null,
         rsi: null,
         weekly: null,
         weeklyRsi: null,
+        equity: null,
         series: {
             candles: null,
             rsi: null,
@@ -40,7 +42,9 @@ const state = {
             trendlines: [],
             weeklyCandles: null,
             weeklyRsiLine: null,
-            weeklyRsiMa: null
+            weeklyRsiMa: null,
+            equityStrategy: null,
+            equityBuyHold: null
         }
     }
 };
@@ -86,6 +90,7 @@ function initApp() {
     setupSliders();
     setupEventListeners();
     setupBacktestControls();
+    setupSimulationControls();
     setupCharts();
     setupTabs();
     setupHeatmapViewToggle();
@@ -802,6 +807,11 @@ function parseAndProcessData(result) {
 
     // 4. Update UI & Charts
     renderAnalysis(effectiveCandles, rsiValues, rsiMaValues, analysisResults);
+
+    // 5. 売買シミュレーション（バックテスト）を最新の解析結果で再実行
+    state.lastComputed = { candles: effectiveCandles, analysis: analysisResults };
+    runAndRenderSimulation();
+
     showLoading(false);
 }
 
@@ -1537,6 +1547,331 @@ function compareSignals(batchSignals, replaySignals) {
         phantom,
         replayOnly
     };
+}
+
+// ============================================================
+// 売買シミュレーション（バックテスト）エンジン
+// シグナル発生バーの引けで判定し、翌営業日の寄り付きでエントリー。
+// 反対シグナル（ドテン）・最大保有日数・損切り/利確で決済する。
+// ※ scripts/screener.js の runTradeSimulation と同一実装を保つこと
+// ============================================================
+function runTradeSimulation(candles, signals, options) {
+    const opt = Object.assign({
+        maxHoldBars: 15,      // 最大保有営業日数 (0 = 無制限)
+        stopLossPct: 0,       // 損切り% (0 = 無効)
+        takeProfitPct: 0,     // 利確% (0 = 無効)
+        allowShort: true,     // SELLシグナルで空売りする
+        exitOnOpposite: true, // 反対シグナルで決済してドテン
+        costPct: 0            // 1トレードあたりの往復コスト%
+    }, options || {});
+
+    const N = candles.length;
+    // 同一バーに複数シグナルがある場合は最後のものを採用
+    const signalByIndex = new Map();
+    signals
+        .filter(s => s.index != null && s.index >= 0 && s.index < N)
+        .slice()
+        .sort((a, b) => a.index - b.index)
+        .forEach(s => signalByIndex.set(s.index, s));
+
+    const trades = [];
+    const equityCurve = [];
+    let equity = 1.0;
+    let peak = 1.0;
+    let maxDrawdown = 0;
+    let position = null;      // { type, entryIdx, entryPrice }
+    let pendingSignal = null; // 前日の引けで出たシグナル → 当日寄り付きで執行
+
+    const unrealized = (pos, price) => pos.type === 'BUY'
+        ? (price - pos.entryPrice) / pos.entryPrice
+        : (pos.entryPrice - price) / pos.entryPrice;
+
+    const closePosition = (exitIdx, exitPrice, reason) => {
+        const net = unrealized(position, exitPrice) - opt.costPct / 100;
+        equity *= (1 + net);
+        trades.push({
+            type: position.type,
+            entryTime: candles[position.entryIdx].time,
+            entryPrice: position.entryPrice,
+            exitTime: candles[exitIdx].time,
+            exitPrice: exitPrice,
+            holdBars: exitIdx - position.entryIdx,
+            returnPct: net * 100,
+            reason: reason
+        });
+        position = null;
+    };
+
+    for (let i = 0; i < N; i++) {
+        const bar = candles[i];
+
+        // 1. 寄り付き: 前日の引けに出たシグナルを執行
+        if (pendingSignal) {
+            const sig = pendingSignal;
+            pendingSignal = null;
+            if (position && opt.exitOnOpposite && sig.type !== position.type) {
+                closePosition(i, bar.open, 'ドテン');
+            }
+            if (!position && (sig.type === 'BUY' || (sig.type === 'SELL' && opt.allowShort))) {
+                position = { type: sig.type, entryIdx: i, entryPrice: bar.open };
+            }
+        }
+
+        // 2. ザラ場: 損切り→利確の順に判定（同一バーで両方到達した場合は損切り優先の保守的判定）
+        if (position && opt.stopLossPct > 0) {
+            const sl = position.type === 'BUY'
+                ? position.entryPrice * (1 - opt.stopLossPct / 100)
+                : position.entryPrice * (1 + opt.stopLossPct / 100);
+            if (position.type === 'BUY' ? bar.low <= sl : bar.high >= sl) {
+                closePosition(i, sl, '損切り');
+            }
+        }
+        if (position && opt.takeProfitPct > 0) {
+            const tp = position.type === 'BUY'
+                ? position.entryPrice * (1 + opt.takeProfitPct / 100)
+                : position.entryPrice * (1 - opt.takeProfitPct / 100);
+            if (position.type === 'BUY' ? bar.high >= tp : bar.low <= tp) {
+                closePosition(i, tp, '利確');
+            }
+        }
+
+        // 3. 引け: 最大保有日数で決済
+        if (position && opt.maxHoldBars > 0 && i - position.entryIdx >= opt.maxHoldBars) {
+            closePosition(i, bar.close, '保有期限');
+        }
+
+        // 4. 引け: 新シグナル検知（翌営業日の寄り付きで執行）
+        const sig = signalByIndex.get(i);
+        if (sig && (!position || (opt.exitOnOpposite && sig.type !== position.type))) {
+            pendingSignal = sig;
+        }
+
+        // 5. 資産曲線（終値で含み損益を時価評価）
+        const mtm = position ? equity * (1 + unrealized(position, bar.close)) : equity;
+        if (mtm > peak) peak = mtm;
+        const dd = (peak - mtm) / peak;
+        if (dd > maxDrawdown) maxDrawdown = dd;
+        equityCurve.push({ time: bar.time, value: mtm });
+    }
+
+    // データ末尾で残ったポジションは最終終値で評価決済（未決済として記録）
+    if (position) {
+        closePosition(N - 1, candles[N - 1].close, '未決済');
+        // 仮想決済のコストを資産曲線の最終点にも反映して整合させる
+        if (equityCurve.length) equityCurve[equityCurve.length - 1].value = equity;
+    }
+
+    return {
+        trades: trades,
+        equityCurve: equityCurve,
+        metrics: summarizeTrades(trades, equityCurve, candles, maxDrawdown)
+    };
+}
+
+function summarizeTrades(trades, equityCurve, candles, maxDrawdown) {
+    const wins = trades.filter(t => t.returnPct > 0);
+    const losses = trades.filter(t => t.returnPct <= 0);
+    const grossProfit = wins.reduce((s, t) => s + t.returnPct, 0);
+    const grossLoss = Math.abs(losses.reduce((s, t) => s + t.returnPct, 0));
+    const finalEquity = equityCurve.length ? equityCurve[equityCurve.length - 1].value : 1;
+    const firstClose = candles.length ? candles[0].close : 0;
+    const lastClose = candles.length ? candles[candles.length - 1].close : 0;
+    return {
+        trades: trades.length,
+        wins: wins.length,
+        losses: losses.length,
+        winRate: trades.length ? wins.length / trades.length : 0,
+        profitFactor: grossLoss > 0 ? grossProfit / grossLoss : (grossProfit > 0 ? Infinity : 0),
+        totalReturnPct: (finalEquity - 1) * 100,
+        buyHoldReturnPct: firstClose ? ((lastClose - firstClose) / firstClose) * 100 : 0,
+        maxDrawdownPct: maxDrawdown * 100,
+        expectancyPct: trades.length ? trades.reduce((s, t) => s + t.returnPct, 0) / trades.length : 0,
+        avgHoldBars: trades.length ? trades.reduce((s, t) => s + t.holdBars, 0) / trades.length : 0
+    };
+}
+
+/* ============ 売買シミュレーション UI ============ */
+
+function setupSimulationControls() {
+    const inputIds = ['sim-max-hold', 'sim-stop-loss', 'sim-take-profit', 'sim-cost', 'sim-allow-short', 'sim-exit-opposite', 'sim-signal-source'];
+    inputIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('change', () => runAndRenderSimulation());
+    });
+    const btn = document.getElementById('btn-sim-run');
+    if (btn) btn.addEventListener('click', () => runAndRenderSimulation());
+}
+
+function getSimulationOptions() {
+    const num = (id, def) => {
+        const el = document.getElementById(id);
+        const v = el ? parseFloat(el.value) : NaN;
+        return isNaN(v) || v < 0 ? def : v;
+    };
+    const checked = (id, def) => {
+        const el = document.getElementById(id);
+        return el ? el.checked : def;
+    };
+    return {
+        maxHoldBars: Math.floor(num('sim-max-hold', 15)),
+        stopLossPct: num('sim-stop-loss', 0),
+        takeProfitPct: num('sim-take-profit', 0),
+        costPct: num('sim-cost', 0.1),
+        allowShort: checked('sim-allow-short', true),
+        exitOnOpposite: checked('sim-exit-opposite', true)
+    };
+}
+
+function runAndRenderSimulation() {
+    if (!state.lastComputed) return;
+    const { candles, analysis } = state.lastComputed;
+
+    // 対象シグナルの選択: 実戦（walk-forwardで実際に点灯した確＋実）か、後知恵の全バッチか
+    const sourceEl = document.getElementById('sim-signal-source');
+    const source = sourceEl ? sourceEl.value : 'replay';
+    let signals;
+    if (source === 'batch') {
+        signals = analysis.signals;
+    } else {
+        const compared = analysis.comparedSignals || { confirmed: [], replayOnly: [] };
+        signals = [...compared.confirmed, ...compared.replayOnly];
+    }
+
+    const result = runTradeSimulation(candles, signals, getSimulationOptions());
+    renderSimulation(candles, result);
+}
+
+function ensureEquityChart() {
+    if (state.charts.equity) return;
+    const container = document.getElementById('chart-equity-container');
+    if (!container) return;
+
+    state.charts.equity = LightweightCharts.createChart(container, {
+        layout: {
+            background: { type: 'solid', color: '#111622' },
+            textColor: '#94a3b8',
+            fontSize: 11,
+            fontFamily: 'Outfit, sans-serif',
+        },
+        grid: {
+            vertLines: { color: 'rgba(148, 163, 184, 0.05)' },
+            horzLines: { color: 'rgba(148, 163, 184, 0.05)' },
+        },
+        crosshair: {
+            mode: LightweightCharts.CrosshairMode.Normal,
+            vertLine: { color: '#6366f1', width: 1, style: 2, labelBackgroundColor: '#6366f1' },
+            horzLine: { color: '#6366f1', width: 1, style: 2, labelBackgroundColor: '#6366f1' },
+        },
+        timeScale: {
+            borderColor: 'rgba(148, 163, 184, 0.1)',
+            timeVisible: false,
+            secondsVisible: false,
+        },
+        rightPriceScale: {
+            borderColor: 'rgba(148, 163, 184, 0.1)',
+            autoScale: true,
+            minimumWidth: 80,
+        }
+    });
+
+    state.charts.series.equityStrategy = state.charts.equity.addLineSeries({
+        color: '#6366f1',
+        lineWidth: 2,
+        title: '戦略',
+        priceLineVisible: false,
+    });
+    state.charts.series.equityBuyHold = state.charts.equity.addLineSeries({
+        color: '#d97706',
+        lineWidth: 2,
+        lineStyle: 2, // Dashed
+        title: 'Buy&Hold',
+        priceLineVisible: false,
+    });
+    // 損益分岐（0%）の基準線
+    state.charts.series.equityStrategy.createPriceLine({
+        price: 0,
+        color: 'rgba(148, 163, 184, 0.35)',
+        lineWidth: 1,
+        lineStyle: 1,
+        axisLabelVisible: false,
+        title: '',
+    });
+
+    const resizeObserver = new ResizeObserver(entries => {
+        for (const entry of entries) {
+            state.charts.equity.applyOptions({ width: entry.contentRect.width });
+        }
+    });
+    resizeObserver.observe(container);
+}
+
+function renderSimulation(candles, result) {
+    const m = result.metrics;
+
+    // 1. 成績サマリーカード
+    const statsEl = document.getElementById('sim-stats');
+    if (statsEl) {
+        const pf = m.profitFactor === Infinity ? '∞' : m.profitFactor.toFixed(2);
+        const clsOf = (v) => v > 0 ? 'up' : (v < 0 ? 'down' : '');
+        const sign = (v) => v > 0 ? '+' : '';
+        const tiles = [
+            { label: '戦略 総リターン', value: `${sign(m.totalReturnPct)}${m.totalReturnPct.toFixed(2)}%`, cls: clsOf(m.totalReturnPct) },
+            { label: 'Buy & Hold', value: `${sign(m.buyHoldReturnPct)}${m.buyHoldReturnPct.toFixed(2)}%`, cls: clsOf(m.buyHoldReturnPct) },
+            { label: '勝率', value: m.trades ? `${(m.winRate * 100).toFixed(1)}%` : '--', sub: m.trades ? `${m.wins}勝${m.losses}敗` : '' },
+            { label: 'プロフィットファクター', value: m.trades ? pf : '--' },
+            { label: '1トレード期待値', value: m.trades ? `${sign(m.expectancyPct)}${m.expectancyPct.toFixed(2)}%` : '--', cls: clsOf(m.expectancyPct) },
+            { label: '最大ドローダウン', value: `-${m.maxDrawdownPct.toFixed(2)}%`, cls: m.maxDrawdownPct > 0 ? 'down' : '' },
+            { label: '取引回数', value: `${m.trades}回` },
+            { label: '平均保有日数', value: m.trades ? `${m.avgHoldBars.toFixed(1)}日` : '--' },
+        ];
+        statsEl.innerHTML = tiles.map(t => `
+            <div class="sim-stat-tile">
+                <span class="sim-stat-label">${t.label}</span>
+                <span class="sim-stat-value ${t.cls || ''}">${t.value}</span>
+                ${t.sub ? `<span class="sim-stat-sub">${t.sub}</span>` : ''}
+            </div>
+        `).join('');
+    }
+
+    // 2. 資産曲線チャート（戦略 vs Buy&Hold、いずれも累積損益%）
+    ensureEquityChart();
+    if (state.charts.equity) {
+        const strategyData = result.equityCurve.map(p => ({ time: p.time, value: (p.value - 1) * 100 }));
+        const base = candles.length ? candles[0].close : 1;
+        const buyHoldData = candles.map(c => ({ time: c.time, value: (c.close / base - 1) * 100 }));
+        state.charts.series.equityStrategy.setData(strategyData);
+        state.charts.series.equityBuyHold.setData(buyHoldData);
+        state.charts.equity.timeScale().fitContent();
+    }
+
+    // 3. 取引履歴テーブル（新しい順）
+    const tableBody = document.getElementById('sim-trades-table')?.querySelector('tbody');
+    if (tableBody) {
+        if (result.trades.length === 0) {
+            tableBody.innerHTML = `<tr><td colspan="7" class="no-data">この条件では取引が発生しませんでした。</td></tr>`;
+        } else {
+            const fmtPrice = (p) => p.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 });
+            tableBody.innerHTML = [...result.trades].reverse().map((t, revIdx) => {
+                const no = result.trades.length - revIdx;
+                const retCls = t.returnPct > 0 ? 'up' : (t.returnPct < 0 ? 'down' : '');
+                const retSign = t.returnPct > 0 ? '+' : '';
+                const reasonBadge = t.reason === '未決済'
+                    ? `<span style="color:#f59e0b;">未決済 (評価中)</span>`
+                    : t.reason;
+                return `
+                    <tr>
+                        <td style="color:var(--text-dim);">${no}</td>
+                        <td><span class="sig-badge ${t.type.toLowerCase()}">${t.type === 'BUY' ? '買い' : '売り'}</span></td>
+                        <td>${t.entryTime}<br><span style="font-family:monospace; color:var(--text-muted);">${fmtPrice(t.entryPrice)}</span></td>
+                        <td>${t.exitTime}<br><span style="font-family:monospace; color:var(--text-muted);">${fmtPrice(t.exitPrice)}</span></td>
+                        <td>${t.holdBars}日</td>
+                        <td class="stat-change ${retCls}" style="font-weight:600;">${retSign}${t.returnPct.toFixed(2)}%</td>
+                        <td style="font-size:0.8rem;">${reasonBadge}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+    }
 }
 
 // Render data and drawings to charts and tables
@@ -2407,6 +2742,77 @@ function renderSectorHeatmap(data) {
 }
 
 // スクリーナーデータのロードと描画
+// バックテスト成績（実戦シグナルによる売買シミュレーション）に基づく推奨銘柄ランキング
+function renderRecommendations(data) {
+    const table = document.getElementById('reco-table');
+    if (!table) return;
+    const tbody = table.querySelector('tbody');
+
+    const results = data.results || [];
+    const hasBacktest = results.some(r => r.backtest);
+    if (!hasBacktest) {
+        tbody.innerHTML = `<tr><td colspan="11" class="no-data">バックテスト成績データがまだありません。次回のスクリーナー自動実行後に表示されます。</td></tr>`;
+        return;
+    }
+
+    // スコアがプラス（期待値プラス × 統計的信頼あり）の銘柄のみを上位10件表示
+    const ranked = results
+        .filter(r => r.backtest && r.backtest.score !== null && r.backtest.score > 0)
+        .sort((a, b) => b.backtest.score - a.backtest.score)
+        .slice(0, 10);
+
+    if (ranked.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="11" class="no-data">現在、バックテスト成績がプラスの銘柄はありません。</td></tr>`;
+        return;
+    }
+
+    tbody.innerHTML = ranked.map((item, i) => {
+        const bt = item.backtest;
+        const pfStr = bt.profitFactor >= 99.9 ? '∞' : bt.profitFactor.toFixed(2);
+        const retCls = bt.totalReturnPct > 0 ? 'up' : (bt.totalReturnPct < 0 ? 'down' : '');
+        const retSign = bt.totalReturnPct > 0 ? '+' : '';
+        const expSign = bt.expectancyPct > 0 ? '+' : '';
+
+        let signalText = '<span style="color:var(--text-dim);">なし</span>';
+        if (item.latestSignal) {
+            const cls = item.latestSignal.type === 'BUY' ? 'buy' : 'sell';
+            signalText = `<span class="sig-badge ${cls}">${item.latestSignal.type}</span> <span style="font-size:0.75rem; color:var(--text-muted);">(${item.latestSignal.barsAgo}日前)</span>`;
+        }
+
+        const rankBadge = i < 3
+            ? `<span class="reco-rank reco-rank-top">${i + 1}</span>`
+            : `<span class="reco-rank">${i + 1}</span>`;
+
+        return `
+            <tr data-symbol="${item.symbol}">
+                <td>${rankBadge}</td>
+                <td style="font-weight:600; color:#f1f5f9;">${item.name}<br><span style="font-family:monospace; font-size:0.75rem; color:var(--text-muted);">${item.symbol}</span></td>
+                <td><span class="badge-param">${item.sector || '--'}</span></td>
+                <td style="font-family:monospace; font-weight:700; color:#818cf8;">${bt.score.toFixed(2)}</td>
+                <td class="stat-change up" style="font-weight:600;">${expSign}${bt.expectancyPct}%</td>
+                <td style="font-family:monospace;">${bt.winRatePct}%<br><span style="font-size:0.72rem; color:var(--text-muted);">${bt.wins}勝${bt.trades - bt.wins}敗</span></td>
+                <td style="font-family:monospace;">${pfStr}</td>
+                <td class="stat-change ${retCls}" style="font-weight:600;">${retSign}${bt.totalReturnPct}%<br><span style="font-size:0.72rem; color:var(--text-muted); font-weight:normal;">B&H ${bt.buyHoldReturnPct > 0 ? '+' : ''}${bt.buyHoldReturnPct}%</span></td>
+                <td style="font-family:monospace; color:var(--color-sell);">-${bt.maxDrawdownPct}%</td>
+                <td>${signalText}</td>
+                <td><button class="btn-screener-view" data-symbol="${item.symbol}">表示</button></td>
+            </tr>
+        `;
+    }).join('');
+
+    // 行クリック・表示ボタンで個別チャートへジャンプ
+    tbody.querySelectorAll('tr').forEach(row => {
+        const symbol = row.dataset.symbol;
+        const itemData = results.find(r => r.symbol === symbol);
+        if (!itemData) return;
+        row.querySelector('.btn-screener-view')?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            jumpToAnalysis(itemData);
+        });
+        row.addEventListener('click', () => jumpToAnalysis(itemData));
+    });
+}
+
 async function loadScreenerData() {
     try {
         const res = await fetch('screener_results.json');
@@ -2420,7 +2826,10 @@ async function loadScreenerData() {
         // セクターマップ（軌道ビュー & タイルビュー）の描画
         renderOrbitMap(data);
         renderSectorHeatmap(data);
-        
+
+        // バックテスト推奨銘柄ランキングの描画
+        renderRecommendations(data);
+
         // サインのカウント
         let buyCount = 0;
         let sellCount = 0;
@@ -2452,7 +2861,17 @@ async function loadScreenerData() {
                 
                 const bp = item.bestParams;
                 const paramStr = `RSI:${bp.rsiPeriod} / MA:${bp.maPeriod} / 偏:${bp.offset} / 差:${bp.margin}`;
-                
+
+                // バックテスト成績（勝率 / PF / 期待値）
+                let btText = '<span style="color:var(--text-dim);">--</span>';
+                const bt = item.backtest;
+                if (bt && bt.trades > 0) {
+                    const pfStr = bt.profitFactor >= 99.9 ? '∞' : bt.profitFactor;
+                    const expCls = bt.expectancyPct > 0 ? 'up' : (bt.expectancyPct < 0 ? 'down' : '');
+                    const expSign = bt.expectancyPct > 0 ? '+' : '';
+                    btText = `<span style="font-family:monospace; font-size:0.8rem;">勝率${bt.winRatePct}% / PF ${pfStr} / <span class="stat-change ${expCls}">${expSign}${bt.expectancyPct}%</span></span>`;
+                }
+
                 return `
                     <tr data-symbol="${item.symbol}">
                         <td style="font-weight:600; color:#f1f5f9;">${item.name}</td>
@@ -2468,6 +2887,7 @@ async function loadScreenerData() {
                         <td><span class="badge-method">${bp.peakMethod}</span></td>
                         <td><span class="badge-param">${paramStr}</span></td>
                         <td>${signalText}</td>
+                        <td>${btText}</td>
                         <td><button class="btn-screener-view" data-symbol="${item.symbol}">表示</button></td>
                     </tr>
                 `;
@@ -2495,13 +2915,17 @@ async function loadScreenerData() {
             
             if (window.lucide) window.lucide.createIcons();
         } else {
-            tableBody.innerHTML = `<tr><td colspan="9" class="no-data">スクリーニング結果が見つかりませんでした。</td></tr>`;
+            tableBody.innerHTML = `<tr><td colspan="10" class="no-data">スクリーニング結果が見つかりませんでした。</td></tr>`;
         }
     } catch (err) {
         console.error('Error loading screener data:', err);
         const tableBody = document.getElementById('screener-table')?.querySelector('tbody');
         if (tableBody) {
-            tableBody.innerHTML = `<tr><td colspan="9" class="no-data" style="color:var(--color-sell);">スクリーニングデータの読み込みに失敗しました。まだ Actions が実行されていないか、JSONファイルがありません。</td></tr>`;
+            tableBody.innerHTML = `<tr><td colspan="10" class="no-data" style="color:var(--color-sell);">スクリーニングデータの読み込みに失敗しました。まだ Actions が実行されていないか、JSONファイルがありません。</td></tr>`;
+        }
+        const recoBody = document.getElementById('reco-table')?.querySelector('tbody');
+        if (recoBody) {
+            recoBody.innerHTML = `<tr><td colspan="11" class="no-data" style="color:var(--color-sell);">スクリーニングデータの読み込みに失敗しました。</td></tr>`;
         }
         const heatmapContainer = document.getElementById('heatmap-container');
         if (heatmapContainer) {

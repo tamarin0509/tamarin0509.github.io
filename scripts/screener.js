@@ -601,6 +601,156 @@ function compareSignals(batchSignals, replaySignals) {
     return { confirmed, phantom, replayOnly };
 }
 
+// ============================================================
+// 売買シミュレーション（バックテスト）エンジン
+// シグナル発生バーの引けで判定し、翌営業日の寄り付きでエントリー。
+// 反対シグナル（ドテン）・最大保有日数・損切り/利確で決済する。
+// ※ rsi_breakout.js の runTradeSimulation と同一実装を保つこと
+// ============================================================
+function runTradeSimulation(candles, signals, options) {
+    const opt = Object.assign({
+        maxHoldBars: 15,      // 最大保有営業日数 (0 = 無制限)
+        stopLossPct: 0,       // 損切り% (0 = 無効)
+        takeProfitPct: 0,     // 利確% (0 = 無効)
+        allowShort: true,     // SELLシグナルで空売りする
+        exitOnOpposite: true, // 反対シグナルで決済してドテン
+        costPct: 0            // 1トレードあたりの往復コスト%
+    }, options || {});
+
+    const N = candles.length;
+    // 同一バーに複数シグナルがある場合は最後のものを採用
+    const signalByIndex = new Map();
+    signals
+        .filter(s => s.index != null && s.index >= 0 && s.index < N)
+        .slice()
+        .sort((a, b) => a.index - b.index)
+        .forEach(s => signalByIndex.set(s.index, s));
+
+    const trades = [];
+    const equityCurve = [];
+    let equity = 1.0;
+    let peak = 1.0;
+    let maxDrawdown = 0;
+    let position = null;      // { type, entryIdx, entryPrice }
+    let pendingSignal = null; // 前日の引けで出たシグナル → 当日寄り付きで執行
+
+    const unrealized = (pos, price) => pos.type === 'BUY'
+        ? (price - pos.entryPrice) / pos.entryPrice
+        : (pos.entryPrice - price) / pos.entryPrice;
+
+    const closePosition = (exitIdx, exitPrice, reason) => {
+        const net = unrealized(position, exitPrice) - opt.costPct / 100;
+        equity *= (1 + net);
+        trades.push({
+            type: position.type,
+            entryTime: candles[position.entryIdx].time,
+            entryPrice: position.entryPrice,
+            exitTime: candles[exitIdx].time,
+            exitPrice: exitPrice,
+            holdBars: exitIdx - position.entryIdx,
+            returnPct: net * 100,
+            reason: reason
+        });
+        position = null;
+    };
+
+    for (let i = 0; i < N; i++) {
+        const bar = candles[i];
+
+        // 1. 寄り付き: 前日の引けに出たシグナルを執行
+        if (pendingSignal) {
+            const sig = pendingSignal;
+            pendingSignal = null;
+            if (position && opt.exitOnOpposite && sig.type !== position.type) {
+                closePosition(i, bar.open, 'ドテン');
+            }
+            if (!position && (sig.type === 'BUY' || (sig.type === 'SELL' && opt.allowShort))) {
+                position = { type: sig.type, entryIdx: i, entryPrice: bar.open };
+            }
+        }
+
+        // 2. ザラ場: 損切り→利確の順に判定（同一バーで両方到達した場合は損切り優先の保守的判定）
+        if (position && opt.stopLossPct > 0) {
+            const sl = position.type === 'BUY'
+                ? position.entryPrice * (1 - opt.stopLossPct / 100)
+                : position.entryPrice * (1 + opt.stopLossPct / 100);
+            if (position.type === 'BUY' ? bar.low <= sl : bar.high >= sl) {
+                closePosition(i, sl, '損切り');
+            }
+        }
+        if (position && opt.takeProfitPct > 0) {
+            const tp = position.type === 'BUY'
+                ? position.entryPrice * (1 + opt.takeProfitPct / 100)
+                : position.entryPrice * (1 - opt.takeProfitPct / 100);
+            if (position.type === 'BUY' ? bar.high >= tp : bar.low <= tp) {
+                closePosition(i, tp, '利確');
+            }
+        }
+
+        // 3. 引け: 最大保有日数で決済
+        if (position && opt.maxHoldBars > 0 && i - position.entryIdx >= opt.maxHoldBars) {
+            closePosition(i, bar.close, '保有期限');
+        }
+
+        // 4. 引け: 新シグナル検知（翌営業日の寄り付きで執行）
+        const sig = signalByIndex.get(i);
+        if (sig && (!position || (opt.exitOnOpposite && sig.type !== position.type))) {
+            pendingSignal = sig;
+        }
+
+        // 5. 資産曲線（終値で含み損益を時価評価）
+        const mtm = position ? equity * (1 + unrealized(position, bar.close)) : equity;
+        if (mtm > peak) peak = mtm;
+        const dd = (peak - mtm) / peak;
+        if (dd > maxDrawdown) maxDrawdown = dd;
+        equityCurve.push({ time: bar.time, value: mtm });
+    }
+
+    // データ末尾で残ったポジションは最終終値で評価決済（未決済として記録）
+    if (position) {
+        closePosition(N - 1, candles[N - 1].close, '未決済');
+        // 仮想決済のコストを資産曲線の最終点にも反映して整合させる
+        if (equityCurve.length) equityCurve[equityCurve.length - 1].value = equity;
+    }
+
+    return {
+        trades: trades,
+        equityCurve: equityCurve,
+        metrics: summarizeTrades(trades, equityCurve, candles, maxDrawdown)
+    };
+}
+
+function summarizeTrades(trades, equityCurve, candles, maxDrawdown) {
+    const wins = trades.filter(t => t.returnPct > 0);
+    const losses = trades.filter(t => t.returnPct <= 0);
+    const grossProfit = wins.reduce((s, t) => s + t.returnPct, 0);
+    const grossLoss = Math.abs(losses.reduce((s, t) => s + t.returnPct, 0));
+    const finalEquity = equityCurve.length ? equityCurve[equityCurve.length - 1].value : 1;
+    const firstClose = candles.length ? candles[0].close : 0;
+    const lastClose = candles.length ? candles[candles.length - 1].close : 0;
+    return {
+        trades: trades.length,
+        wins: wins.length,
+        losses: losses.length,
+        winRate: trades.length ? wins.length / trades.length : 0,
+        profitFactor: grossLoss > 0 ? grossProfit / grossLoss : (grossProfit > 0 ? Infinity : 0),
+        totalReturnPct: (finalEquity - 1) * 100,
+        buyHoldReturnPct: firstClose ? ((lastClose - firstClose) / firstClose) * 100 : 0,
+        maxDrawdownPct: maxDrawdown * 100,
+        expectancyPct: trades.length ? trades.reduce((s, t) => s + t.returnPct, 0) / trades.length : 0,
+        avgHoldBars: trades.length ? trades.reduce((s, t) => s + t.holdBars, 0) / trades.length : 0
+    };
+}
+
+// 推奨スコア: 1トレードあたり期待値% × 取引数の信頼係数 ÷ ドローダウンペナルティ
+// 取引数3未満は統計的に無意味なため対象外 (null)
+function computeBacktestScore(m) {
+    if (!m || m.trades < 3) return null;
+    const confidence = Math.sqrt(Math.min(m.trades, 20) / 20);
+    const ddPenalty = 1 + m.maxDrawdownPct / 25;
+    return (m.expectancyPct * confidence) / ddPenalty;
+}
+
 // Backtest evaluator (Fast version with slicing and expectancy score)
 function evaluateParameters(candles, rsi, rsiMa, testParams, startIdx, endIdx) {
     // Slice arrays to simulate optimization at a specific point in time (prevent future leak)
@@ -859,10 +1009,33 @@ async function runScreener() {
                 }
             }
             
+            // 売買シミュレーション: walk-forwardで実際に点灯したシグナル（確定＋実戦のみ）に従い
+            // 翌営業日の寄り付きで売買した場合の成績を全期間で検証する
+            const simulation = runTradeSimulation(candles, replaySignals, {
+                maxHoldBars: 15,
+                allowShort: true,
+                exitOnOpposite: true,
+                costPct: 0.1
+            });
+            const m = simulation.metrics;
+            const score = computeBacktestScore(m);
+            const backtest = {
+                trades: m.trades,
+                wins: m.wins,
+                winRatePct: parseFloat((m.winRate * 100).toFixed(1)),
+                profitFactor: parseFloat(Math.min(m.profitFactor, 99.9).toFixed(2)),
+                totalReturnPct: parseFloat(m.totalReturnPct.toFixed(2)),
+                buyHoldReturnPct: parseFloat(m.buyHoldReturnPct.toFixed(2)),
+                maxDrawdownPct: parseFloat(m.maxDrawdownPct.toFixed(2)),
+                expectancyPct: parseFloat(m.expectancyPct.toFixed(3)),
+                avgHoldBars: parseFloat(m.avgHoldBars.toFixed(1)),
+                score: score === null ? null : parseFloat(score.toFixed(3))
+            };
+
             const latestCandle = candles[candles.length - 1];
             const prevCandle = candles[candles.length - 2];
             const changePercent = prevCandle ? ((latestCandle.close - prevCandle.close) / prevCandle.close) * 100 : 0;
-            
+
             results.push({
                 symbol: item.symbol,
                 name: item.name,
@@ -872,7 +1045,8 @@ async function runScreener() {
                 changePercent: parseFloat(changePercent.toFixed(2)),
                 rsi: parseFloat(rsi[rsi.length - 1].toFixed(2)),
                 bestParams: optParams,
-                latestSignal: latestSig
+                latestSignal: latestSig,
+                backtest: backtest
             });
             
             console.log(`Successfully processed ${item.symbol}. Latest signal: ${latestSig ? `${latestSig.type} (${latestSig.barsAgo} days ago)` : 'None'}`);
@@ -893,4 +1067,20 @@ async function runScreener() {
     console.log(`Screener run finished. Saved results to ${outputPath}`);
 }
 
-runScreener();
+module.exports = {
+    WATCH_SYMBOLS,
+    calculateRSI,
+    calculateMA,
+    buildWeeklyCandles,
+    calculateRsiBreakout,
+    calculateWalkForwardReplay,
+    compareSignals,
+    runTradeSimulation,
+    summarizeTrades,
+    computeBacktestScore,
+    sanitizeSymbolForFile
+};
+
+if (require.main === module) {
+    runScreener();
+}

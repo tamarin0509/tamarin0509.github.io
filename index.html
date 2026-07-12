@@ -457,6 +457,71 @@
                         </div>
                     </div>
                 </section>
+
+                <!-- Trade Simulation (Backtest) -->
+                <section class="sim-section card-glass" id="simulation-section">
+                    <div class="card-header">
+                        <h3><i data-lucide="flask-conical"></i> 売買シミュレーション（バックテスト）</h3>
+                        <span class="sim-note">シグナルの翌営業日の寄り付きで売買した場合の全期間成績</span>
+                    </div>
+                    <div class="sim-controls">
+                        <label class="sim-control">
+                            対象シグナル
+                            <select id="sim-signal-source" class="form-control">
+                                <option value="replay" selected>実戦シグナル（確＋実）</option>
+                                <option value="batch">後知恵シグナル（全バッチ）</option>
+                            </select>
+                        </label>
+                        <label class="sim-control">
+                            最大保有日数
+                            <input type="number" id="sim-max-hold" class="form-control" value="15" min="0" max="250" step="1">
+                        </label>
+                        <label class="sim-control">
+                            損切り % <span class="sim-hint">(0=無効)</span>
+                            <input type="number" id="sim-stop-loss" class="form-control" value="0" min="0" max="50" step="0.5">
+                        </label>
+                        <label class="sim-control">
+                            利確 % <span class="sim-hint">(0=無効)</span>
+                            <input type="number" id="sim-take-profit" class="form-control" value="0" min="0" max="100" step="0.5">
+                        </label>
+                        <label class="sim-control">
+                            往復コスト %
+                            <input type="number" id="sim-cost" class="form-control" value="0.1" min="0" max="5" step="0.05">
+                        </label>
+                        <label class="sim-check"><input type="checkbox" id="sim-allow-short" checked> 売りシグナルで空売り</label>
+                        <label class="sim-check"><input type="checkbox" id="sim-exit-opposite" checked> 反対シグナルでドテン</label>
+                        <button type="button" id="btn-sim-run" class="btn-primary sim-run-btn"><i data-lucide="play"></i> 再計算</button>
+                    </div>
+                    <div class="sim-stats" id="sim-stats">
+                        <div class="sim-stat-tile"><span class="sim-stat-label">--</span><span class="sim-stat-value">データ読込中</span></div>
+                    </div>
+                    <div class="sim-equity-header">
+                        <h4>資産曲線（累積損益 %）</h4>
+                        <div class="sim-legend">
+                            <span class="sim-legend-item"><span class="sim-legend-swatch" style="background:#6366f1;"></span> 戦略</span>
+                            <span class="sim-legend-item"><span class="sim-legend-swatch" style="background:repeating-linear-gradient(to right, #d97706 0 6px, transparent 6px 10px);"></span> Buy &amp; Hold</span>
+                        </div>
+                    </div>
+                    <div id="chart-equity-container" class="chart-container sim-equity-chart"></div>
+                    <div class="table-wrapper sim-trades-wrapper">
+                        <table id="sim-trades-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>方向</th>
+                                    <th>エントリー (翌日寄付)</th>
+                                    <th>決済</th>
+                                    <th>保有</th>
+                                    <th>損益</th>
+                                    <th>決済理由</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td colspan="7" class="no-data">チャートのデータを読み込んでください。</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
             </div>
 
             <!-- Tab 2: Screener -->
@@ -480,6 +545,36 @@
                     </div>
                 </div>
 
+                <!-- Backtest-based Recommendations -->
+                <div class="reco-card card-glass" style="margin-bottom: 1.5rem;">
+                    <div class="card-header">
+                        <h3><i data-lucide="trophy"></i> バックテスト推奨銘柄 TOP10</h3>
+                        <span class="sim-note">過去約2年の実戦シグナル（リペイント無し）に翌日寄り付きで追随した場合のシミュレーション成績ランキング。スコア = 1トレード期待値 × 取引数信頼係数 ÷ ドローダウンペナルティ</span>
+                    </div>
+                    <div class="table-wrapper">
+                        <table id="reco-table">
+                            <thead>
+                                <tr>
+                                    <th>順位</th>
+                                    <th>銘柄</th>
+                                    <th>セクター</th>
+                                    <th>スコア</th>
+                                    <th>期待値/回</th>
+                                    <th>勝率</th>
+                                    <th>PF</th>
+                                    <th>総リターン</th>
+                                    <th>最大DD</th>
+                                    <th>直近シグナル</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td colspan="11" class="no-data">スクリーニングデータを読み込んでいます...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
                 <div class="screener-table-card card-glass">
                     <div class="table-wrapper">
                         <table id="screener-table">
@@ -493,12 +588,13 @@
                                     <th>検出方式</th>
                                     <th>最適パラメータ (RSI/MA/オフセット/マージン)</th>
                                     <th>最新シグナル (週足MTFフィルタ適用済)</th>
+                                    <th>バックテスト成績</th>
                                     <th>操作</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td colspan="9" class="no-data">スクリーニングデータを読み込んでいます...</td>
+                                    <td colspan="10" class="no-data">スクリーニングデータを読み込んでいます...</td>
                                 </tr>
                             </tbody>
                         </table>
