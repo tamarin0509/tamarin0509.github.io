@@ -804,6 +804,14 @@ function parseAndProcessData(result) {
     // 4. Update UI & Charts
     renderAnalysis(effectiveCandles, rsiValues, rsiMaValues, analysisResults);
     showLoading(false);
+
+    // バックテスト再生タブが表示中なら、新しいデータで再生をリセット
+    // （URLハッシュ #tab-replay で直接開いた場合のチャート初期化もここで行う）
+    const replayTab = document.getElementById('tab-replay');
+    if (replayTab && replayTab.classList.contains('active')) {
+        ensureReplayCharts();
+        replayReset();
+    }
 }
 
 /* Indicators Math Logic */
@@ -2619,7 +2627,14 @@ function ensureReplayCharts() {
 
     REPLAY.charts.price = LightweightCharts.createChart(priceContainer, {
         ...chartTheme,
-        rightPriceScale: { borderColor: 'rgba(148, 163, 184, 0.1)', autoScale: true, minimumWidth: 80 }
+        rightPriceScale: {
+            borderColor: 'rgba(148, 163, 184, 0.1)',
+            autoScale: true,
+            minimumWidth: 80,
+            // デフォルト(上0.2/下0.1)は余白が大きすぎ、マーカーの固定余白と
+            // 合わさるとローソク足が縦に圧縮されるため詰める
+            scaleMargins: { top: 0.05, bottom: 0.05 }
+        }
     });
     REPLAY.series.candles = REPLAY.charts.price.addCandlestickSeries({
         upColor: '#10b981',
@@ -2631,7 +2646,12 @@ function ensureReplayCharts() {
 
     REPLAY.charts.equity = LightweightCharts.createChart(equityContainer, {
         ...chartTheme,
-        rightPriceScale: { borderColor: 'rgba(148, 163, 184, 0.1)', autoScale: true, minimumWidth: 80 }
+        rightPriceScale: {
+            borderColor: 'rgba(148, 163, 184, 0.1)',
+            autoScale: true,
+            minimumWidth: 80,
+            scaleMargins: { top: 0.1, bottom: 0.1 }
+        }
     });
     REPLAY.series.equity = REPLAY.charts.equity.addBaselineSeries({
         baseValue: { type: 'price', price: 100 },
@@ -2791,14 +2811,28 @@ function replayReset() {
     });
     REPLAY.series.tradeLines = [];
     // 損益カーブ: 開始日以前はホワイトスペースで埋め、ローソク足と時間軸を揃える
-    REPLAY.series.equity.setData(candles.slice(0, startIdx).map(c => ({ time: c.time })));
+    // 注意: 実データ点が1つも無いと時間軸の範囲設定が効かないため、
+    // 開始前日に初期値100の点を置く（ここが損益カーブの起点になる）
+    const equityInit = candles.slice(0, startIdx).map(c => ({ time: c.time }));
+    equityInit[startIdx - 1] = { time: candles[startIdx - 1].time, value: 100 };
+    REPLAY.series.equity.setData(equityInit);
 
     // トレード履歴テーブルをクリア
     const tbody = document.querySelector('#replay-trades-table tbody');
     tbody.innerHTML = '<tr><td colspan="8" class="no-data">「再生」を押すとバックテストが始まります。</td></tr>';
 
     // 表示範囲を開始日付近へ
-    REPLAY.charts.price.timeScale().setVisibleLogicalRange({ from: startIdx - 90, to: startIdx + 40 });
+    // （setData直後はチャート内部のスクロール処理と競合するため、次フレームでも再適用する）
+    replayEnsureAutoScale();
+    const applyRange = () => {
+        if (!REPLAY.charts.price) return;
+        const range = { from: startIdx - 90, to: startIdx + 40 };
+        // 同値再設定では同期イベントが発火しないため、両チャートに直接適用する
+        REPLAY.charts.price.timeScale().setVisibleLogicalRange(range);
+        REPLAY.charts.equity.timeScale().setVisibleLogicalRange(range);
+    };
+    applyRange();
+    requestAnimationFrame(() => requestAnimationFrame(applyRange));
 
     // ステータス表示リセット
     document.getElementById('replay-asset-name').textContent = state.assetName;
@@ -2806,11 +2840,19 @@ function replayReset() {
     replayUpdateStats(null);
 }
 
+// 軸を手動ドラッグするとautoScaleが解除されたままになるため、再生系操作で復帰させる
+function replayEnsureAutoScale() {
+    if (!REPLAY.charts.price) return;
+    REPLAY.charts.price.priceScale('right').applyOptions({ autoScale: true });
+    REPLAY.charts.equity.priceScale('right').applyOptions({ autoScale: true });
+}
+
 function replayPlay() {
     if (!REPLAY.engine) return;
     const N = state.candles.length;
     if (REPLAY.cursor >= N - 1) replayReset(); // 最後まで到達済みなら最初から
 
+    replayEnsureAutoScale();
     REPLAY.playing = true;
     const speedMs = parseInt(document.getElementById('replay-speed').value, 10);
     REPLAY.timer = setInterval(replayTick, speedMs);
