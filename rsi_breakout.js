@@ -89,6 +89,7 @@ function initApp() {
     setupCharts();
     setupTabs();
     setupHeatmapViewToggle();
+    setupReplayControls();
     loadScreenerData();
     loadData();
 }
@@ -2511,3 +2512,472 @@ async function loadScreenerData() {
 }
 
 
+
+// =====================================================
+// バックテスト再生 (Backtest Replay Mode)
+// 過去の日付から1日ずつ再生し、実戦シグナル（walk-forward検証済み）で
+// エントリー→逆シグナルで決済（ドテン）。エントリーと決済を線で結び、
+// 累積損益カーブを時系列アニメーションとして表示する。
+// =====================================================
+
+const REPLAY = {
+    charts: { price: null, equity: null },
+    series: { candles: null, equity: null, tradeLines: [] },
+    signalsCache: { key: null, signals: null },
+    engine: null,        // { key, startDate, startIdx, events, equity, trades }
+    cursor: -1,
+    timer: null,
+    playing: false,
+    markers: [],
+    entryPriceLine: null,
+    live: null           // { pos, closedEq, closed, wins }
+};
+
+function replayDataKey() {
+    if (!state.candles) return null;
+    const last = state.candles[state.candles.length - 1];
+    return `${state.symbol}|${state.candles.length}|${last.time}|${JSON.stringify(state.params)}`;
+}
+
+function setupReplayControls() {
+    const btnPlay = document.getElementById('btn-replay-play');
+    const btnStep = document.getElementById('btn-replay-step');
+    const btnReset = document.getElementById('btn-replay-reset');
+    const speedSel = document.getElementById('replay-speed');
+    const dateInput = document.getElementById('replay-start-date');
+    if (!btnPlay) return;
+
+    // タブが開かれたタイミングでチャートを生成（非表示中はwidth=0になるため）
+    const tabBtn = document.querySelector('.tab-btn[data-tab="tab-replay"]');
+    if (tabBtn) {
+        tabBtn.addEventListener('click', () => {
+            ensureReplayCharts();
+            replayEnsureReady(false);
+        });
+    }
+
+    btnPlay.addEventListener('click', () => {
+        if (REPLAY.playing) {
+            replayPause();
+        } else {
+            if (!replayEnsureReady(true)) return;
+            replayPlay();
+        }
+    });
+    btnStep.addEventListener('click', () => {
+        if (!replayEnsureReady(true)) return;
+        replayPause();
+        replayTick();
+    });
+    btnReset.addEventListener('click', () => {
+        if (!state.candles) return;
+        replayReset();
+    });
+    speedSel.addEventListener('change', () => {
+        if (REPLAY.playing) { // 再生中なら新しい速度でタイマーを張り直す
+            clearInterval(REPLAY.timer);
+            REPLAY.timer = setInterval(replayTick, parseInt(speedSel.value, 10));
+        }
+    });
+    dateInput.addEventListener('change', () => {
+        if (state.candles) replayReset();
+    });
+}
+
+function ensureReplayCharts() {
+    if (REPLAY.charts.price) {
+        // 表示直後にサイズを合わせ直す
+        requestAnimationFrame(() => replayResizeCharts());
+        return;
+    }
+    const priceContainer = document.getElementById('replay-chart-price');
+    const equityContainer = document.getElementById('replay-chart-equity');
+    if (!priceContainer || !equityContainer) return;
+
+    const chartTheme = {
+        layout: {
+            background: { type: 'solid', color: '#111622' },
+            textColor: '#94a3b8',
+            fontSize: 11,
+            fontFamily: 'Outfit, sans-serif',
+        },
+        grid: {
+            vertLines: { color: 'rgba(148, 163, 184, 0.05)' },
+            horzLines: { color: 'rgba(148, 163, 184, 0.05)' },
+        },
+        crosshair: {
+            mode: LightweightCharts.CrosshairMode.Normal,
+            vertLine: { color: '#6366f1', width: 1, style: 2, labelBackgroundColor: '#6366f1' },
+            horzLine: { color: '#6366f1', width: 1, style: 2, labelBackgroundColor: '#6366f1' },
+        },
+        timeScale: {
+            borderColor: 'rgba(148, 163, 184, 0.1)',
+            timeVisible: false,
+            secondsVisible: false,
+        },
+    };
+
+    REPLAY.charts.price = LightweightCharts.createChart(priceContainer, {
+        ...chartTheme,
+        rightPriceScale: { borderColor: 'rgba(148, 163, 184, 0.1)', autoScale: true, minimumWidth: 80 }
+    });
+    REPLAY.series.candles = REPLAY.charts.price.addCandlestickSeries({
+        upColor: '#10b981',
+        downColor: '#f43f5e',
+        borderVisible: false,
+        wickUpColor: '#10b981',
+        wickDownColor: '#f43f5e',
+    });
+
+    REPLAY.charts.equity = LightweightCharts.createChart(equityContainer, {
+        ...chartTheme,
+        rightPriceScale: { borderColor: 'rgba(148, 163, 184, 0.1)', autoScale: true, minimumWidth: 80 }
+    });
+    REPLAY.series.equity = REPLAY.charts.equity.addBaselineSeries({
+        baseValue: { type: 'price', price: 100 },
+        topLineColor: '#10b981',
+        topFillColor1: 'rgba(16, 185, 129, 0.28)',
+        topFillColor2: 'rgba(16, 185, 129, 0.02)',
+        bottomLineColor: '#f43f5e',
+        bottomFillColor1: 'rgba(244, 63, 94, 0.02)',
+        bottomFillColor2: 'rgba(244, 63, 94, 0.28)',
+        lineWidth: 2,
+        priceLineVisible: false,
+    });
+
+    // 上下チャートの時間軸を同期
+    REPLAY.charts.price.timeScale().subscribeVisibleLogicalRangeChange(range => {
+        if (range) REPLAY.charts.equity.timeScale().setVisibleLogicalRange(range);
+    });
+    REPLAY.charts.equity.timeScale().subscribeVisibleLogicalRangeChange(range => {
+        if (range) REPLAY.charts.price.timeScale().setVisibleLogicalRange(range);
+    });
+
+    window.addEventListener('resize', replayResizeCharts);
+    replayResizeCharts();
+}
+
+function replayResizeCharts() {
+    const priceContainer = document.getElementById('replay-chart-price');
+    if (!priceContainer || !REPLAY.charts.price) return;
+    const width = priceContainer.clientWidth;
+    if (width > 0) {
+        REPLAY.charts.price.resize(width, 380);
+        REPLAY.charts.equity.resize(width, 200);
+    }
+}
+
+// 実戦シグナル（walk-forward）を必要に応じて計算しキャッシュ
+function replayGetSignals() {
+    const key = replayDataKey();
+    if (REPLAY.signalsCache.key === key && REPLAY.signalsCache.signals) {
+        return REPLAY.signalsCache.signals;
+    }
+    const signals = calculateWalkForwardReplay(state.candles, state.params);
+    REPLAY.signalsCache = { key, signals };
+    return signals;
+}
+
+// エンジンが最新データで準備できているか確認し、必要なら（再）構築
+function replayEnsureReady(alertIfNoData) {
+    if (!state.candles || state.candles.length < 80) {
+        if (alertIfNoData) alert('先に「個別チャート分析」タブで銘柄データを読み込んでください。');
+        return false;
+    }
+    ensureReplayCharts();
+    const key = replayDataKey();
+    const dateVal = document.getElementById('replay-start-date').value;
+    if (!REPLAY.engine || REPLAY.engine.key !== key || REPLAY.engine.startDate !== dateVal) {
+        replayReset();
+    }
+    return !!REPLAY.engine;
+}
+
+// タイムライン構築: 各営業日のイベント（エントリー/決済）と日次評価損益を事前計算
+function buildReplayTimeline(candles, signals, startIdx) {
+    const N = candles.length;
+    const events = new Map();
+    const getEv = (i) => {
+        if (!events.has(i)) events.set(i, { exit: null, entry: null });
+        return events.get(i);
+    };
+    const equity = new Array(N).fill(null);
+    const trades = [];
+    const sigByIdx = new Map();
+    signals.forEach(s => { if (s.index >= startIdx) sigByIdx.set(s.index, s); });
+
+    let pos = null;
+    let closedEq = 100;
+
+    for (let t = startIdx; t < N; t++) {
+        const sig = sigByIdx.get(t);
+        if (sig) {
+            const dir = sig.type === 'BUY' ? 1 : -1;
+            if (pos && pos.dir !== dir) {
+                // 逆シグナルで決済
+                const exitPrice = candles[t].close;
+                const ret = pos.dir * (exitPrice - pos.entryPrice) / pos.entryPrice;
+                closedEq *= (1 + ret);
+                const trade = {
+                    dir: pos.dir,
+                    entryIdx: pos.entryIdx, entryTime: candles[pos.entryIdx].time, entryPrice: pos.entryPrice,
+                    exitIdx: t, exitTime: candles[t].time, exitPrice,
+                    returnPct: ret * 100, cumEq: closedEq
+                };
+                trades.push(trade);
+                getEv(t).exit = trade;
+                pos = null;
+            }
+            if (!pos && !getEv(t).entry) {
+                // 新規エントリー（ドテン含む）
+                pos = { dir, entryIdx: t, entryPrice: candles[t].close };
+                getEv(t).entry = { dir, time: candles[t].time, price: pos.entryPrice, type: sig.type };
+            }
+        }
+        // その日の終値で評価した累積損益（含み込み）
+        equity[t] = pos
+            ? closedEq * (1 + pos.dir * (candles[t].close - pos.entryPrice) / pos.entryPrice)
+            : closedEq;
+    }
+    return { events, equity, trades };
+}
+
+function replayReset() {
+    replayPause();
+    ensureReplayCharts();
+    if (!REPLAY.charts.price || !state.candles) return;
+
+    const candles = state.candles;
+    const N = candles.length;
+
+    // 開始日入力の範囲設定とデフォルト値（データ末尾から約1年前）
+    const dateInput = document.getElementById('replay-start-date');
+    const minIdx = 60; // 指標のウォームアップ分
+    const defaultIdx = Math.max(minIdx, N - 260);
+    dateInput.min = candles[minIdx].time;
+    dateInput.max = candles[N - 2].time;
+    if (!dateInput.value || dateInput.value < dateInput.min || dateInput.value > dateInput.max) {
+        dateInput.value = candles[defaultIdx].time;
+    }
+
+    // 開始インデックス決定（指定日以降の最初の営業日）
+    let startIdx = candles.findIndex(c => c.time >= dateInput.value);
+    if (startIdx < minIdx) startIdx = minIdx;
+
+    const signals = replayGetSignals();
+    const timeline = buildReplayTimeline(candles, signals, startIdx);
+    REPLAY.engine = {
+        key: replayDataKey(),
+        startDate: dateInput.value,
+        startIdx,
+        events: timeline.events,
+        equity: timeline.equity,
+        trades: timeline.trades
+    };
+    REPLAY.cursor = startIdx - 1;
+    REPLAY.live = { pos: null, closedEq: 100, closed: 0, wins: 0 };
+
+    // チャート初期化: 開始日までの履歴を一括表示（ここから再生が始まる）
+    // コピーを渡す（Lightweight Chartsによるtimeのin-place変換対策）
+    REPLAY.series.candles.setData(candles.slice(0, startIdx).map(c => ({ ...c })));
+    REPLAY.markers = [];
+    REPLAY.series.candles.setMarkers([]);
+    if (REPLAY.entryPriceLine) {
+        try { REPLAY.series.candles.removePriceLine(REPLAY.entryPriceLine); } catch (e) {}
+        REPLAY.entryPriceLine = null;
+    }
+    REPLAY.series.tradeLines.forEach(s => {
+        try { REPLAY.charts.price.removeSeries(s); } catch (e) {}
+    });
+    REPLAY.series.tradeLines = [];
+    // 損益カーブ: 開始日以前はホワイトスペースで埋め、ローソク足と時間軸を揃える
+    REPLAY.series.equity.setData(candles.slice(0, startIdx).map(c => ({ time: c.time })));
+
+    // トレード履歴テーブルをクリア
+    const tbody = document.querySelector('#replay-trades-table tbody');
+    tbody.innerHTML = '<tr><td colspan="8" class="no-data">「再生」を押すとバックテストが始まります。</td></tr>';
+
+    // 表示範囲を開始日付近へ
+    REPLAY.charts.price.timeScale().setVisibleLogicalRange({ from: startIdx - 90, to: startIdx + 40 });
+
+    // ステータス表示リセット
+    document.getElementById('replay-asset-name').textContent = state.assetName;
+    document.getElementById('replay-stat-date').textContent = candles[startIdx].time + ' から再生';
+    replayUpdateStats(null);
+}
+
+function replayPlay() {
+    if (!REPLAY.engine) return;
+    const N = state.candles.length;
+    if (REPLAY.cursor >= N - 1) replayReset(); // 最後まで到達済みなら最初から
+
+    REPLAY.playing = true;
+    const speedMs = parseInt(document.getElementById('replay-speed').value, 10);
+    REPLAY.timer = setInterval(replayTick, speedMs);
+    replaySetPlayButton(true);
+}
+
+function replayPause() {
+    REPLAY.playing = false;
+    if (REPLAY.timer) { clearInterval(REPLAY.timer); REPLAY.timer = null; }
+    replaySetPlayButton(false);
+}
+
+function replaySetPlayButton(playing) {
+    const btn = document.getElementById('btn-replay-play');
+    if (!btn) return;
+    btn.innerHTML = playing
+        ? '<i data-lucide="pause"></i> 一時停止'
+        : '<i data-lucide="play"></i> 再生';
+    lucide.createIcons();
+}
+
+function replayTick() {
+    const eng = REPLAY.engine;
+    if (!eng) { replayPause(); return; }
+    const candles = state.candles;
+    const N = candles.length;
+
+    if (REPLAY.cursor >= N - 1) {
+        replayPause();
+        return;
+    }
+    REPLAY.cursor++;
+    const t = REPLAY.cursor;
+    const candle = candles[t];
+
+    // 1. ローソク足と損益カーブを1日分進める
+    // 注意: Lightweight Chartsのupdate()は渡したオブジェクトのtimeを内部形式に
+    // 書き換える（in-place変換）ため、必ずコピーを渡す
+    REPLAY.series.candles.update({ ...candle });
+    REPLAY.series.equity.update({ time: candle.time, value: eng.equity[t] });
+
+    // 2. 当日のイベント処理（決済 → エントリーの順）
+    const ev = eng.events.get(t);
+    if (ev) {
+        if (ev.exit) replayHandleExit(ev.exit);
+        if (ev.entry) replayHandleEntry(ev.entry);
+        REPLAY.series.candles.setMarkers(REPLAY.markers);
+    }
+
+    // 3. 表示範囲を追従
+    REPLAY.charts.price.timeScale().setVisibleLogicalRange({ from: t - 110, to: t + 15 });
+
+    // 4. ステータス更新
+    const dayNo = t - eng.startIdx + 1;
+    const totalDays = N - eng.startIdx;
+    document.getElementById('replay-stat-date').textContent =
+        t >= N - 1 ? candle.time + '（再生終了）' : candle.time + '（' + dayNo + '/' + totalDays + '日）';
+    replayUpdateStats(candle);
+
+    if (t >= N - 1) replayPause();
+}
+
+function replayHandleEntry(entry) {
+    REPLAY.live.pos = { dir: entry.dir, entryPrice: entry.price, entryTime: entry.time };
+    REPLAY.markers.push({
+        time: entry.time,
+        position: entry.dir === 1 ? 'belowBar' : 'aboveBar',
+        color: entry.dir === 1 ? '#10b981' : '#f43f5e',
+        shape: entry.dir === 1 ? 'arrowUp' : 'arrowDown',
+        text: entry.dir === 1 ? '買' : '売',
+    });
+    // 保有中はエントリー価格に点線を表示
+    REPLAY.entryPriceLine = REPLAY.series.candles.createPriceLine({
+        price: entry.price,
+        color: entry.dir === 1 ? '#10b981' : '#f43f5e',
+        lineWidth: 1,
+        lineStyle: 2,
+        axisLabelVisible: true,
+        title: entry.dir === 1 ? 'ロング' : 'ショート',
+    });
+}
+
+function replayHandleExit(trade) {
+    REPLAY.live.pos = null;
+    REPLAY.live.closedEq = trade.cumEq;
+    REPLAY.live.closed++;
+    if (trade.returnPct > 0) REPLAY.live.wins++;
+
+    if (REPLAY.entryPriceLine) {
+        try { REPLAY.series.candles.removePriceLine(REPLAY.entryPriceLine); } catch (e) {}
+        REPLAY.entryPriceLine = null;
+    }
+    REPLAY.markers.push({
+        time: trade.exitTime,
+        position: trade.dir === 1 ? 'aboveBar' : 'belowBar',
+        color: '#f59e0b',
+        shape: 'circle',
+        text: '決済',
+    });
+
+    // エントリーと決済を結ぶライン（緑=利益 / 赤=損失）
+    const win = trade.returnPct > 0;
+    const line = REPLAY.charts.price.addLineSeries({
+        color: win ? 'rgba(16, 185, 129, 0.9)' : 'rgba(244, 63, 94, 0.9)',
+        lineWidth: 2,
+        priceLineVisible: false,
+        lastValueVisible: false,
+        crosshairMarkerVisible: false,
+    });
+    line.setData([
+        { time: trade.entryTime, value: trade.entryPrice },
+        { time: trade.exitTime, value: trade.exitPrice },
+    ]);
+    REPLAY.series.tradeLines.push(line);
+
+    // トレード履歴テーブルへ追加（新しい順）
+    const tbody = document.querySelector('#replay-trades-table tbody');
+    const noData = tbody.querySelector('.no-data');
+    if (noData) tbody.innerHTML = '';
+    const row = document.createElement('tr');
+    const plColor = win ? '#10b981' : '#f43f5e';
+    const cumPct = trade.cumEq - 100;
+    const fmtPct = (v) => (v >= 0 ? '+' : '') + v.toFixed(2) + '%';
+    row.innerHTML =
+        '<td>' + REPLAY.live.closed + '</td>' +
+        '<td style="color:' + (trade.dir === 1 ? '#10b981' : '#f43f5e') + ';font-weight:600;">' + (trade.dir === 1 ? 'ロング' : 'ショート') + '</td>' +
+        '<td>' + trade.entryTime + '</td>' +
+        '<td>' + trade.entryPrice.toLocaleString() + '</td>' +
+        '<td>' + trade.exitTime + '</td>' +
+        '<td>' + trade.exitPrice.toLocaleString() + '</td>' +
+        '<td style="color:' + plColor + ';font-weight:600;">' + fmtPct(trade.returnPct) + '</td>' +
+        '<td style="color:' + (cumPct >= 0 ? '#10b981' : '#f43f5e') + ';">' + fmtPct(cumPct) + '</td>';
+    tbody.insertBefore(row, tbody.firstChild);
+}
+
+function replayUpdateStats(candle) {
+    const live = REPLAY.live;
+    if (!live) return;
+    const posEl = document.getElementById('replay-stat-position');
+    const openPlEl = document.getElementById('replay-stat-open-pl');
+    const cumEl = document.getElementById('replay-stat-cum-pl');
+    const tradesEl = document.getElementById('replay-stat-trades');
+    const winEl = document.getElementById('replay-stat-winrate');
+    const fmtPct = (v) => (v >= 0 ? '+' : '') + v.toFixed(2) + '%';
+
+    if (live.pos && candle) {
+        const openPl = live.pos.dir * (candle.close - live.pos.entryPrice) / live.pos.entryPrice * 100;
+        posEl.textContent = live.pos.dir === 1 ? 'ロング' : 'ショート';
+        posEl.style.color = live.pos.dir === 1 ? '#10b981' : '#f43f5e';
+        openPlEl.textContent = fmtPct(openPl);
+        openPlEl.style.color = openPl >= 0 ? '#10b981' : '#f43f5e';
+    } else {
+        posEl.textContent = 'なし';
+        posEl.style.color = '';
+        openPlEl.textContent = '---';
+        openPlEl.style.color = '';
+    }
+
+    // 累積損益（含み込みの評価ベース）
+    const eng = REPLAY.engine;
+    let cum = 0;
+    if (eng && REPLAY.cursor >= eng.startIdx && eng.equity[REPLAY.cursor] != null) {
+        cum = eng.equity[REPLAY.cursor] - 100;
+    }
+    cumEl.textContent = fmtPct(cum);
+    cumEl.style.color = cum >= 0 ? '#10b981' : '#f43f5e';
+
+    tradesEl.textContent = String(live.closed);
+    winEl.textContent = live.closed > 0 ? (live.wins / live.closed * 100).toFixed(1) + '%' : '---';
+}

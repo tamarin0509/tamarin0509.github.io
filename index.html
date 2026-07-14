@@ -309,6 +309,9 @@
                 <button type="button" class="tab-btn" data-tab="tab-heatmap">
                     <i data-lucide="grid-3x3"></i> セクターマップ
                 </button>
+                <button type="button" class="tab-btn" data-tab="tab-replay">
+                    <i data-lucide="play-circle"></i> バックテスト再生
+                </button>
                 <button type="button" class="tab-btn" data-tab="tab-changelog">
                     <i data-lucide="history"></i> バージョン履歴
                 </button>
@@ -564,6 +567,111 @@
                 </div>
             </div>
 
+            <!-- Tab: Backtest Replay -->
+            <div id="tab-replay" class="tab-content">
+                <!-- Controls -->
+                <div class="card-glass" style="padding: 1.25rem 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;">
+                    <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 1rem;">
+                        <div>
+                            <h2 style="font-size: 1.15rem; display: flex; align-items: center; gap: 8px; margin: 0;">
+                                <i data-lucide="play-circle" style="color: #6366f1;"></i> バックテスト再生
+                                <span id="replay-asset-name" class="badge-symbol" style="font-size: 0.75rem;">---</span>
+                            </h2>
+                            <p style="font-size: 0.75rem; color: #64748b; margin-top: 4px;">
+                                「個別チャート分析」タブで選択中の銘柄・パラメータを使用します。サイン発動でエントリー、逆サインで決済（ドテン）します。
+                            </p>
+                        </div>
+                        <div style="flex: 1;"></div>
+                        <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem;">
+                            <label style="font-size: 0.75rem; color: #94a3b8;">開始日</label>
+                            <input type="date" id="replay-start-date" class="form-control" style="width: auto; padding: 6px 10px; font-size: 0.85rem;">
+                            <label style="font-size: 0.75rem; color: #94a3b8;">速度</label>
+                            <select id="replay-speed" class="form-control" style="width: auto; padding: 6px 10px; font-size: 0.85rem;">
+                                <option value="400">ゆっくり</option>
+                                <option value="150" selected>標準</option>
+                                <option value="50">速い</option>
+                                <option value="10">最速</option>
+                            </select>
+                            <button type="button" id="btn-replay-play" class="btn-primary" style="width: auto; padding: 8px 18px; margin: 0;">
+                                <i data-lucide="play"></i> 再生
+                            </button>
+                            <button type="button" id="btn-replay-step" class="btn-secondary" style="padding: 8px 14px;">
+                                <i data-lucide="skip-forward" style="width: 14px; height: 14px;"></i> 1日
+                            </button>
+                            <button type="button" id="btn-replay-reset" class="btn-secondary" style="padding: 8px 14px;">
+                                <i data-lucide="rotate-ccw" style="width: 14px; height: 14px;"></i> リセット
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Replay Stats -->
+                <div class="stats-grid" style="margin-bottom: 1.5rem;">
+                    <div class="stat-card card-glass">
+                        <span class="stat-label">再生日付</span>
+                        <div class="stat-value" id="replay-stat-date" style="font-size: 1.1rem;">---</div>
+                    </div>
+                    <div class="stat-card card-glass">
+                        <span class="stat-label">ポジション</span>
+                        <div class="stat-value" id="replay-stat-position">なし</div>
+                    </div>
+                    <div class="stat-card card-glass">
+                        <span class="stat-label">含み損益</span>
+                        <div class="stat-value" id="replay-stat-open-pl">---</div>
+                    </div>
+                    <div class="stat-card card-glass">
+                        <span class="stat-label">累積損益</span>
+                        <div class="stat-value" id="replay-stat-cum-pl">+0.00%</div>
+                    </div>
+                    <div class="stat-card card-glass">
+                        <span class="stat-label">トレード数</span>
+                        <div class="stat-value" id="replay-stat-trades">0</div>
+                    </div>
+                    <div class="stat-card card-glass">
+                        <span class="stat-label">勝率</span>
+                        <div class="stat-value" id="replay-stat-winrate">---</div>
+                    </div>
+                </div>
+
+                <!-- Replay Charts -->
+                <section class="charts-section card-glass" style="margin-bottom: 1.5rem;">
+                    <div style="padding:5px 12px;font-size:0.72rem;color:#818cf8;background:rgba(99,102,241,0.06);letter-spacing:0.03em;">
+                        価格チャート — エントリー &amp; 決済（緑=利益 / 赤=損失 の線で接続）
+                    </div>
+                    <div id="replay-chart-price" class="chart-container"></div>
+                    <div style="padding:5px 12px;font-size:0.72rem;color:#818cf8;background:rgba(99,102,241,0.06);letter-spacing:0.03em;border-top:2px solid rgba(99,102,241,0.25);">
+                        累積損益カーブ（開始時 = 100）
+                    </div>
+                    <div id="replay-chart-equity" class="chart-container" style="height: 200px;"></div>
+                </section>
+
+                <!-- Trade Log -->
+                <div class="log-card card-glass">
+                    <div class="card-header">
+                        <h3><i data-lucide="list-ordered"></i> トレード履歴（再生中に随時追加）</h3>
+                    </div>
+                    <div class="table-wrapper">
+                        <table id="replay-trades-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>方向</th>
+                                    <th>エントリー日</th>
+                                    <th>エントリー価格</th>
+                                    <th>決済日</th>
+                                    <th>決済価格</th>
+                                    <th>損益率</th>
+                                    <th>累積損益</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td colspan="8" class="no-data">「再生」を押すとバックテストが始まります。</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
             <!-- Tab 4: Version History -->
             <div id="tab-changelog" class="tab-content">
                 <div class="changelog-card card-glass" style="padding: 1.5rem 2rem; border-radius: 12px; margin-bottom: 1.5rem;">
@@ -572,11 +680,24 @@
                     </h2>
                     
                     <div class="changelog-timeline" style="display: flex; flex-direction: column; gap: 1.5rem;">
-                        <!-- Version 1.4.0 -->
+                        <!-- Version 1.5.0 -->
                         <div class="changelog-item" style="border-left: 2px solid #6366f1; padding-left: 1.25rem; position: relative; padding-bottom: 0.5rem;">
                             <div style="font-weight: 600; font-size: 1.1rem; color: #f1f5f9; display: flex; align-items: center; gap: 8px;">
-                                <span>v1.4.0 - バックテストモード（タイムスライド）</span>
+                                <span>v1.5.0 - バックテスト再生（トレードアニメーション）＆ 週次レポート</span>
                                 <span style="font-size: 0.72rem; background: rgba(99, 102, 241, 0.2); color: #818cf8; padding: 2px 6px; border-radius: 4px; font-weight: 500;">Latest</span>
+                            </div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted); margin: 4px 0 8px 0;">2026年7月15日 更新</div>
+                            <ul style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; padding-left: 1.2rem; margin: 0; display: flex; flex-direction: column; gap: 4px;">
+                                <li><strong>バックテスト再生タブ:</strong> 指定した過去日付から1日ずつチャートを再生。実戦シグナル（walk-forward検証済み）でエントリーし、逆シグナルで決済（ドテン）。エントリーと決済を緑（利益）/ 赤（損失）の線で結び、下段に累積損益カーブをリアルタイム描画。</li>
+                                <li><strong>再生コントロール:</strong> 再生 / 一時停止 / 1日ステップ / リセット / 4段階の速度調整。保有中はエントリー価格の点線とポジション・含み損益を常時表示。トレード履歴も再生に合わせて随時追加。</li>
+                                <li><strong>週次レポート（予測と答え合わせ）:</strong> 毎週土曜朝にスクリーナーの予測シグナルを記録し、前週の予測が1週間後にどうなったかを自動で答え合わせ。結果はサイト内ブログ（<code style="font-size:0.8em;">blog/</code>）にアーカイブ。</li>
+                            </ul>
+                        </div>
+
+                        <!-- Version 1.4.0 -->
+                        <div class="changelog-item" style="border-left: 2px solid #94a3b8; padding-left: 1.25rem; position: relative; padding-bottom: 0.5rem;">
+                            <div style="font-weight: 600; font-size: 1.1rem; color: #cbd5e1; display: flex; align-items: center; gap: 8px;">
+                                <span>v1.4.0 - バックテストモード（タイムスライド）</span>
                             </div>
                             <div style="font-size: 0.8rem; color: var(--text-muted); margin: 4px 0 8px 0;">2026年7月11日 更新</div>
                             <ul style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; padding-left: 1.2rem; margin: 0; display: flex; flex-direction: column; gap: 4px;">
