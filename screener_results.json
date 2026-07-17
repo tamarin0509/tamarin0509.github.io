@@ -1,14 +1,14 @@
 {
-  "updatedAt": "2026-07-16T22:08:02.290Z",
+  "updatedAt": "2026-07-17T21:58:43.529Z",
   "results": [
     {
       "symbol": "^N225",
       "name": "日経平均株価 (Nikkei 225)",
       "type": "index",
       "sector": "指数",
-      "close": 68751.5078,
-      "changePercent": 1.49,
-      "rsi": 54.43,
+      "close": 66835.5391,
+      "changePercent": -2.79,
+      "rsi": 51.68,
       "bestParams": {
         "rsiPeriod": 25,
         "maPeriod": 20,
@@ -25,9 +25,9 @@
         "time": "2026-07-09",
         "type": "BUY",
         "price": 67743.8516,
-        "rsi": 53.58877332520766,
+        "rsi": 53.588773324450585,
         "status": "confirmed",
-        "barsAgo": 4
+        "barsAgo": 5
       }
     },
     {
@@ -35,12 +35,12 @@
       "name": "S&P 500 Index",
       "type": "index",
       "sector": "指数",
-      "close": 7533.77,
-      "changePercent": -0.51,
-      "rsi": 57.23,
+      "close": 7457.6899,
+      "changePercent": -1.01,
+      "rsi": 46.7,
       "bestParams": {
-        "rsiPeriod": 7,
-        "maPeriod": 60,
+        "rsiPeriod": 11,
+        "maPeriod": 30,
         "maMethod": "EMA",
         "offset": -3,
         "margin": 0.2,
@@ -51,12 +51,12 @@
         "mtfFilter": "weekly"
       },
       "latestSignal": {
-        "time": "2026-06-29",
+        "time": "2026-07-02",
         "type": "BUY",
-        "price": 7440.4302,
-        "rsi": 48.212740290464495,
-        "status": "confirmed",
-        "barsAgo": 12
+        "price": 7483.2402,
+        "rsi": 55.65876600019748,
+        "status": "phantom",
+        "barsAgo": 10
       }
     },
     {
@@ -64,38 +64,31 @@
       "name": "NYダウ (Dow Jones)",
       "type": "index",
       "sector": "指数",
-      "close": 52552.9688,
-      "changePercent": -0.2,
-      "rsi": 59.08,
+      "close": 52146.4219,
+      "changePercent": -0.77,
+      "rsi": 57.62,
       "bestParams": {
-        "rsiPeriod": 9,
-        "maPeriod": 20,
+        "rsiPeriod": 25,
+        "maPeriod": 45,
         "maMethod": "EMA",
         "offset": -3,
-        "margin": 1,
+        "margin": 2,
         "nLines": 3,
         "peakMethod": "kairi",
         "swingPeriod": 10,
         "minGap": 2,
         "mtfFilter": "weekly"
       },
-      "latestSignal": {
-        "time": "2026-07-01",
-        "type": "BUY",
-        "price": 52305.2383,
-        "rsi": 68.14316709953405,
-        "status": "confirmed",
-        "barsAgo": 10
-      }
+      "latestSignal": null
     },
     {
       "symbol": "^IXIC",
       "name": "ナスダック総合 (NASDAQ)",
       "type": "index",
       "sector": "指数",
-      "close": 25881.9473,
-      "changePercent": -1.47,
-      "rsi": 52.06,
+      "close": 25520.2441,
+      "changePercent": -1.4,
+      "rsi": 48.16,
       "bestParams": {
         "rsiPeriod": 25,
         "maPeriod": 90,
@@ -112,9 +105,9 @@
         "time": "2026-07-09",
         "type": "BUY",
         "price": 26206.8906,
-        "rsi": 53.74119432017931,
+        "rsi": 53.74119432509345,
         "status": "confirmed",
-        "barsAgo": 5
+        "barsAgo": 6
       }
     },
     {
@@ -122,38 +115,31 @@
       "name": "米ドル / 円 (USD/JPY)",
       "type": "forex",
       "sector": "為替",
-      "close": 162.339,
-      "changePercent": 0.16,
-      "rsi": 58.1,
+      "close": 162.353,
+      "changePercent": -0.01,
+      "rsi": 60.19,
       "bestParams": {
-        "rsiPeriod": 7,
-        "maPeriod": 20,
+        "rsiPeriod": 25,
+        "maPeriod": 90,
         "maMethod": "EMA",
         "offset": -3,
-        "margin": 0.2,
+        "margin": 1.3,
         "nLines": 3,
         "peakMethod": "kairi",
         "swingPeriod": 10,
         "minGap": 2,
         "mtfFilter": "weekly"
       },
-      "latestSignal": {
-        "time": "2026-06-30",
-        "type": "BUY",
-        "price": 162.628,
-        "rsi": 90.2951992959439,
-        "status": "confirmed",
-        "barsAgo": 12
-      }
+      "latestSignal": null
     },
     {
       "symbol": "EURUSD=X",
       "name": "ユーロ / 米ドル (EUR/USD)",
       "type": "forex",
       "sector": "為替",
-      "close": 1.1448,
-      "changePercent": -0.19,
-      "rsi": 45.14,
+      "close": 1.1446,
+      "changePercent": 0.01,
+      "rsi": 44.93,
       "bestParams": {
         "rsiPeriod": 21,
         "maPeriod": 30,
@@ -170,9 +156,9 @@
         "time": "2026-07-12",
         "type": "SELL",
         "price": 1.1404,
-        "rsi": 40.6544420485935,
+        "rsi": 40.6544420485339,
         "status": "confirmed",
-        "barsAgo": 4
+        "barsAgo": 5
       }
     },
     {
@@ -180,12 +166,12 @@
       "name": "英ポンド / 円 (GBP/JPY)",
       "type": "forex",
       "sector": "為替",
-      "close": 218.756,
-      "changePercent": -0.29,
-      "rsi": 62.92,
+      "close": 218.481,
+      "changePercent": -0.15,
+      "rsi": 61.72,
       "bestParams": {
         "rsiPeriod": 25,
-        "maPeriod": 75,
+        "maPeriod": 45,
         "maMethod": "EMA",
         "offset": -3,
         "margin": 2,
@@ -195,23 +181,16 @@
         "minGap": 2,
         "mtfFilter": "weekly"
       },
-      "latestSignal": {
-        "time": "2026-07-05",
-        "type": "BUY",
-        "price": 215.579,
-        "rsi": 57.56891443300358,
-        "status": "confirmed",
-        "barsAgo": 9
-      }
+      "latestSignal": null
     },
     {
       "symbol": "AUDUSD=X",
       "name": "豪ドル / 米ドル (AUD/USD)",
       "type": "forex",
       "sector": "為替",
-      "close": 0.7,
-      "changePercent": -0.11,
-      "rsi": 66.06,
+      "close": 0.6985,
+      "changePercent": -0.2,
+      "rsi": 60.41,
       "bestParams": {
         "rsiPeriod": 7,
         "maPeriod": 20,
@@ -231,15 +210,15 @@
       "name": "マイクロソフト (MSFT)",
       "type": "stock",
       "sector": "テクノロジー",
-      "close": 401.1,
-      "changePercent": 1.38,
-      "rsi": 51.29,
+      "close": 393.82,
+      "changePercent": -1.82,
+      "rsi": 52.08,
       "bestParams": {
-        "rsiPeriod": 25,
-        "maPeriod": 90,
+        "rsiPeriod": 14,
+        "maPeriod": 75,
         "maMethod": "EMA",
         "offset": -3,
-        "margin": 1,
+        "margin": 0.5,
         "nLines": 3,
         "peakMethod": "kairi",
         "swingPeriod": 10,
@@ -247,12 +226,12 @@
         "mtfFilter": "weekly"
       },
       "latestSignal": {
-        "time": "2026-07-14",
+        "time": "2026-07-17",
         "type": "SELL",
-        "price": 384.93,
-        "rsi": 46.48195425872105,
+        "price": 393.82,
+        "rsi": 52.084082946447715,
         "status": "confirmed",
-        "barsAgo": 2
+        "barsAgo": 0
       }
     },
     {
@@ -260,9 +239,9 @@
       "name": "アップル (AAPL)",
       "type": "stock",
       "sector": "テクノロジー",
-      "close": 333.26,
-      "changePercent": 1.76,
-      "rsi": 69.04,
+      "close": 333.74,
+      "changePercent": 0.14,
+      "rsi": 69.45,
       "bestParams": {
         "rsiPeriod": 18,
         "maPeriod": 60,
@@ -282,9 +261,9 @@
       "name": "アルファベット (GOOGL)",
       "type": "stock",
       "sector": "テクノロジー",
-      "close": 354.46,
-      "changePercent": -4.44,
-      "rsi": 52.39,
+      "close": 346.77,
+      "changePercent": -2.17,
+      "rsi": 38.33,
       "bestParams": {
         "rsiPeriod": 9,
         "maPeriod": 30,
@@ -304,15 +283,15 @@
       "name": "アマゾン (AMZN)",
       "type": "stock",
       "sector": "テクノロジー",
-      "close": 249.89,
-      "changePercent": -1.99,
-      "rsi": 59.08,
+      "close": 247.23,
+      "changePercent": -1.06,
+      "rsi": 51.03,
       "bestParams": {
-        "rsiPeriod": 11,
-        "maPeriod": 60,
+        "rsiPeriod": 14,
+        "maPeriod": 30,
         "maMethod": "EMA",
         "offset": -3,
-        "margin": 1.6,
+        "margin": 2,
         "nLines": 3,
         "peakMethod": "kairi",
         "swingPeriod": 10,
@@ -320,12 +299,12 @@
         "mtfFilter": "weekly"
       },
       "latestSignal": {
-        "time": "2026-07-15",
-        "type": "BUY",
-        "price": 254.96,
-        "rsi": 62.388143477260996,
-        "status": "confirmed",
-        "barsAgo": 1
+        "time": "2026-07-01",
+        "type": "SELL",
+        "price": 241.7,
+        "rsi": 46.21381473705645,
+        "status": "phantom",
+        "barsAgo": 11
       }
     },
     {
@@ -333,9 +312,9 @@
       "name": "メタ・プラットフォームズ (META)",
       "type": "stock",
       "sector": "テクノロジー",
-      "close": 664.54,
-      "changePercent": -2.46,
-      "rsi": 69.62,
+      "close": 646.01,
+      "changePercent": -2.79,
+      "rsi": 53.77,
       "bestParams": {
         "rsiPeriod": 7,
         "maPeriod": 45,
@@ -354,7 +333,7 @@
         "price": 603.12,
         "rsi": 60.32428387319285,
         "status": "confirmed",
-        "barsAgo": 6
+        "barsAgo": 7
       }
     },
     {
@@ -362,9 +341,9 @@
       "name": "ソフトバンクグループ (9984)",
       "type": "stock",
       "sector": "テクノロジー",
-      "close": 5961,
-      "changePercent": -6.27,
-      "rsi": 43.46,
+      "close": 5424,
+      "changePercent": -9.01,
+      "rsi": 35.3,
       "bestParams": {
         "rsiPeriod": 11,
         "maPeriod": 90,
@@ -384,9 +363,9 @@
       "name": "ソニーグループ (6758)",
       "type": "stock",
       "sector": "テクノロジー",
-      "close": 3438,
-      "changePercent": 1.45,
-      "rsi": 54.28,
+      "close": 3470,
+      "changePercent": 0.93,
+      "rsi": 57.29,
       "bestParams": {
         "rsiPeriod": 14,
         "maPeriod": 20,
@@ -406,9 +385,9 @@
       "name": "エヌビディア (NVDA)",
       "type": "stock",
       "sector": "半導体",
-      "close": 207.4,
-      "changePercent": -2.4,
-      "rsi": 53.18,
+      "close": 202.81,
+      "changePercent": -2.21,
+      "rsi": 48.1,
       "bestParams": {
         "rsiPeriod": 18,
         "maPeriod": 20,
@@ -425,9 +404,9 @@
         "time": "2026-06-30",
         "type": "BUY",
         "price": 200.09,
-        "rsi": 44.245114939231684,
+        "rsi": 44.2451149392297,
         "status": "confirmed",
-        "barsAgo": 11
+        "barsAgo": 12
       }
     },
     {
@@ -435,9 +414,9 @@
       "name": "アドバンスト・マイクロ・デバイセズ (AMD)",
       "type": "stock",
       "sector": "半導体",
-      "close": 500.94,
-      "changePercent": -5.33,
-      "rsi": 39.27,
+      "close": 495.76,
+      "changePercent": -1.03,
+      "rsi": 34.88,
       "bestParams": {
         "rsiPeriod": 7,
         "maPeriod": 60,
@@ -456,7 +435,7 @@
         "price": 580.91,
         "rsi": 68.21743812022923,
         "status": "confirmed",
-        "barsAgo": 11
+        "barsAgo": 12
       }
     },
     {
@@ -464,12 +443,12 @@
       "name": "ブロードコム (AVGO)",
       "type": "stock",
       "sector": "半導体",
-      "close": 374.45,
-      "changePercent": -5.03,
-      "rsi": 44.25,
+      "close": 370.825,
+      "changePercent": -0.97,
+      "rsi": 36.66,
       "bestParams": {
-        "rsiPeriod": 9,
-        "maPeriod": 30,
+        "rsiPeriod": 7,
+        "maPeriod": 45,
         "maMethod": "EMA",
         "offset": -3,
         "margin": 0.2,
@@ -479,23 +458,16 @@
         "minGap": 2,
         "mtfFilter": "weekly"
       },
-      "latestSignal": {
-        "time": "2026-07-02",
-        "type": "SELL",
-        "price": 360.45,
-        "rsi": 35.50717145609645,
-        "status": "phantom",
-        "barsAgo": 9
-      }
+      "latestSignal": null
     },
     {
       "symbol": "8035.T",
       "name": "東京エレクトロン (8035)",
       "type": "stock",
       "sector": "半導体",
-      "close": 70890,
-      "changePercent": -4.51,
-      "rsi": 55.53,
+      "close": 65100,
+      "changePercent": -8.17,
+      "rsi": 50.38,
       "bestParams": {
         "rsiPeriod": 25,
         "maPeriod": 60,
@@ -515,9 +487,9 @@
       "name": "アドバンテスト (6857)",
       "type": "stock",
       "sector": "半導体",
-      "close": 29640,
-      "changePercent": -5.93,
-      "rsi": 50.55,
+      "close": 27505,
+      "changePercent": -7.2,
+      "rsi": 42.54,
       "bestParams": {
         "rsiPeriod": 14,
         "maPeriod": 45,
@@ -537,9 +509,9 @@
       "name": "ディスコ (6146)",
       "type": "stock",
       "sector": "半導体",
-      "close": 70590,
-      "changePercent": -4.02,
-      "rsi": 46.94,
+      "close": 64780,
+      "changePercent": -8.23,
+      "rsi": 43.36,
       "bestParams": {
         "rsiPeriod": 25,
         "maPeriod": 75,
@@ -559,9 +531,9 @@
       "name": "キオクシアホールディングス (285A)",
       "type": "stock",
       "sector": "半導体",
-      "close": 62110,
-      "changePercent": -15.03,
-      "rsi": 40.37,
+      "close": 52110,
+      "changePercent": -16.1,
+      "rsi": 34.92,
       "bestParams": {
         "rsiPeriod": 14,
         "maPeriod": 30,
@@ -581,9 +553,9 @@
       "name": "INPEX (1605)",
       "type": "stock",
       "sector": "エネルギー",
-      "close": 3429,
-      "changePercent": -0.61,
-      "rsi": 50.19,
+      "close": 3401,
+      "changePercent": -0.82,
+      "rsi": 48.2,
       "bestParams": {
         "rsiPeriod": 14,
         "maPeriod": 20,
@@ -603,9 +575,9 @@
       "name": "ENEOSホールディングス (5020)",
       "type": "stock",
       "sector": "エネルギー",
-      "close": 1274,
-      "changePercent": -0.7,
-      "rsi": 52.05,
+      "close": 1243.5,
+      "changePercent": -2.39,
+      "rsi": 47.83,
       "bestParams": {
         "rsiPeriod": 21,
         "maPeriod": 90,
@@ -622,9 +594,9 @@
         "time": "2026-07-15",
         "type": "BUY",
         "price": 1283,
-        "rsi": 53.532548470702984,
+        "rsi": 53.532548470387646,
         "status": "confirmed",
-        "barsAgo": 1
+        "barsAgo": 2
       }
     },
     {
@@ -632,15 +604,15 @@
       "name": "出光興産 (5019)",
       "type": "stock",
       "sector": "エネルギー",
-      "close": 1262.5,
-      "changePercent": -1.33,
-      "rsi": 48.17,
+      "close": 1241,
+      "changePercent": -1.7,
+      "rsi": 45.53,
       "bestParams": {
-        "rsiPeriod": 18,
-        "maPeriod": 75,
+        "rsiPeriod": 14,
+        "maPeriod": 90,
         "maMethod": "EMA",
         "offset": -3,
-        "margin": 1.3,
+        "margin": 0.2,
         "nLines": 3,
         "peakMethod": "kairi",
         "swingPeriod": 10,
@@ -654,9 +626,9 @@
       "name": "エクソンモービル (XOM)",
       "type": "stock",
       "sector": "エネルギー",
-      "close": 145.95,
-      "changePercent": 1,
-      "rsi": 67.85,
+      "close": 147.36,
+      "changePercent": 0.97,
+      "rsi": 73.23,
       "bestParams": {
         "rsiPeriod": 7,
         "maPeriod": 30,
@@ -676,9 +648,9 @@
       "name": "シェブロン (CVX)",
       "type": "stock",
       "sector": "エネルギー",
-      "close": 183.86,
-      "changePercent": 1.24,
-      "rsi": 59.16,
+      "close": 187.38,
+      "changePercent": 1.91,
+      "rsi": 63.38,
       "bestParams": {
         "rsiPeriod": 14,
         "maPeriod": 75,
@@ -697,7 +669,7 @@
         "price": 181.76,
         "rsi": 57.38555028463756,
         "status": "confirmed",
-        "barsAgo": 2
+        "barsAgo": 3
       }
     },
     {
@@ -705,9 +677,9 @@
       "name": "三菱重工業 (7011)",
       "type": "stock",
       "sector": "防衛・重工",
-      "close": 3823,
-      "changePercent": -0.13,
-      "rsi": 52.64,
+      "close": 3681,
+      "changePercent": -3.71,
+      "rsi": 40.85,
       "bestParams": {
         "rsiPeriod": 9,
         "maPeriod": 45,
@@ -721,12 +693,12 @@
         "mtfFilter": "weekly"
       },
       "latestSignal": {
-        "time": "2026-06-25",
+        "time": "2026-07-17",
         "type": "SELL",
-        "price": 3618,
-        "rsi": 41.21316263645533,
+        "price": 3681,
+        "rsi": 40.84862330981826,
         "status": "confirmed",
-        "barsAgo": 15
+        "barsAgo": 0
       }
     },
     {
@@ -734,9 +706,9 @@
       "name": "川崎重工業 (7012)",
       "type": "stock",
       "sector": "防衛・重工",
-      "close": 2737.5,
-      "changePercent": 0.44,
-      "rsi": 43.15,
+      "close": 2604.5,
+      "changePercent": -4.86,
+      "rsi": 36.26,
       "bestParams": {
         "rsiPeriod": 11,
         "maPeriod": 20,
@@ -750,12 +722,12 @@
         "mtfFilter": "weekly"
       },
       "latestSignal": {
-        "time": "2026-07-02",
+        "time": "2026-07-17",
         "type": "SELL",
-        "price": 2765,
-        "rsi": 37.89869846672375,
+        "price": 2604.5,
+        "rsi": 36.25603151984344,
         "status": "confirmed",
-        "barsAgo": 10
+        "barsAgo": 0
       }
     },
     {
@@ -763,9 +735,9 @@
       "name": "IHI (7013)",
       "type": "stock",
       "sector": "防衛・重工",
-      "close": 2809,
-      "changePercent": -0.09,
-      "rsi": 51.69,
+      "close": 2666.5,
+      "changePercent": -5.07,
+      "rsi": 45.73,
       "bestParams": {
         "rsiPeriod": 14,
         "maPeriod": 60,
@@ -785,9 +757,9 @@
       "name": "ロッキード・マーティン (LMT)",
       "type": "stock",
       "sector": "防衛・重工",
-      "close": 513.52,
-      "changePercent": -0.18,
-      "rsi": 45.44,
+      "close": 508.77,
+      "changePercent": -0.92,
+      "rsi": 45.55,
       "bestParams": {
         "rsiPeriod": 25,
         "maPeriod": 30,
@@ -804,9 +776,9 @@
         "time": "2026-07-14",
         "type": "SELL",
         "price": 514.99,
-        "rsi": 46.51497902888806,
+        "rsi": 46.51497902987732,
         "status": "confirmed",
-        "barsAgo": 2
+        "barsAgo": 3
       }
     },
     {
@@ -814,15 +786,15 @@
       "name": "RTX (旧レイセオン)",
       "type": "stock",
       "sector": "防衛・重工",
-      "close": 194.36,
-      "changePercent": -0.78,
-      "rsi": 57.67,
+      "close": 193.51,
+      "changePercent": -0.44,
+      "rsi": 58.04,
       "bestParams": {
         "rsiPeriod": 18,
         "maPeriod": 90,
         "maMethod": "EMA",
         "offset": -3,
-        "margin": 1.6,
+        "margin": 2,
         "nLines": 3,
         "peakMethod": "kairi",
         "swingPeriod": 10,
@@ -836,9 +808,9 @@
       "name": "三菱UFJフィナンシャルG (8306)",
       "type": "stock",
       "sector": "金融",
-      "close": 3629,
-      "changePercent": -1.84,
-      "rsi": 77.57,
+      "close": 3473,
+      "changePercent": -4.3,
+      "rsi": 53.46,
       "bestParams": {
         "rsiPeriod": 7,
         "maPeriod": 20,
@@ -858,9 +830,9 @@
       "name": "三井住友フィナンシャルG (8316)",
       "type": "stock",
       "sector": "金融",
-      "close": 7030,
-      "changePercent": -1.28,
-      "rsi": 70.44,
+      "close": 6721,
+      "changePercent": -4.4,
+      "rsi": 56.55,
       "bestParams": {
         "rsiPeriod": 14,
         "maPeriod": 75,
@@ -880,9 +852,9 @@
       "name": "みずほフィナンシャルG (8411)",
       "type": "stock",
       "sector": "金融",
-      "close": 8440,
-      "changePercent": -2.13,
-      "rsi": 67.98,
+      "close": 7930,
+      "changePercent": -6.04,
+      "rsi": 40.16,
       "bestParams": {
         "rsiPeriod": 7,
         "maPeriod": 20,
@@ -902,9 +874,9 @@
       "name": "JPモルガン・チェース (JPM)",
       "type": "stock",
       "sector": "金融",
-      "close": 343.15,
-      "changePercent": -1.08,
-      "rsi": 65.53,
+      "close": 341.1,
+      "changePercent": -0.6,
+      "rsi": 57.42,
       "bestParams": {
         "rsiPeriod": 7,
         "maPeriod": 45,
@@ -923,7 +895,7 @@
         "price": 342.89,
         "rsi": 60.164191369330496,
         "status": "confirmed",
-        "barsAgo": 2
+        "barsAgo": 3
       }
     },
     {
@@ -931,12 +903,12 @@
       "name": "ゴールドマン・サックス (GS)",
       "type": "stock",
       "sector": "金融",
-      "close": 1095.46,
-      "changePercent": -4.91,
-      "rsi": 60.53,
+      "close": 1065.22,
+      "changePercent": -2.76,
+      "rsi": 53.46,
       "bestParams": {
         "rsiPeriod": 21,
-        "maPeriod": 45,
+        "maPeriod": 60,
         "maMethod": "EMA",
         "offset": -3,
         "margin": 1.6,
@@ -950,9 +922,9 @@
         "time": "2026-07-14",
         "type": "BUY",
         "price": 1140,
-        "rsi": 63.16206140243755,
+        "rsi": 63.16206140258731,
         "status": "confirmed",
-        "barsAgo": 2
+        "barsAgo": 3
       }
     },
     {
@@ -960,9 +932,9 @@
       "name": "ソニーフィナンシャルグループ (8729)",
       "type": "stock",
       "sector": "金融",
-      "close": 156.4,
-      "changePercent": -1.01,
-      "rsi": 82.83,
+      "close": 154.7,
+      "changePercent": -1.09,
+      "rsi": 65.35,
       "bestParams": {
         "rsiPeriod": 7,
         "maPeriod": 20,
@@ -982,9 +954,9 @@
       "name": "トヨタ自動車 (7203)",
       "type": "stock",
       "sector": "自動車",
-      "close": 2909,
-      "changePercent": 1.17,
-      "rsi": 49.73,
+      "close": 2899.5,
+      "changePercent": -0.33,
+      "rsi": 49.18,
       "bestParams": {
         "rsiPeriod": 25,
         "maPeriod": 20,
@@ -1004,9 +976,9 @@
       "name": "ホンダ (7267)",
       "type": "stock",
       "sector": "自動車",
-      "close": 1558.5,
-      "changePercent": 3.11,
-      "rsi": 60.74,
+      "close": 1535.5,
+      "changePercent": -1.48,
+      "rsi": 59.31,
       "bestParams": {
         "rsiPeriod": 14,
         "maPeriod": 20,
@@ -1023,9 +995,9 @@
         "time": "2026-06-29",
         "type": "BUY",
         "price": 1476,
-        "rsi": 60.26663275244022,
+        "rsi": 60.266632752440216,
         "status": "confirmed",
-        "barsAgo": 13
+        "barsAgo": 14
       }
     },
     {
@@ -1033,34 +1005,12 @@
       "name": "スズキ (7269)",
       "type": "stock",
       "sector": "自動車",
-      "close": 2052,
-      "changePercent": 1.31,
-      "rsi": 57.36,
+      "close": 2050.5,
+      "changePercent": -0.07,
+      "rsi": 56.73,
       "bestParams": {
-        "rsiPeriod": 14,
-        "maPeriod": 75,
-        "maMethod": "EMA",
-        "offset": -3,
-        "margin": 0.8,
-        "nLines": 3,
-        "peakMethod": "kairi",
-        "swingPeriod": 10,
-        "minGap": 2,
-        "mtfFilter": "weekly"
-      },
-      "latestSignal": null
-    },
-    {
-      "symbol": "7201.T",
-      "name": "日産自動車 (7201)",
-      "type": "stock",
-      "sector": "自動車",
-      "close": 329,
-      "changePercent": 3.79,
-      "rsi": 58.52,
-      "bestParams": {
-        "rsiPeriod": 9,
-        "maPeriod": 20,
+        "rsiPeriod": 11,
+        "maPeriod": 60,
         "maMethod": "EMA",
         "offset": -3,
         "margin": 1.6,
@@ -1072,11 +1022,40 @@
       },
       "latestSignal": {
         "time": "2026-07-14",
+        "type": "BUY",
+        "price": 2017,
+        "rsi": 53.79044195972465,
+        "status": "phantom",
+        "barsAgo": 3
+      }
+    },
+    {
+      "symbol": "7201.T",
+      "name": "日産自動車 (7201)",
+      "type": "stock",
+      "sector": "自動車",
+      "close": 329.3,
+      "changePercent": 0.09,
+      "rsi": 67.2,
+      "bestParams": {
+        "rsiPeriod": 7,
+        "maPeriod": 20,
+        "maMethod": "EMA",
+        "offset": -3,
+        "margin": 1.3,
+        "nLines": 3,
+        "peakMethod": "kairi",
+        "swingPeriod": 10,
+        "minGap": 2,
+        "mtfFilter": "weekly"
+      },
+      "latestSignal": {
+        "time": "2026-07-13",
         "type": "SELL",
         "price": 305.1,
-        "rsi": 39.61572844041364,
+        "rsi": 41.12560208860779,
         "status": "confirmed",
-        "barsAgo": 2
+        "barsAgo": 4
       }
     },
     {
@@ -1084,9 +1063,9 @@
       "name": "テスラ (TSLA)",
       "type": "stock",
       "sector": "自動車",
-      "close": 391.06,
-      "changePercent": -0.86,
-      "rsi": 40.98,
+      "close": 380.84,
+      "changePercent": -2.61,
+      "rsi": 34.56,
       "bestParams": {
         "rsiPeriod": 7,
         "maPeriod": 30,
@@ -1105,7 +1084,7 @@
         "price": 394.46,
         "rsi": 46.39504585447429,
         "status": "confirmed",
-        "barsAgo": 1
+        "barsAgo": 2
       }
     },
     {
@@ -1113,9 +1092,9 @@
       "name": "日本製鉄 (5401)",
       "type": "stock",
       "sector": "素材・非鉄",
-      "close": 580.2,
-      "changePercent": 1.03,
-      "rsi": 56.12,
+      "close": 585.6,
+      "changePercent": 0.93,
+      "rsi": 58.14,
       "bestParams": {
         "rsiPeriod": 25,
         "maPeriod": 20,
@@ -1135,9 +1114,9 @@
       "name": "フジクラ (5803)",
       "type": "stock",
       "sector": "素材・非鉄",
-      "close": 4761,
-      "changePercent": -7.46,
-      "rsi": 44,
+      "close": 4472,
+      "changePercent": -6.07,
+      "rsi": 39.59,
       "bestParams": {
         "rsiPeriod": 14,
         "maPeriod": 30,
@@ -1157,9 +1136,9 @@
       "name": "JX金属 (5016)",
       "type": "stock",
       "sector": "素材・非鉄",
-      "close": 3852,
-      "changePercent": -6.82,
-      "rsi": 45.81,
+      "close": 3558,
+      "changePercent": -7.63,
+      "rsi": 40.8,
       "bestParams": {
         "rsiPeriod": 18,
         "maPeriod": 30,
@@ -1179,9 +1158,9 @@
       "name": "伊藤忠商事 (8001)",
       "type": "stock",
       "sector": "商社",
-      "close": 1919.5,
-      "changePercent": -0.85,
-      "rsi": 55.02,
+      "close": 1902.5,
+      "changePercent": -0.89,
+      "rsi": 51.76,
       "bestParams": {
         "rsiPeriod": 18,
         "maPeriod": 60,
@@ -1194,19 +1173,26 @@
         "minGap": 2,
         "mtfFilter": "weekly"
       },
-      "latestSignal": null
+      "latestSignal": {
+        "time": "2026-07-17",
+        "type": "SELL",
+        "price": 1902.5,
+        "rsi": 51.76452733718139,
+        "status": "confirmed",
+        "barsAgo": 0
+      }
     },
     {
       "symbol": "8031.T",
       "name": "三井物産 (8031)",
       "type": "stock",
       "sector": "商社",
-      "close": 4738,
-      "changePercent": -1.78,
-      "rsi": 62.3,
+      "close": 4662,
+      "changePercent": -1.6,
+      "rsi": 50.18,
       "bestParams": {
         "rsiPeriod": 7,
-        "maPeriod": 30,
+        "maPeriod": 20,
         "maMethod": "EMA",
         "offset": -3,
         "margin": 0.5,
@@ -1223,15 +1209,15 @@
       "name": "三菱商事 (8058)",
       "type": "stock",
       "sector": "商社",
-      "close": 4530,
-      "changePercent": -1.2,
-      "rsi": 47.51,
+      "close": 4447,
+      "changePercent": -1.83,
+      "rsi": 42.19,
       "bestParams": {
-        "rsiPeriod": 14,
-        "maPeriod": 45,
+        "rsiPeriod": 18,
+        "maPeriod": 60,
         "maMethod": "EMA",
         "offset": -3,
-        "margin": 1.6,
+        "margin": 1,
         "nLines": 3,
         "peakMethod": "kairi",
         "swingPeriod": 10,
@@ -1245,12 +1231,12 @@
       "name": "住友商事 (8053)",
       "type": "stock",
       "sector": "商社",
-      "close": 1583,
-      "changePercent": -0.44,
-      "rsi": 49.1,
+      "close": 1514,
+      "changePercent": -4.36,
+      "rsi": 41.67,
       "bestParams": {
-        "rsiPeriod": 9,
-        "maPeriod": 20,
+        "rsiPeriod": 21,
+        "maPeriod": 45,
         "maMethod": "EMA",
         "offset": -3,
         "margin": 0.2,
@@ -1267,9 +1253,9 @@
       "name": "丸紅 (8002)",
       "type": "stock",
       "sector": "商社",
-      "close": 5084,
-      "changePercent": -0.51,
-      "rsi": 59.82,
+      "close": 4988,
+      "changePercent": -1.89,
+      "rsi": 55.26,
       "bestParams": {
         "rsiPeriod": 11,
         "maPeriod": 20,
@@ -1289,31 +1275,38 @@
       "name": "武田薬品工業 (4502)",
       "type": "stock",
       "sector": "医薬品",
-      "close": 5345,
-      "changePercent": 1.08,
-      "rsi": 55.68,
+      "close": 5480,
+      "changePercent": 2.53,
+      "rsi": 67.98,
       "bestParams": {
-        "rsiPeriod": 18,
+        "rsiPeriod": 7,
         "maPeriod": 20,
         "maMethod": "EMA",
         "offset": -3,
-        "margin": 0.8,
+        "margin": 1,
         "nLines": 3,
         "peakMethod": "kairi",
         "swingPeriod": 10,
         "minGap": 2,
         "mtfFilter": "weekly"
       },
-      "latestSignal": null
+      "latestSignal": {
+        "time": "2026-07-06",
+        "type": "BUY",
+        "price": 5517,
+        "rsi": 85.41008037856155,
+        "status": "confirmed",
+        "barsAgo": 9
+      }
     },
     {
       "symbol": "4568.T",
       "name": "第一三共 (4568)",
       "type": "stock",
       "sector": "医薬品",
-      "close": 2746.5,
-      "changePercent": 2.6,
-      "rsi": 60.97,
+      "close": 2791,
+      "changePercent": 1.62,
+      "rsi": 69.99,
       "bestParams": {
         "rsiPeriod": 7,
         "maPeriod": 20,
@@ -1333,9 +1326,9 @@
       "name": "ジョンソン・エンド・ジョンソン (JNJ)",
       "type": "stock",
       "sector": "医薬品",
-      "close": 249.97,
-      "changePercent": 1.19,
-      "rsi": 45.87,
+      "close": 253.04,
+      "changePercent": 1.23,
+      "rsi": 52.19,
       "bestParams": {
         "rsiPeriod": 9,
         "maPeriod": 20,
@@ -1354,7 +1347,7 @@
         "price": 254.66,
         "rsi": 77.77382441107878,
         "status": "confirmed",
-        "barsAgo": 13
+        "barsAgo": 14
       }
     },
     {
@@ -1362,38 +1355,31 @@
       "name": "イーライリリー (LLY)",
       "type": "stock",
       "sector": "医薬品",
-      "close": 1169.17,
-      "changePercent": 1.08,
-      "rsi": 47.64,
+      "close": 1179.11,
+      "changePercent": 0.85,
+      "rsi": 55.58,
       "bestParams": {
-        "rsiPeriod": 9,
-        "maPeriod": 20,
+        "rsiPeriod": 18,
+        "maPeriod": 30,
         "maMethod": "EMA",
         "offset": -3,
-        "margin": 1.3,
+        "margin": 1.6,
         "nLines": 3,
         "peakMethod": "kairi",
         "swingPeriod": 10,
         "minGap": 2,
         "mtfFilter": "weekly"
       },
-      "latestSignal": {
-        "time": "2026-06-26",
-        "type": "BUY",
-        "price": 1208.12,
-        "rsi": 72.27287992676989,
-        "status": "confirmed",
-        "barsAgo": 13
-      }
+      "latestSignal": null
     },
     {
       "symbol": "9432.T",
       "name": "NTT (9432)",
       "type": "stock",
       "sector": "通信",
-      "close": 150.9,
-      "changePercent": 0.6,
-      "rsi": 54.18,
+      "close": 151.1,
+      "changePercent": 0.13,
+      "rsi": 55.65,
       "bestParams": {
         "rsiPeriod": 25,
         "maPeriod": 45,
@@ -1413,9 +1399,9 @@
       "name": "KDDI (9433)",
       "type": "stock",
       "sector": "通信",
-      "close": 2844,
-      "changePercent": -0.3,
-      "rsi": 59.89,
+      "close": 2868,
+      "changePercent": 0.84,
+      "rsi": 61.09,
       "bestParams": {
         "rsiPeriod": 25,
         "maPeriod": 60,
@@ -1432,9 +1418,9 @@
         "time": "2026-07-08",
         "type": "BUY",
         "price": 2808,
-        "rsi": 58.071037284400006,
+        "rsi": 58.07103727681747,
         "status": "confirmed",
-        "barsAgo": 6
+        "barsAgo": 7
       }
     },
     {
@@ -1442,31 +1428,38 @@
       "name": "ソフトバンク (9434)",
       "type": "stock",
       "sector": "通信",
-      "close": 219.6,
-      "changePercent": -0.18,
-      "rsi": 60.21,
+      "close": 220.5,
+      "changePercent": 0.41,
+      "rsi": 62.65,
       "bestParams": {
-        "rsiPeriod": 21,
+        "rsiPeriod": 18,
         "maPeriod": 75,
         "maMethod": "EMA",
         "offset": -3,
-        "margin": 1.3,
+        "margin": 0.2,
         "nLines": 3,
         "peakMethod": "kairi",
         "swingPeriod": 10,
         "minGap": 2,
         "mtfFilter": "weekly"
       },
-      "latestSignal": null
+      "latestSignal": {
+        "time": "2026-07-17",
+        "type": "SELL",
+        "price": 220.5,
+        "rsi": 62.64822927665378,
+        "status": "confirmed",
+        "barsAgo": 0
+      }
     },
     {
       "symbol": "VZ",
       "name": "ベライゾン (VZ)",
       "type": "stock",
       "sector": "通信",
-      "close": 43.88,
-      "changePercent": 2.45,
-      "rsi": 46.32,
+      "close": 43.59,
+      "changePercent": -0.66,
+      "rsi": 48.59,
       "bestParams": {
         "rsiPeriod": 14,
         "maPeriod": 30,
@@ -1485,7 +1478,7 @@
         "price": 44.1,
         "rsi": 36.370134233195955,
         "status": "confirmed",
-        "barsAgo": 12
+        "barsAgo": 13
       }
     },
     {
@@ -1494,8 +1487,8 @@
       "type": "stock",
       "sector": "消費・小売",
       "close": 78840,
-      "changePercent": 0.01,
-      "rsi": 30.56,
+      "changePercent": 0,
+      "rsi": 35.4,
       "bestParams": {
         "rsiPeriod": 9,
         "maPeriod": 45,
@@ -1514,7 +1507,7 @@
         "price": 86930,
         "rsi": 69.83007159361709,
         "status": "confirmed",
-        "barsAgo": 8
+        "barsAgo": 9
       }
     },
     {
@@ -1522,9 +1515,9 @@
       "name": "任天堂 (7974)",
       "type": "stock",
       "sector": "消費・小売",
-      "close": 7080,
-      "changePercent": 0.94,
-      "rsi": 49.48,
+      "close": 7294,
+      "changePercent": 3.02,
+      "rsi": 62.28,
       "bestParams": {
         "rsiPeriod": 9,
         "maPeriod": 60,
@@ -1544,15 +1537,15 @@
       "name": "ウォルマート (WMT)",
       "type": "stock",
       "sector": "消費・小売",
-      "close": 114.95,
-      "changePercent": 2.15,
-      "rsi": 45.44,
+      "close": 114.24,
+      "changePercent": -0.62,
+      "rsi": 47.04,
       "bestParams": {
         "rsiPeriod": 18,
         "maPeriod": 20,
         "maMethod": "EMA",
         "offset": -3,
-        "margin": 1,
+        "margin": 0.2,
         "nLines": 3,
         "peakMethod": "kairi",
         "swingPeriod": 10,
@@ -1563,9 +1556,9 @@
         "time": "2026-07-15",
         "type": "SELL",
         "price": 112.53,
-        "rsi": 41.820576517219756,
+        "rsi": 41.82057651721927,
         "status": "confirmed",
-        "barsAgo": 1
+        "barsAgo": 2
       }
     },
     {
@@ -1573,9 +1566,9 @@
       "name": "コストコ (COST)",
       "type": "stock",
       "sector": "消費・小売",
-      "close": 945.57,
-      "changePercent": 3.17,
-      "rsi": 50.94,
+      "close": 940.87,
+      "changePercent": -0.5,
+      "rsi": 56.64,
       "bestParams": {
         "rsiPeriod": 7,
         "maPeriod": 20,
@@ -1594,7 +1587,7 @@
         "price": 935.47,
         "rsi": 31.170621954214152,
         "status": "confirmed",
-        "barsAgo": 11
+        "barsAgo": 12
       }
     },
     {
@@ -1602,9 +1595,9 @@
       "name": "村田製作所 (6981)",
       "type": "stock",
       "sector": "電子部品",
-      "close": 8400,
-      "changePercent": -7.69,
-      "rsi": 36.74,
+      "close": 7632,
+      "changePercent": -9.14,
+      "rsi": 30.97,
       "bestParams": {
         "rsiPeriod": 11,
         "maPeriod": 20,
@@ -1624,9 +1617,9 @@
       "name": "ヒューリック (3003)",
       "type": "stock",
       "sector": "不動産",
-      "close": 1790,
-      "changePercent": -0.14,
-      "rsi": 55.81,
+      "close": 1789,
+      "changePercent": -0.06,
+      "rsi": 56.29,
       "bestParams": {
         "rsiPeriod": 25,
         "maPeriod": 90,
@@ -1646,9 +1639,9 @@
       "name": "ビットコイン (BTC/USD)",
       "type": "crypto",
       "sector": "暗号資産",
-      "close": 64145.4492,
-      "changePercent": -0.88,
-      "rsi": 58.73,
+      "close": 64045.9883,
+      "changePercent": 0.4,
+      "rsi": 51.68,
       "bestParams": {
         "rsiPeriod": 7,
         "maPeriod": 20,
@@ -1661,16 +1654,23 @@
         "minGap": 2,
         "mtfFilter": "weekly"
       },
-      "latestSignal": null
+      "latestSignal": {
+        "time": "2026-07-17",
+        "type": "SELL",
+        "price": 64045.9883,
+        "rsi": 51.68109538418329,
+        "status": "confirmed",
+        "barsAgo": 0
+      }
     },
     {
       "symbol": "ETH-USD",
       "name": "イーサリアム (ETH/USD)",
       "type": "crypto",
       "sector": "暗号資産",
-      "close": 1879.16,
-      "changePercent": -1.97,
-      "rsi": 55.23,
+      "close": 1841.1,
+      "changePercent": -1.19,
+      "rsi": 51.84,
       "bestParams": {
         "rsiPeriod": 25,
         "maPeriod": 45,
@@ -1690,9 +1690,9 @@
       "name": "メタプラネット (3350)",
       "type": "stock",
       "sector": "暗号資産",
-      "close": 233,
-      "changePercent": -5.28,
-      "rsi": 51.13,
+      "close": 221,
+      "changePercent": -5.15,
+      "rsi": 42.96,
       "bestParams": {
         "rsiPeriod": 11,
         "maPeriod": 90,
