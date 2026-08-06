@@ -1494,3 +1494,11 @@ tr:hover td {
 #reco-table tbody tr:hover {
     background: rgba(99, 102, 241, 0.07);
 }
+
+/* ============ トレード内省ノート (Reflection Journal) ============ */
+@media (max-width: 900px) {
+    .reflection-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+

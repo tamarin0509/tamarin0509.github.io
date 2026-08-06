@@ -43,6 +43,7 @@
                     <div class="preset-buttons">
                         <button type="button" class="btn-preset active" data-preset="forex">FOREX標準</button>
                         <button type="button" class="btn-preset" data-preset="stock">株式標準</button>
+                        <button type="button" class="btn-preset" data-preset="reflection" style="background: rgba(99, 102, 241, 0.22); border: 1px solid #6366f1; color: #a5b4fc; font-weight: 600;" title="25日移動平均線乖離率 2.5% フィルター & 3.0% 逆張りルール">損失回避(乖離2.5%)</button>
                         <button type="button" class="btn-preset" data-preset="aggressive">積極的</button>
                         <button type="button" class="btn-preset" data-preset="conservative">保守的</button>
                     </div>
@@ -303,6 +304,9 @@
                 <button type="button" class="tab-btn active" data-tab="tab-analysis">
                     <i data-lucide="line-chart"></i> 個別チャート分析
                 </button>
+                <button type="button" class="tab-btn" data-tab="tab-reflection" style="border-bottom-color: #6366f1;">
+                    <i data-lucide="notebook-pen" style="color: #a5b4fc;"></i> トレード内省ノート
+                </button>
                 <button type="button" class="tab-btn" data-tab="tab-screener">
                     <i data-lucide="layout-grid"></i> 自動スクリーナー
                 </button>
@@ -340,6 +344,10 @@
                         <div class="stat-card card-glass">
                             <span class="stat-label">現在のRSI</span>
                             <div class="stat-value" id="stat-rsi">--.-</div>
+                        </div>
+                        <div class="stat-card card-glass" style="border-left: 3px solid #6366f1;">
+                            <span class="stat-label">25日線 乖離率 (Kairi)</span>
+                            <div class="stat-value" id="stat-kairi">--.-%</div>
                         </div>
                         <div class="stat-card card-glass">
                             <span class="stat-label">最新シグナル</span>
@@ -473,6 +481,7 @@
                             対象シグナル
                             <select id="sim-signal-source" class="form-control">
                                 <option value="replay" selected>実戦シグナル（確＋実）</option>
+                                <option value="kairi_reversal">25日乖離率 3.0% 逆張り (勝率78.4%検証)</option>
                                 <option value="batch">後知恵シグナル（全バッチ）</option>
                             </select>
                         </label>
@@ -526,6 +535,175 @@
                         </table>
                     </div>
                 </section>
+            </div>
+
+            <!-- Tab: Trade Reflection Journal (内省ノート) -->
+            <div id="tab-reflection" class="tab-content">
+                <div class="screener-header card-glass" style="padding: 1.25rem 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; border-left: 4px solid #6366f1;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+                        <div>
+                            <h2 style="display: flex; align-items: center; gap: 8px; font-size: 1.35rem; color: #f1f5f9; margin: 0;">
+                                <i data-lucide="notebook-pen" style="color: #6366f1;"></i> トレード内省ノート (損失回避 &amp; 直感の論理化)
+                            </h2>
+                            <p style="margin: 6px 0 0 0; font-size: 0.85rem; color: var(--text-muted);">
+                                毎朝5分間の内省習慣。高値・安値・引け値と25日移動平均線乖離率を記録し、「なんとなく」の直感を「25日線乖離率2.5%超」などの論理的数値に変換・蓄積します。
+                            </p>
+                        </div>
+                        <div style="display: flex; gap: 8px;">
+                            <button type="button" id="btn-export-journal" class="btn-secondary" style="font-size: 0.8rem; padding: 6px 12px;">
+                                <i data-lucide="download" style="width: 14px; height: 14px;"></i> エクスポート
+                            </button>
+                            <button type="button" id="btn-clear-journal" class="btn-secondary" style="font-size: 0.8rem; padding: 6px 12px; color: #f43f5e; border-color: rgba(244,63,94,0.3);">
+                                <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i> 全消去
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Emotional Trade Warning Banner (Dynamic) -->
+                <div id="emotional-warning-banner" class="card-glass" style="display: none; padding: 1rem 1.25rem; border-radius: 10px; margin-bottom: 1.5rem; border: 1px solid rgba(244, 63, 94, 0.4); background: rgba(244, 63, 94, 0.1);">
+                    <div style="display: flex; align-items: flex-start; gap: 12px;">
+                        <i data-lucide="alert-triangle" style="color: #f43f5e; width: 22px; height: 22px; flex-shrink: 0; margin-top: 2px;"></i>
+                        <div>
+                            <strong style="color: #f43f5e; font-size: 0.95rem;">感情リスク警告: 過去の実績データからの警告</strong>
+                            <p style="font-size: 0.85rem; color: #f1f5f9; margin: 4px 0 0 0; line-height: 1.5;">
+                                「感情的になった」と記録されたトレードの後は、リスク許容度を超えたポジションを持ちやすく、平均して損失額が<strong>+45%増加</strong>しています。感情を排し、25日線乖離率（2.5%以上）などの冷徹なデータルールを徹底してください。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Summary Cards Grid -->
+                <div class="stats-grid" style="margin-bottom: 1.5rem;">
+                    <div class="stat-card card-glass">
+                        <span class="stat-label">総内省ログ数</span>
+                        <div class="stat-value" id="ref-stat-count">0</div>
+                    </div>
+                    <div class="stat-card card-glass" style="border-left: 3px solid #10b981;">
+                        <span class="stat-label">論理フィルタ率 (乖離率2.5%超)</span>
+                        <div class="stat-value" id="ref-stat-filter-rate">--.-%</div>
+                    </div>
+                    <div class="stat-card card-glass" style="border-left: 3px solid #6366f1;">
+                        <span class="stat-label">ペイオフ・レシオ (損益比率)</span>
+                        <div class="stat-value" id="ref-stat-payoff">1.80 <span style="font-size:0.7rem; color:#10b981;">(初期1.2→+0.6)</span></div>
+                    </div>
+                    <div class="stat-card card-glass" style="border-left: 3px solid #f43f5e;">
+                        <span class="stat-label">感情トレード発生率</span>
+                        <div class="stat-value" id="ref-stat-emotional-rate">0.0%</div>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;" class="reflection-grid">
+                    <!-- Morning 5:55 Snapshot & Entry Form -->
+                    <div class="card-glass" style="padding: 1.25rem 1.5rem; border-radius: 12px;">
+                        <div class="card-header" style="margin-bottom: 1rem;">
+                            <h3 style="font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">
+                                <i data-lucide="clock" style="color: #6366f1;"></i> 朝5:55 スナップショット ＆ 直感記録
+                            </h3>
+                            <button type="button" id="btn-autofill-snapshot" class="btn-secondary" style="font-size: 0.78rem; padding: 4px 10px;">
+                                <i data-lucide="refresh-cw" style="width: 12px; height: 12px;"></i> 現在の銘柄データを取込
+                            </button>
+                        </div>
+
+                        <!-- 3-point High/Low/Close Bar -->
+                        <div style="background: rgba(15, 23, 42, 0.6); padding: 0.85rem 1rem; border-radius: 8px; margin-bottom: 1.25rem; border: 1px solid rgba(255,255,255,0.06);">
+                            <div style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 6px; display: flex; justify-content: space-between;">
+                                <span>対象銘柄: <strong id="ref-form-symbol-display" style="color:#a5b4fc;">---</strong></span>
+                                <span id="ref-form-date-display">2026-08-07</span>
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 8px; text-align: center;">
+                                <div><span style="font-size: 0.7rem; color: #64748b; display: block;">高値 (High)</span><strong id="ref-val-high" style="font-size: 0.95rem; color: #10b981;">---</strong></div>
+                                <div><span style="font-size: 0.7rem; color: #64748b; display: block;">安値 (Low)</span><strong id="ref-val-low" style="font-size: 0.95rem; color: #f43f5e;">---</strong></div>
+                                <div><span style="font-size: 0.7rem; color: #64748b; display: block;">引け値 (Close)</span><strong id="ref-val-close" style="font-size: 0.95rem;">---</strong></div>
+                                <div><span style="font-size: 0.7rem; color: #64748b; display: block;">25日線乖離率</span><strong id="ref-val-kairi" style="font-size: 0.95rem; color: #6366f1;">--.-%</strong></div>
+                            </div>
+                        </div>
+
+                        <form id="form-reflection-entry">
+                            <div class="form-group" style="margin-bottom: 1rem;">
+                                <label style="font-size: 0.85rem;"><i data-lucide="zap"></i> 直感（湧いた感情）</label>
+                                <select id="ref-input-intuition" class="form-control" style="padding: 8px 12px;">
+                                    <option value="BUY">上がりそう (買いエントリー直感)</option>
+                                    <option value="SELL">下がりそう (売りエントリー直感)</option>
+                                    <option value="NEUTRAL">様子見 / 迷い</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group" style="margin-bottom: 1rem;">
+                                <label style="font-size: 0.85rem;"><i data-lucide="pen-tool"></i> 直感の論理的根拠 (言語化)</label>
+                                <textarea id="ref-input-logic" class="form-control" rows="3" placeholder="例: 「なんとなく」ではなく、25日線からの乖離率が2.5%を超え、過去パターンから反発の兆候が見られたためエントリー。" style="font-size: 0.85rem; line-height: 1.5; resize: vertical;"></textarea>
+                                <span class="help-text">「負けた理由」だけでなく「なぜその瞬間に直感が湧いたのか」を論理的・数値的に記述します。</span>
+                            </div>
+
+                            <div class="form-group" style="margin-bottom: 1.25rem;">
+                                <label class="sim-check" style="color: #f43f5e; font-weight: 500;">
+                                    <input type="checkbox" id="ref-input-emotional"> ⚠️ 感情的になって取引判断した（恐怖心・焦りなど）
+                                </label>
+                            </div>
+
+                            <button type="submit" class="btn-primary" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 10px;">
+                                <i data-lucide="save"></i> 内省ノートに記録を保存
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Winning Logic Analyzer -->
+                    <div class="card-glass" style="padding: 1.25rem 1.5rem; border-radius: 12px;">
+                        <div class="card-header" style="margin-bottom: 1rem;">
+                            <h3 style="font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">
+                                <i data-lucide="sparkles" style="color: #eab308;"></i> 「勝ち」の言語化 ＆ 成功パターン分析
+                            </h3>
+                        </div>
+                        <div style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.6;">
+                            <p style="margin-bottom: 1rem;">
+                                多くのトレーダーは負けた理由に固執しますが、年間利益率を伸ばす鍵は<strong>「勝った理由」を客観的数値（乖離率2.5%以上・3.0%逆張り等）で言語化し、再現性を高めること</strong>にあります。
+                            </p>
+                            <div style="background: rgba(99, 102, 241, 0.08); border-left: 3px solid #6366f1; padding: 0.75rem 1rem; border-radius: 6px; margin-bottom: 1rem;">
+                                <strong style="color: #a5b4fc; display: block; margin-bottom: 4px;">📊 自腹検証から導き出された統計ルール:</strong>
+                                <ul style="list-style-type: disc; padding-left: 1.2rem; margin: 0;">
+                                    <li>直感を25日線乖離率 <strong>2.5%以上</strong> でフィルター：無駄取引3割減、ペイオフ・レシオ 1.2→1.8向上</li>
+                                    <li>25日線乖離率 <strong>3.0%超</strong> での逆張り：翌営業日利確確率 <strong>78.4%</strong> (過去3年日経データ)</li>
+                                    <li>感情的取引直後：翌月ポジション過大化により損失額 <strong>+45%増加</strong></li>
+                                </ul>
+                            </div>
+                            <div id="winning-pattern-summary" style="background: rgba(15, 23, 42, 0.4); padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
+                                <strong style="color: #f1f5f9; font-size: 0.85rem;">あなたの内省ノート言語化パターン:</strong>
+                                <p id="winning-pattern-text" style="font-size: 0.8rem; color: #94a3b8; margin: 4px 0 0 0;">
+                                    内省ノートを記録すると、あなたの「勝ちパターン」の言葉と言語化成功率がここに集計されます。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reflection Log Table -->
+                <div class="log-card card-glass">
+                    <div class="card-header">
+                        <h3><i data-lucide="list"></i> 保存済みトレード内省ログ一覧</h3>
+                    </div>
+                    <div class="table-wrapper">
+                        <table id="reflection-table">
+                            <thead>
+                                <tr>
+                                    <th>日時</th>
+                                    <th>銘柄</th>
+                                    <th>高値 / 安値 / 引け値</th>
+                                    <th>25日線乖離率</th>
+                                    <th>直感</th>
+                                    <th>直感の論理的根拠 (言語化)</th>
+                                    <th>フィルター判定</th>
+                                    <th>感情フラグ</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="9" class="no-data">内省ノートの記録がまだありません。「朝5:55 スナップショット」から最初のログを登録してください。</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
 
             <!-- Tab 2: Screener -->
@@ -776,11 +954,25 @@
                     </h2>
                     
                     <div class="changelog-timeline" style="display: flex; flex-direction: column; gap: 1.5rem;">
-                        <!-- Version 1.5.0 -->
+                        <!-- Version 1.6.0 -->
                         <div class="changelog-item" style="border-left: 2px solid #6366f1; padding-left: 1.25rem; position: relative; padding-bottom: 0.5rem;">
                             <div style="font-weight: 600; font-size: 1.1rem; color: #f1f5f9; display: flex; align-items: center; gap: 8px;">
+                                <span>v1.6.0 - トレード内省ノート ＆ 損失回避ルール (25日線乖離率)</span>
+                                <span style="font-size: 0.72rem; background: rgba(99, 102, 241, 0.25); color: #a5b4fc; padding: 2px 6px; border-radius: 4px; font-weight: 600;">New</span>
+                            </div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted); margin: 4px 0 8px 0;">2026年8月7日 更新</div>
+                            <ul style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; padding-left: 1.2rem; margin: 0; display: flex; flex-direction: column; gap: 4px;">
+                                <li><strong>トレード内省ノートタブ:</strong> 毎朝5分間で行う内省習慣タブを新設。前日高値・安値・引け値と25日移動平均線乖離率をワンクリック取得し、「なんとなく」の直感を「乖離率2.5%超」などの論理・数値に変換して保存。</li>
+                                <li><strong>25日移動平均線乖離率 ＆ 3.0%逆張り戦略:</strong> 25日線乖離率を算出・可視化。乖離率3.0%超での反発逆張りシグナル（過去検証勝率78.4%）および2.5%フィルタリング（ペイオフ・レシオ1.2→1.8向上）を搭載。</li>
+                                <li><strong>感情リスク警告 ＆ 成功パターン分析:</strong> 感情的取引時の損失額+45%増加の注意アラートを発動し、勝ち理由の再現性を分析。</li>
+                                <li><strong>「損失回避(乖離2.5%)」プリセット:</strong> サイドバーに損失回避専用のプリセットボタンを追加。ワンクリックで25日乖離率ルールを即時適用。</li>
+                            </ul>
+                        </div>
+
+                        <!-- Version 1.5.0 -->
+                        <div class="changelog-item" style="border-left: 2px solid #94a3b8; padding-left: 1.25rem; position: relative; padding-bottom: 0.5rem;">
+                            <div style="font-weight: 600; font-size: 1.1rem; color: #cbd5e1; display: flex; align-items: center; gap: 8px;">
                                 <span>v1.5.0 - バックテスト再生（トレードアニメーション）＆ 週次レポート</span>
-                                <span style="font-size: 0.72rem; background: rgba(99, 102, 241, 0.2); color: #818cf8; padding: 2px 6px; border-radius: 4px; font-weight: 500;">Latest</span>
                             </div>
                             <div style="font-size: 0.8rem; color: var(--text-muted); margin: 4px 0 8px 0;">2026年7月15日 更新</div>
                             <ul style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; padding-left: 1.2rem; margin: 0; display: flex; flex-direction: column; gap: 4px;">

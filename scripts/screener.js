@@ -91,6 +91,25 @@ const WATCH_SYMBOLS = [
     { symbol: '3350.T', name: 'メタプラネット (3350)', type: 'stock', sector: '暗号資産' }
 ];
 
+function calculateKairi(candles, period = 25) {
+    if (!candles || candles.length < period) {
+        return new Array(candles ? candles.length : 0).fill(null);
+    }
+    const kairi = new Array(candles.length).fill(null);
+    let sum = 0;
+    for (let i = 0; i < candles.length; i++) {
+        sum += candles[i].close;
+        if (i >= period - 1) {
+            if (i >= period) {
+                sum -= candles[i - period].close;
+            }
+            const sma = sum / period;
+            kairi[i] = ((candles[i].close - sma) / sma) * 100.0;
+        }
+    }
+    return kairi;
+}
+
 // Wilder's RSI calculation
 function calculateSingleRSI(candles, period, priceField) {
     const rsi = new Array(candles.length).fill(null);
@@ -1036,6 +1055,9 @@ async function runScreener() {
             const prevCandle = candles[candles.length - 2];
             const changePercent = prevCandle ? ((latestCandle.close - prevCandle.close) / prevCandle.close) * 100 : 0;
 
+            const kairiArr = calculateKairi(candles, 25);
+            const latestKairi = kairiArr[kairiArr.length - 1];
+
             results.push({
                 symbol: item.symbol,
                 name: item.name,
@@ -1044,6 +1066,7 @@ async function runScreener() {
                 close: latestCandle.close,
                 changePercent: parseFloat(changePercent.toFixed(2)),
                 rsi: parseFloat(rsi[rsi.length - 1].toFixed(2)),
+                kairi25: latestKairi != null ? parseFloat(latestKairi.toFixed(2)) : null,
                 bestParams: optParams,
                 latestSignal: latestSig,
                 backtest: backtest
