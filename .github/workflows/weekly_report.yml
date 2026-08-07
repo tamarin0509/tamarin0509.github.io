@@ -27,17 +27,28 @@ jobs:
       - name: Run Screener Script
         run: node scripts/screener.js
 
+      - name: Run Weekly Analyzer Script
+        run: node scripts/weekly_analyzer.js
+
       - name: Run Weekly Report Script
         run: node scripts/weekly_report.js
+
+      - name: Send Alert Notifications
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          LINE_CHANNEL_ACCESS_TOKEN: ${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}
+          LINE_USER_ID: ${{ secrets.LINE_USER_ID }}
+          LINE_NOTIFY_TOKEN: ${{ secrets.LINE_NOTIFY_TOKEN }}
+        run: node scripts/notify_alerts.js
 
       - name: Commit and Push results
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-          git add screener_results.json data blog
+          git add screener_results.json weekly_watchlist.json data blog
           if ! git diff --cached --quiet; then
-            git commit -m "chore: weekly report update [skip ci]"
+            git commit -m "chore: weekly report & watchlist update [skip ci]"
             git push origin main
           else
             echo "No changes."

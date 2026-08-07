@@ -311,6 +311,9 @@
                 <button type="button" class="tab-btn active" data-tab="tab-analysis">
                     <i data-lucide="line-chart"></i> 個別チャート分析
                 </button>
+                <button type="button" class="tab-btn" data-tab="tab-watchlist" style="border-bottom-color: #10b981;">
+                    <i data-lucide="list-checks" style="color: #10b981;"></i> 週足ウォッチリスト
+                </button>
                 <button type="button" class="tab-btn" data-tab="tab-reflection" style="border-bottom-color: #6366f1;">
                     <i data-lucide="notebook-pen" style="color: #a5b4fc;"></i> トレード内省ノート
                 </button>
@@ -542,6 +545,71 @@
                         </table>
                     </div>
                 </section>
+            </div>
+
+            <!-- Tab: Weekly Watchlist (週足ウォッチリスト) -->
+            <div id="tab-watchlist" class="tab-content">
+                <div class="screener-header card-glass" style="padding: 1.25rem 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; border-left: 4px solid #10b981;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                        <div>
+                            <h2 style="display: flex; align-items: center; gap: 8px; font-size: 1.35rem; color: #f1f5f9; margin: 0;">
+                                <i data-lucide="list-checks" style="color: #10b981;"></i> 週足ウォッチリスト (週末分析 &amp; 自動シグナル)
+                            </h2>
+                            <p style="margin: 6px 0 0 0; font-size: 0.85rem; color: var(--text-muted);">
+                                毎週土曜朝に自動分析。週足RSIブレイクアウトと25週移動平均線乖離率（±5.0%）を掛け合わせ、スマホ手動注文用の注目銘柄をランク付けします。
+                            </p>
+                        </div>
+                        <div style="font-size: 0.85rem; color: var(--text-muted);" id="watchlist-updated-at">
+                            最終更新: 読み込み中...
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Market Summary Cards -->
+                <div class="stats-grid" id="watchlist-market-grid" style="margin-bottom: 1.5rem;">
+                    <!-- JavaScript にて動的描画 -->
+                </div>
+
+                <!-- Watchlist Filter & Table Container -->
+                <div class="screener-table-container card-glass" style="padding: 1.25rem; border-radius: 12px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 10px;">
+                        <h3 style="font-size: 1.1rem; font-weight: 600; color: #f1f5f9; display: flex; align-items: center; gap: 6px; margin: 0;">
+                            <i data-lucide="star" style="color: #f59e0b; width: 18px; height: 18px;"></i> 注目・警戒銘柄一覧
+                        </h3>
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <select id="watchlist-priority-filter" class="form-control" style="font-size: 0.8rem; padding: 4px 8px; min-width: 140px;">
+                                <option value="ALL">すべての優先度 (ALL)</option>
+                                <option value="HIGH" selected>⭐ 最優先 (HIGHのみ)</option>
+                                <option value="MEDIUM">⚠️ 注目 (MEDIUM以上)</option>
+                            </select>
+                            <select id="watchlist-action-filter" class="form-control" style="font-size: 0.8rem; padding: 4px 8px; min-width: 140px;">
+                                <option value="ALL" selected>すべての売買 (BUY &amp; SELL)</option>
+                                <option value="BUY">🟢 BUY (買い注目)</option>
+                                <option value="SELL">🔴 SELL (売り警戒)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="table-wrapper">
+                        <table id="watchlist-table">
+                            <thead>
+                                <tr>
+                                    <th class="name">銘柄名</th>
+                                    <th>売買</th>
+                                    <th>優先度</th>
+                                    <th>セクター</th>
+                                    <th>25週乖離率</th>
+                                    <th>週足RSI</th>
+                                    <th>トリガー詳細</th>
+                                    <th>トレードメモ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="watchlist-tbody">
+                                <tr><td colspan="8" class="no-data">週足ウォッチリストを読み込んでいます...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
 
             <!-- Tab: Trade Reflection Journal (内省ノート) -->

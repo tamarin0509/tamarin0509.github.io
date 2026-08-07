@@ -338,6 +338,109 @@ ${JSON.stringify(machineData, null, 1)}
 `;
 }
 
+function renderWatchlistPage(today, watchlistData) {
+    const alerts = watchlistData.alerts || [];
+    const highAlerts = alerts.filter(a => a.priority === 'HIGH');
+    const medAlerts = alerts.filter(a => a.priority === 'MEDIUM');
+    const lowAlerts = alerts.filter(a => a.priority === 'LOW');
+
+    const renderAlertRows = (list) => {
+        if (!list || list.length === 0) {
+            return `<tr><td colspan="7" style="text-align:center; color:var(--muted, #888);">該当銘柄なし</td></tr>`;
+        }
+        return list.map(a => {
+            const badgeClass = a.action === 'BUY' ? 'badge-buy' : a.action === 'SELL' ? 'badge-sell' : 'badge-neutral';
+            const kairiColor = a.weeklyKairi25 > 0 ? '#ef4444' : a.weeklyKairi25 < 0 ? '#10b981' : 'inherit';
+            return `<tr>
+                <td class="name"><strong><a href="../index.html?symbol=${a.symbol}" style="color:inherit; text-decoration:underline;">${escapeHtml(a.name)}</a></strong></td>
+                <td><span class="badge ${badgeClass}">${a.action}</span></td>
+                <td>${escapeHtml(a.sector)}</td>
+                <td style="color:${kairiColor}; font-weight:600;">${a.weeklyKairi25 > 0 ? '+' : ''}${a.weeklyKairi25.toFixed(1)}%</td>
+                <td>${a.weeklyRsi.toFixed(1)}</td>
+                <td style="font-size:0.88em; max-width:280px;">${escapeHtml(a.triggerDetails)}</td>
+                <td style="font-size:0.85em; color:#a5b4fc; max-width:260px;">${escapeHtml(a.note)}</td>
+            </tr>`;
+        }).join('\n');
+    };
+
+    const m = watchlistData.marketSummary || {};
+    const marketHtml = `
+    <div class="summary-cards" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-bottom: 25px;">
+        <div class="summary-card">
+            <div class="label">🇯🇵 日経平均</div>
+            <div class="value" style="font-size:1.2rem;">${m.nikkei ? m.nikkei.close.toLocaleString() : '---'}</div>
+            <div style="font-size:0.85em; margin-top:4px;">週足RSI: ${m.nikkei ? m.nikkei.weeklyRsi : '---'} | ${m.nikkei ? m.nikkei.trend : ''}</div>
+        </div>
+        <div class="summary-card">
+            <div class="label">🇺🇸 S&P 500</div>
+            <div class="value" style="font-size:1.2rem;">${m.sp500 ? m.sp500.close.toLocaleString() : '---'}</div>
+            <div style="font-size:0.85em; margin-top:4px;">週足RSI: ${m.sp500 ? m.sp500.weeklyRsi : '---'} | ${m.sp500 ? m.sp500.trend : ''}</div>
+        </div>
+        <div class="summary-card">
+            <div class="label">💱 ドル/円</div>
+            <div class="value" style="font-size:1.2rem;">${m.usdjpy ? m.usdjpy.close : '---'}</div>
+            <div style="font-size:0.85em; margin-top:4px;">週足RSI: ${m.usdjpy ? m.usdjpy.weeklyRsi : '---'} | ${m.usdjpy ? m.usdjpy.trend : ''}</div>
+        </div>
+    </div>`;
+
+    const heat = watchlistData.sectorHeatmap || {};
+    const heatHtml = Object.entries(heat).map(([sec, val]) => {
+        const isPlus = val.startsWith('+');
+        const color = isPlus ? '#10b981' : '#ef4444';
+        return `<div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); padding:8px 12px; border-radius:6px; text-align:center;">
+            <div style="font-size:0.75rem; color:#888;">${escapeHtml(sec)}</div>
+            <div style="font-size:0.95rem; font-weight:bold; color:${color}; margin-top:2px;">${val}</div>
+        </div>`;
+    }).join('\n');
+
+    return `<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>週足ウォッチリストレポート ${today} | RSI Breakout Screener</title>
+<style>
+${PAGE_STYLE}
+.badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; }
+.badge-buy { background: rgba(16, 185, 129, 0.2); color: #10b981; border: 1px solid #10b981; }
+.badge-sell { background: rgba(239, 68, 68, 0.2); color: #ef4444; border: 1px solid #ef4444; }
+.badge-neutral { background: rgba(156, 163, 175, 0.2); color: #9ca3af; border: 1px solid #9ca3af; }
+</style>
+<div class="container">
+    <a class="back-link" href="./index.html">&larr; レポート一覧に戻る</a>
+    <h1>📋 週足ウォッチリスト分析レポート (${today})</h1>
+    <p class="meta">週足RSIブレイクアウト × 25週移動平均乖離率による週末テクニカル分析アラート</p>
+
+    <h3>🌏 主要市場サマリー</h3>
+    ${marketHtml}
+
+    <h3>📊 セクターモメンタム (週変化率)</h3>
+    <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap:10px; margin-bottom:30px;">
+        ${heatHtml}
+    </div>
+
+    <h3>⭐ 最優先注目銘柄 (Priority: HIGH)</h3>
+    <div class="table-wrap">
+    <table>
+    <thead><tr><th>銘柄名</th><th>売買</th><th>セクター</th><th>25週乖離率</th><th>週足RSI</th><th>トリガー詳細</th><th>トレードメモ</th></tr></thead>
+    <tbody>
+    ${renderAlertRows(highAlerts)}
+    </tbody>
+    </table>
+    </div>
+
+    <h3 style="margin-top:35px;">⚠️ 注目・警戒銘柄 (Priority: MEDIUM)</h3>
+    <div class="table-wrap">
+    <table>
+    <thead><tr><th>銘柄名</th><th>売買</th><th>セクター</th><th>25週乖離率</th><th>週足RSI</th><th>トリガー詳細</th><th>トレードメモ</th></tr></thead>
+    <tbody>
+    ${renderAlertRows(medAlerts)}
+    </tbody>
+    </table>
+    </div>
+
+    <p class="note" style="margin-top:30px;">&copy; 2026 tamarin0509-art — このウォッチリストは自動生成されており、投資勧誘を目的としたものではありません。</p>
+</div>
+`;
+}
+
 function rebuildIndexPage() {
     const snapshots = listFiles('snapshot-');
     const reports = listFiles('report-').map(f =>
@@ -355,7 +458,14 @@ function rebuildIndexPage() {
         if (rep) {
             desc += ` ／ 前週答え合わせ: 的中率 ${rep.summary.winRate === null ? '---' : rep.summary.winRate + '%'}（${rep.summary.wins}/${rep.summary.total}）`;
         }
-        return `<li><a href="./${d}.html"><span class="date">${d}</span></a><div class="desc">${desc}</div></li>`;
+
+        let watchlistLink = '';
+        const watchlistFile = path.join(BLOG_DIR, `watchlist_${d}.html`);
+        if (fs.existsSync(watchlistFile)) {
+            watchlistLink = ` &nbsp;|&nbsp; <a href="./watchlist_${d}.html" style="color:#a5b4fc; font-weight:bold;">📋 週足ウォッチリスト</a>`;
+        }
+
+        return `<li><a href="./${d}.html"><span class="date">${d}</span></a>${watchlistLink}<div class="desc">${desc}</div></li>`;
     }).join('\n');
 
     const html = `<meta charset="UTF-8">
@@ -365,7 +475,7 @@ function rebuildIndexPage() {
 <div class="container">
     <a class="back-link" href="../index.html">&larr; スクリーナーに戻る</a>
     <h1>週次スクリーニングレポート</h1>
-    <p class="meta">毎週の予測シグナルと、その1週間後の答え合わせ結果のアーカイブ</p>
+    <p class="meta">毎週の予測シグナル、週足ウォッチリスト、および1週間後の答え合わせ結果のアーカイブ</p>
     <ul class="entry-list">
 ${items}
     </ul>
@@ -399,10 +509,25 @@ function main() {
     // 2. 今週の予測をスナップショット保存
     const snapshot = createSnapshot(screener, today);
 
-    // 3. ブログエントリ生成 + 一覧再構築
+    // 3. ブログエントリ生成
     const entryFile = path.join(BLOG_DIR, `${today}.html`);
     fs.writeFileSync(entryFile, renderEntryPage(today, snapshot, report));
     console.log(`Blog entry written: ${entryFile}`);
+
+    // 4. 週足ウォッチリストレポート生成 (weekly_watchlist.json が存在する場合)
+    const watchlistJsonPath = path.join(ROOT, 'weekly_watchlist.json');
+    if (fs.existsSync(watchlistJsonPath)) {
+        try {
+            const watchlistData = JSON.parse(fs.readFileSync(watchlistJsonPath, 'utf8'));
+            const watchlistHtmlFile = path.join(BLOG_DIR, `watchlist_${today}.html`);
+            fs.writeFileSync(watchlistHtmlFile, renderWatchlistPage(today, watchlistData));
+            console.log(`Watchlist blog entry written: ${watchlistHtmlFile}`);
+        } catch (e) {
+            console.error('⚠ Watchlist blog generation failed:', e.message);
+        }
+    }
+
+    // 5. 一覧再構築
     rebuildIndexPage();
 }
 

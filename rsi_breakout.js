@@ -107,6 +107,7 @@ function initApp() {
     setupReplayControls();
     initReflectionJournal();
     loadScreenerData();
+    loadWeeklyWatchlistData();
     loadData();
 }
 
@@ -3764,4 +3765,111 @@ function clearReflectionJournal() {
     if (!confirm('本当にすべての内省ノートログを消去しますか？この操作は取り消せません。')) return;
     localStorage.removeItem(REFLECTION_STORAGE_KEY);
     renderReflectionJournalUI();
+}
+
+// ===== Weekly Watchlist Tab Integration =====
+const watchlistState = {
+    data: null,
+    priorityFilter: 'HIGH',
+    actionFilter: 'ALL'
+};
+
+async function loadWeeklyWatchlistData() {
+    try {
+        const resp = await fetch('weekly_watchlist.json');
+        if (!resp.ok) return;
+        watchlistState.data = await resp.json();
+        renderWeeklyWatchlist();
+        setupWatchlistFilters();
+    } catch (e) {
+        console.warn('Weekly watchlist data could not be loaded:', e);
+    }
+}
+
+function setupWatchlistFilters() {
+    const pFilter = document.getElementById('watchlist-priority-filter');
+    const aFilter = document.getElementById('watchlist-action-filter');
+    if (pFilter) {
+        pFilter.addEventListener('change', (e) => {
+            watchlistState.priorityFilter = e.target.value;
+            renderWeeklyWatchlist();
+        });
+    }
+    if (aFilter) {
+        aFilter.addEventListener('change', (e) => {
+            watchlistState.actionFilter = e.target.value;
+            renderWeeklyWatchlist();
+        });
+    }
+}
+
+function renderWeeklyWatchlist() {
+    if (!watchlistState.data) return;
+    const { generatedAt, weekEnding, alerts, marketSummary } = watchlistState.data;
+
+    const updatedEl = document.getElementById('watchlist-updated-at');
+    if (updatedEl) {
+        const dateStr = weekEnding || (generatedAt ? generatedAt.slice(0, 10) : '');
+        updatedEl.textContent = `最終更新: 週締め ${dateStr}`;
+    }
+
+    // Render Market Cards
+    const marketGrid = document.getElementById('watchlist-market-grid');
+    if (marketGrid && marketSummary) {
+        const m = marketSummary;
+        marketGrid.innerHTML = `
+            <div class="stat-card card-glass">
+                <span class="stat-label">🇯🇵 日経平均 (週足)</span>
+                <div class="stat-value" style="font-size:1.3rem;">${m.nikkei ? m.nikkei.close.toLocaleString() : '---'}</div>
+                <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">RSI: ${m.nikkei ? m.nikkei.weeklyRsi : '--'} (${m.nikkei ? m.nikkei.trend : ''})</div>
+            </div>
+            <div class="stat-card card-glass">
+                <span class="stat-label">🇺🇸 S&P 500 (週足)</span>
+                <div class="stat-value" style="font-size:1.3rem;">${m.sp500 ? m.sp500.close.toLocaleString() : '---'}</div>
+                <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">RSI: ${m.sp500 ? m.sp500.weeklyRsi : '--'} (${m.sp500 ? m.sp500.trend : ''})</div>
+            </div>
+            <div class="stat-card card-glass">
+                <span class="stat-label">💱 ドル円 (週足)</span>
+                <div class="stat-value" style="font-size:1.3rem;">${m.usdjpy ? m.usdjpy.close : '---'}</div>
+                <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">RSI: ${m.usdjpy ? m.usdjpy.weeklyRsi : '--'} (${m.usdjpy ? m.usdjpy.trend : ''})</div>
+            </div>
+        `;
+    }
+
+    // Render Table Rows
+    const tbody = document.getElementById('watchlist-tbody');
+    if (!tbody) return;
+
+    let filtered = alerts || [];
+    if (watchlistState.priorityFilter === 'HIGH') {
+        filtered = filtered.filter(a => a.priority === 'HIGH');
+    } else if (watchlistState.priorityFilter === 'MEDIUM') {
+        filtered = filtered.filter(a => a.priority === 'HIGH' || a.priority === 'MEDIUM');
+    }
+
+    if (watchlistState.actionFilter !== 'ALL') {
+        filtered = filtered.filter(a => a.action === watchlistState.actionFilter);
+    }
+
+    if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" class="no-data">条件に一致するウォッチリスト銘柄はありません。</td></tr>`;
+        return;
+    }
+
+    tbody.innerHTML = filtered.map(a => {
+        const badgeActionClass = a.action === 'BUY' ? 'badge-buy' : a.action === 'SELL' ? 'badge-sell' : 'badge-neutral';
+        const priorityStyle = a.priority === 'HIGH' ? 'style="color:#f59e0b; font-weight:bold;"' : 'style="color:#a5b4fc;"';
+        const kairiColor = a.weeklyKairi25 > 0 ? '#ef4444' : a.weeklyKairi25 < 0 ? '#10b981' : 'inherit';
+
+        return `<tr style="cursor:pointer;" onclick="jumpToAnalysis({ symbol: '${a.symbol}', name: '${a.name.replace(/'/g, "\\'")}', bestParams: {} })">
+            <td class="name"><strong>${escapeHtml(a.name)}</strong></td>
+            <td><span class="badge ${badgeActionClass}">${a.action}</span></td>
+            <td ${priorityStyle}>${a.priority === 'HIGH' ? '⭐ HIGH' : a.priority}</td>
+            <td>${escapeHtml(a.sector)}</td>
+            <td style="color:${kairiColor}; font-weight:600;">${a.weeklyKairi25 > 0 ? '+' : ''}${a.weeklyKairi25.toFixed(1)}%</td>
+            <td>${a.weeklyRsi.toFixed(1)}</td>
+            <td style="font-size:0.85rem; max-width:240px; white-space:normal;">${escapeHtml(a.triggerDetails)}</td>
+            <td style="font-size:0.82rem; color:#a5b4fc; max-width:240px; white-space:normal;">${escapeHtml(a.note)}</td>
+        </tr>`;
+    }).join('');
 }
