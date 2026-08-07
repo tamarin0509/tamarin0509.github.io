@@ -3861,6 +3861,9 @@ function renderWeeklyWatchlist() {
         const priorityStyle = a.priority === 'HIGH' ? 'style="color:#f59e0b; font-weight:bold;"' : 'style="color:#a5b4fc;"';
         const kairiColor = a.weeklyKairi25 > 0 ? '#ef4444' : a.weeklyKairi25 < 0 ? '#10b981' : 'inherit';
 
+        const tradePlanText = a.tradePlan ? `<div style="font-weight:600; color:${a.action === 'BUY' ? '#10b981' : '#ef4444'}; margin-bottom:3px; line-height:1.3;">${escapeHtml(a.tradePlan.executionNote)}</div>` : '';
+        const fullNote = tradePlanText + `<div style="color:#94a3b8; font-size:0.8rem;">💡 ${escapeHtml(a.note)}</div>`;
+
         return `<tr style="cursor:pointer;" onclick="jumpToAnalysis({ symbol: '${a.symbol}', name: '${a.name.replace(/'/g, "\\'")}', bestParams: {} })">
             <td class="name"><strong>${escapeHtml(a.name)}</strong></td>
             <td><span class="badge ${badgeActionClass}">${a.action}</span></td>
@@ -3868,8 +3871,8 @@ function renderWeeklyWatchlist() {
             <td>${escapeHtml(a.sector)}</td>
             <td style="color:${kairiColor}; font-weight:600;">${a.weeklyKairi25 > 0 ? '+' : ''}${a.weeklyKairi25.toFixed(1)}%</td>
             <td>${a.weeklyRsi.toFixed(1)}</td>
-            <td style="font-size:0.85rem; max-width:240px; white-space:normal;">${escapeHtml(a.triggerDetails)}</td>
-            <td style="font-size:0.82rem; color:#a5b4fc; max-width:240px; white-space:normal;">${escapeHtml(a.note)}</td>
+            <td style="font-size:0.85rem; max-width:200px; white-space:normal;">${escapeHtml(a.triggerDetails)}</td>
+            <td style="font-size:0.82rem; max-width:340px; white-space:normal;">${fullNote}</td>
         </tr>`;
     }).join('');
 }

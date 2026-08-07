@@ -351,14 +351,15 @@ function renderWatchlistPage(today, watchlistData) {
         return list.map(a => {
             const badgeClass = a.action === 'BUY' ? 'badge-buy' : a.action === 'SELL' ? 'badge-sell' : 'badge-neutral';
             const kairiColor = a.weeklyKairi25 > 0 ? '#ef4444' : a.weeklyKairi25 < 0 ? '#10b981' : 'inherit';
+            const planText = a.tradePlan ? `<div style="font-weight:bold; color:${a.action==='BUY'?'#10b981':'#ef4444'}; margin-bottom:3px;">${escapeHtml(a.tradePlan.executionNote)}</div>` : '';
             return `<tr>
                 <td class="name"><strong><a href="../index.html?symbol=${a.symbol}" style="color:inherit; text-decoration:underline;">${escapeHtml(a.name)}</a></strong></td>
                 <td><span class="badge ${badgeClass}">${a.action}</span></td>
                 <td>${escapeHtml(a.sector)}</td>
                 <td style="color:${kairiColor}; font-weight:600;">${a.weeklyKairi25 > 0 ? '+' : ''}${a.weeklyKairi25.toFixed(1)}%</td>
                 <td>${a.weeklyRsi.toFixed(1)}</td>
-                <td style="font-size:0.88em; max-width:280px;">${escapeHtml(a.triggerDetails)}</td>
-                <td style="font-size:0.85em; color:#a5b4fc; max-width:260px;">${escapeHtml(a.note)}</td>
+                <td style="font-size:0.88em; max-width:240px;">${escapeHtml(a.triggerDetails)}</td>
+                <td style="font-size:0.85em; max-width:320px;">${planText}<div style="color:#94a3b8;">💡 ${escapeHtml(a.note)}</div></td>
             </tr>`;
         }).join('\n');
     };

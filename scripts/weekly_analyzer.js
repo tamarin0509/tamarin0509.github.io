@@ -301,6 +301,80 @@ function detectWeeklyRsiBreakout(candles, rsi, swingPeriod = 5) {
     return signals;
 }
 
+// トレードエントリー指示計算 (Entry Target / Stop Loss / Take Profit / Risk Reward)
+function calculateTradePlan(dailyCandles, action, close) {
+    if (!dailyCandles || dailyCandles.length < 10 || action === 'NEUTRAL') return null;
+
+    const recentBars = dailyCandles.slice(-20);
+    const recentLows = recentBars.map(c => c.low);
+    const recentHighs = recentBars.map(c => c.high);
+    const minLow = Math.min(...recentLows);
+    const maxHigh = Math.max(...recentHighs);
+
+    const fmtP = (v) => v >= 100 ? Math.round(v).toLocaleString() : v.toFixed(3);
+
+    let stopLoss = 0;
+    let takeProfit = 0;
+    let entryType = '';
+    let entryRange = '';
+    let executionNote = '';
+
+    if (action === 'BUY') {
+        entryType = '成行 / 押し目買付';
+        stopLoss = Math.min(minLow * 0.985, close * 0.955);
+        if (stopLoss >= close) stopLoss = close * 0.95;
+
+        const risk = close - stopLoss;
+        takeProfit = Math.max(maxHigh, close + risk * 1.8);
+
+        const slPct = ((stopLoss - close) / close) * 100.0;
+        const tpPct = ((takeProfit - close) / close) * 100.0;
+        const rr = Math.abs(tpPct / slPct);
+
+        entryRange = `${fmtP(stopLoss * 1.01)} 〜 ${fmtP(close)}`;
+        executionNote = `【買付指示】エントリー: ${fmtP(close)}以下 | 損切り(SL): ${fmtP(stopLoss)} (${slPct.toFixed(1)}%) | 利確(TP): ${fmtP(takeProfit)} (+${tpPct.toFixed(1)}%) | RR: 1:${rr.toFixed(1)}`;
+
+        return {
+            entryType,
+            entryTarget: close,
+            entryRange,
+            stopLoss: parseFloat(stopLoss.toFixed(2)),
+            stopLossPct: parseFloat(slPct.toFixed(2)),
+            takeProfit: parseFloat(takeProfit.toFixed(2)),
+            takeProfitPct: parseFloat(tpPct.toFixed(2)),
+            riskRewardRatio: parseFloat(rr.toFixed(2)),
+            executionNote
+        };
+    } else if (action === 'SELL') {
+        entryType = '成行 / 戻り売り';
+        stopLoss = Math.max(maxHigh * 1.015, close * 1.045);
+        if (stopLoss <= close) stopLoss = close * 1.05;
+
+        const risk = stopLoss - close;
+        takeProfit = Math.min(minLow, close - risk * 1.8);
+
+        const slPct = ((stopLoss - close) / close) * 100.0;
+        const tpPct = ((takeProfit - close) / close) * 100.0;
+        const rr = Math.abs(tpPct / slPct);
+
+        entryRange = `${fmtP(close)} 〜 ${fmtP(stopLoss * 0.99)}`;
+        executionNote = `【空売り指示】エントリー: ${fmtP(close)}以上 | 損切り(SL): ${fmtP(stopLoss)} (+${slPct.toFixed(1)}%) | 利確(TP): ${fmtP(takeProfit)} (${tpPct.toFixed(1)}%) | RR: 1:${rr.toFixed(1)}`;
+
+        return {
+            entryType,
+            entryTarget: close,
+            entryRange,
+            stopLoss: parseFloat(stopLoss.toFixed(2)),
+            stopLossPct: parseFloat(slPct.toFixed(2)),
+            takeProfit: parseFloat(takeProfit.toFixed(2)),
+            takeProfitPct: parseFloat(tpPct.toFixed(2)),
+            riskRewardRatio: parseFloat(rr.toFixed(2)),
+            executionNote
+        };
+    }
+    return null;
+}
+
 // アクションコメント生成
 function generateActionNote(action, triggers, weeklyKairi, weeklyRsi) {
     if (action === 'BUY') {
@@ -466,6 +540,7 @@ function runAnalyzer() {
             if (triggers.includes('T6')) triggerDetailsParts.push(`週足RSI極端値(${currentWRsi.toFixed(1)})`);
 
             const note = generateActionNote(action, triggers, currentWKairi, currentWRsi);
+            const tradePlan = calculateTradePlan(dailyCandles, action, lastW.close);
 
             alerts.push({
                 symbol: info.symbol,
@@ -482,7 +557,8 @@ function runAnalyzer() {
                 weekChange: parseFloat(weekChangePct.toFixed(2)),
                 action,
                 priority,
-                note
+                note,
+                tradePlan
             });
         }
     }

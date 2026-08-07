@@ -127,11 +127,16 @@ async function sendLineMessagingApiNotification(accessToken, userId, watchlistDa
     let text = `📊 週足ウォッチリスト [${watchlistData.weekEnding || ''}]\n━━━━━━━━━━━━━━━\n\n`;
 
     if (highAlerts.length > 0) {
-        text += `⭐ 【最優先注目】\n`;
+        text += `⭐ 【エントリー売買指示 (HIGH)】\n`;
         highAlerts.slice(0, 5).forEach(a => {
-            text += `${a.action === 'BUY' ? '🟢' : '🔴'} ${a.name} (¥${a.close.toLocaleString()})\n`;
-            text += `  週RSI:${a.weeklyRsi} | 25週乖離:${a.weeklyKairi25 > 0 ? '+' : ''}${a.weeklyKairi25.toFixed(1)}%\n`;
-            text += `  💡 ${a.note}\n\n`;
+            const p = a.tradePlan;
+            text += `${a.action === 'BUY' ? '🟢 買い指示' : '🔴 売り指示'}: ${a.name} (終値 ¥${a.close.toLocaleString()})\n`;
+            if (p) {
+                text += ` 🎯 発注目標: ${a.action === 'BUY' ? '¥' + a.close.toLocaleString() + '以下' : '¥' + a.close.toLocaleString() + '以上'} (${p.entryType})\n`;
+                text += ` ⛔ 損切り逆指値(SL): ¥${p.stopLoss.toLocaleString()} (${p.stopLossPct > 0 ? '+' : ''}${p.stopLossPct}%)\n`;
+                text += ` 🏁 利確指値(TP): ¥${p.takeProfit.toLocaleString()} (${p.takeProfitPct > 0 ? '+' : ''}${p.takeProfitPct}%) [リスクリワード 1:${p.riskRewardRatio}]\n`;
+            }
+            text += ` 💡 根拠: ${a.note}\n\n`;
         });
     }
 
