@@ -1502,3 +1502,54 @@ tr:hover td {
     }
 }
 
+/* ============ Trade Instruction Cards (売買指示カード) ============ */
+.trade-instruction-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin-bottom: 1.25rem;
+}
+.trade-instruction-card.buy {
+    border-left: 4px solid var(--color-buy);
+}
+.trade-instruction-card.sell {
+    border-left: 4px solid var(--color-sell);
+}
+.trade-instruction-card .card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1rem;
+}
+.trade-instruction-card .card-header h4 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0;
+}
+.instruction-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px;
+    margin-bottom: 1rem;
+}
+.instruction-grid .item {
+    background: rgba(10, 14, 23, 0.4);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 8px 12px;
+}
+.instruction-grid .label {
+    display: block;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+}
+.instruction-grid .val {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-top: 2px;
+}
+.instruction-grid .val.highlight { color: #f59e0b; }
+.instruction-grid .val.success { color: var(--color-buy); }
+.instruction-grid .val.danger { color: var(--color-sell); }
+

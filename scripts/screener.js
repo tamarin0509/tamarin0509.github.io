@@ -1064,6 +1064,18 @@ async function runScreener() {
             const kairiArr = calculateKairi(candles, 25);
             const latestKairi = kairiArr[kairiArr.length - 1];
 
+            const { generateTradeInstruction } = require('./trade_instruction_generator');
+            let tradeInst = null;
+            if (latestSig && latestSig.status === 'confirmed') {
+                tradeInst = generateTradeInstruction(
+                    item,
+                    candles,
+                    latestSig.type,
+                    latestKairi != null ? latestKairi : 0,
+                    rsi[rsi.length - 1]
+                );
+            }
+
             results.push({
                 symbol: item.symbol,
                 name: item.name,
@@ -1075,6 +1087,7 @@ async function runScreener() {
                 kairi25: latestKairi != null ? parseFloat(latestKairi.toFixed(2)) : null,
                 bestParams: optParams,
                 latestSignal: latestSig,
+                tradeInstruction: tradeInst,
                 backtest: backtest
             });
             

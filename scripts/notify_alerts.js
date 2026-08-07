@@ -127,28 +127,29 @@ async function sendLineMessagingApiNotification(accessToken, userId, watchlistDa
     let text = `📊 週足ウォッチリスト [${watchlistData.weekEnding || ''}]\n━━━━━━━━━━━━━━━\n\n`;
 
     if (highAlerts.length > 0) {
-        text += `⭐ 【エントリー売買指示 (HIGH)】\n`;
-        highAlerts.slice(0, 5).forEach(a => {
+        highAlerts.slice(0, 3).forEach(a => {
             const p = a.tradePlan;
-            text += `${a.action === 'BUY' ? '🟢 買い指示' : '🔴 売り指示'}: ${a.name} (終値 ¥${a.close.toLocaleString()})\n`;
+            text += `📱【売買指示: ${a.action}】${a.name}\n`;
+            text += `━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
             if (p) {
-                text += ` 🎯 発注目標: ${a.action === 'BUY' ? '¥' + a.close.toLocaleString() + '以下' : '¥' + a.close.toLocaleString() + '以上'} (${p.entryType})\n`;
-                text += ` ⛔ 損切り逆指値(SL): ¥${p.stopLoss.toLocaleString()} (${p.stopLossPct > 0 ? '+' : ''}${p.stopLossPct}%)\n`;
-                text += ` 🏁 利確指値(TP): ¥${p.takeProfit.toLocaleString()} (${p.takeProfitPct > 0 ? '+' : ''}${p.takeProfitPct}%) [リスクリワード 1:${p.riskRewardRatio}]\n`;
+                text += `【注文種別】${p.orderTypeJp}\n`;
+                text += `【目標価格】${p.entryRangeStr}\n`;
+                text += `------------------------------------------\n`;
+                text += `【損切り (SL)】¥${p.stopLoss.toLocaleString()} (${p.stopLossPct > 0 ? '+' : ''}${p.stopLossPct}%)\n`;
+                text += `【利確目標 (TP)】¥${p.takeProfit.toLocaleString()} (${p.takeProfitPct > 0 ? '+' : ''}${p.takeProfitPct}%)\n`;
+                text += `【最大保有】${p.maxHoldBars}営業日 (到達なければ撤退)\n`;
+                text += `【リスクリワード比】1 : ${p.riskRewardRatio}\n`;
             }
-            text += ` 💡 根拠: ${a.note}\n\n`;
+            text += `------------------------------------------\n`;
+            text += `【根拠】${a.triggerDetails}\n`;
+            if (p && p.executionGuide) {
+                text += `${p.executionGuide}\n`;
+            }
+            text += `\n`;
         });
     }
 
-    if (medAlerts.length > 0 && highAlerts.length < 5) {
-        text += `⚠️ 【要チェック】\n`;
-        medAlerts.slice(0, 3).forEach(a => {
-            text += `${a.action === 'BUY' ? '🟢' : '🔴'} ${a.name}\n`;
-            text += `  ${a.triggerDetails}\n\n`;
-        });
-    }
-
-    text += `📈 詳細レポート:\n${reportUrl}`;
+    text += `📈 詳細レポート: ${reportUrl}`;
 
     const targetUrl = userId ? 'https://api.line.me/v2/bot/message/push' : 'https://api.line.me/v2/bot/message/broadcast';
     const payload = userId ? { to: userId, messages: [{ type: 'text', text }] } : { messages: [{ type: 'text', text }] };

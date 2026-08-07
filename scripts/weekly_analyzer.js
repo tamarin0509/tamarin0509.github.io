@@ -8,6 +8,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { generateTradeInstruction } = require('./trade_instruction_generator');
 
 const ROOT = path.join(__dirname, '..');
 const CANDLES_DIR = path.join(ROOT, 'data', 'candles');

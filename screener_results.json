@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-07T08:11:47.039Z",
+  "updatedAt": "2026-08-07T08:54:13.336Z",
   "results": [
     {
       "symbol": "^N225",
@@ -23,6 +23,7 @@
         "mtfFilter": "weekly"
       },
       "latestSignal": null,
+      "tradeInstruction": null,
       "backtest": {
         "trades": 14,
         "wins": 8,
@@ -64,6 +65,22 @@
         "rsi": 62.50069868967785,
         "status": "confirmed",
         "barsAgo": 2
+      },
+      "tradeInstruction": {
+        "action": "BUY",
+        "symbol": "^GSPC",
+        "name": "S&P 500 Index",
+        "orderType": "MARKET_OPEN",
+        "orderTypeJp": "翌日寄り付き成行買い (MARKET BUY)",
+        "entryPrice": 7709.96,
+        "entryRangeStr": "¥7,710 近辺 (寄り成行)",
+        "stopLoss": 7204.21,
+        "stopLossPct": -6.56,
+        "takeProfit": 8789.35,
+        "takeProfitPct": 14,
+        "riskRewardRatio": 2.1,
+        "maxHoldBars": 15,
+        "executionGuide": "【スマホ操作】証券アプリで「S&P 500 Index 成行 / 逆指値 7,204円 / 利確 8,789円」をセット！"
       },
       "backtest": {
         "trades": 4,
@@ -107,6 +124,22 @@
         "status": "confirmed",
         "barsAgo": 3
       },
+      "tradeInstruction": {
+        "action": "BUY",
+        "symbol": "^DJI",
+        "name": "NYダウ (Dow Jones)",
+        "orderType": "MARKET_OPEN",
+        "orderTypeJp": "翌日寄り付き成行買い (MARKET BUY)",
+        "entryPrice": 53885.1,
+        "entryRangeStr": "¥53,885 近辺 (寄り成行)",
+        "stopLoss": 50768.93,
+        "stopLossPct": -5.78,
+        "takeProfit": 61429.02,
+        "takeProfitPct": 14,
+        "riskRewardRatio": 2.4,
+        "maxHoldBars": 15,
+        "executionGuide": "【スマホ操作】証券アプリで「NYダウ (Dow Jones) 成行 / 逆指値 50,769円 / 利確 61,429円」をセット！"
+      },
       "backtest": {
         "trades": 13,
         "wins": 6,
@@ -142,6 +175,7 @@
         "mtfFilter": "weekly"
       },
       "latestSignal": null,
+      "tradeInstruction": null,
       "backtest": {
         "trades": 5,
         "wins": 3,
@@ -160,10 +194,10 @@
       "name": "米ドル / 円 (USD/JPY)",
       "type": "forex",
       "sector": "為替",
-      "close": 158.445,
-      "changePercent": 0.54,
-      "rsi": 36.96,
-      "kairi25": -1.96,
+      "close": 158.394,
+      "changePercent": 0.5,
+      "rsi": 36.84,
+      "kairi25": -1.99,
       "bestParams": {
         "rsiPeriod": 18,
         "maPeriod": 45,
@@ -177,13 +211,14 @@
         "mtfFilter": "weekly"
       },
       "latestSignal": null,
+      "tradeInstruction": null,
       "backtest": {
         "trades": 11,
         "wins": 4,
         "winRatePct": 36.4,
         "profitFactor": 0.63,
         "totalReturnPct": -3.94,
-        "buyHoldReturnPct": 9.47,
+        "buyHoldReturnPct": 9.44,
         "maxDrawdownPct": 5.99,
         "expectancyPct": -0.346,
         "avgHoldBars": 15,
@@ -195,10 +230,10 @@
       "name": "ユーロ / 米ドル (EUR/USD)",
       "type": "forex",
       "sector": "為替",
-      "close": 1.1523,
-      "changePercent": -0.29,
-      "rsi": 63.64,
-      "kairi25": 0.69,
+      "close": 1.1527,
+      "changePercent": -0.26,
+      "rsi": 63.93,
+      "kairi25": 0.72,
       "bestParams": {
         "rsiPeriod": 9,
         "maPeriod": 20,
@@ -212,13 +247,14 @@
         "mtfFilter": "weekly"
       },
       "latestSignal": null,
+      "tradeInstruction": null,
       "backtest": {
         "trades": 12,
         "wins": 4,
         "winRatePct": 33.3,
         "profitFactor": 0.34,
         "totalReturnPct": -8.67,
-        "buyHoldReturnPct": 5.46,
+        "buyHoldReturnPct": 5.5,
         "maxDrawdownPct": 11.18,
         "expectancyPct": -0.738,
         "avgHoldBars": 15,
@@ -230,10 +266,10 @@
       "name": "英ポンド / 円 (GBP/JPY)",
       "type": "forex",
       "sector": "為替",
-      "close": 213.029,
-      "changePercent": 0.35,
-      "rsi": 34.75,
-      "kairi25": -1.64,
+      "close": 212.995,
+      "changePercent": 0.34,
+      "rsi": 34.63,
+      "kairi25": -1.65,
       "bestParams": {
         "rsiPeriod": 7,
         "maPeriod": 20,
@@ -247,13 +283,14 @@
         "mtfFilter": "weekly"
       },
       "latestSignal": null,
+      "tradeInstruction": null,
       "backtest": {
         "trades": 13,
         "wins": 6,
         "winRatePct": 46.2,
         "profitFactor": 0.71,
         "totalReturnPct": -1.94,
-        "buyHoldReturnPct": 16.04,
+        "buyHoldReturnPct": 16.02,
         "maxDrawdownPct": 6.03,
         "expectancyPct": -0.146,
         "avgHoldBars": 15,
@@ -265,10 +302,10 @@
       "name": "豪ドル / 米ドル (AUD/USD)",
       "type": "forex",
       "sector": "為替",
-      "close": 0.7039,
-      "changePercent": -0.26,
-      "rsi": 58.9,
-      "kairi25": 0.79,
+      "close": 0.704,
+      "changePercent": -0.24,
+      "rsi": 59.17,
+      "kairi25": 0.8,
       "bestParams": {
         "rsiPeriod": 7,
         "maPeriod": 90,
@@ -289,13 +326,29 @@
         "status": "confirmed",
         "barsAgo": 15
       },
+      "tradeInstruction": {
+        "action": "SELL",
+        "symbol": "AUDUSD=X",
+        "name": "豪ドル / 米ドル (AUD/USD)",
+        "orderType": "MARKET_OPEN",
+        "orderTypeJp": "翌日寄り付き成行売り (MARKET SELL)",
+        "entryPrice": 0.7,
+        "entryRangeStr": "¥0.704 近辺 (寄り成行)",
+        "stopLoss": 0.73,
+        "stopLossPct": 4,
+        "takeProfit": 0.61,
+        "takeProfitPct": -14,
+        "riskRewardRatio": 3.5,
+        "maxHoldBars": 15,
+        "executionGuide": "【スマホ操作】証券アプリで「豪ドル / 米ドル (AUD/USD) 成行売り / 逆指値 0.732円 / 返済利確 0.605円」をセット！"
+      },
       "backtest": {
         "trades": 10,
         "wins": 4,
         "winRatePct": 40,
         "profitFactor": 1.07,
         "totalReturnPct": 0.19,
-        "buyHoldReturnPct": 8.04,
+        "buyHoldReturnPct": 8.06,
         "maxDrawdownPct": 9.58,
         "expectancyPct": 0.077,
         "avgHoldBars": 15,
@@ -331,6 +384,7 @@
         "status": "phantom",
         "barsAgo": 9
       },
+      "tradeInstruction": null,
       "backtest": {
         "trades": 11,
         "wins": 8,
@@ -366,6 +420,7 @@
         "mtfFilter": "weekly"
       },
       "latestSignal": null,
+      "tradeInstruction": null,
       "backtest": {
         "trades": 5,
         "wins": 3,
@@ -408,6 +463,22 @@
         "status": "confirmed",
         "barsAgo": 3
       },
+      "tradeInstruction": {
+        "action": "BUY",
+        "symbol": "GOOGL",
+        "name": "アルファベット (GOOGL)",
+        "orderType": "MARKET_OPEN",
+        "orderTypeJp": "翌日寄り付き成行買い (MARKET BUY)",
+        "entryPrice": 357.75,
+        "entryRangeStr": "¥358 近辺 (寄り成行)",
+        "stopLoss": 310.18,
+        "stopLossPct": -13.3,
+        "takeProfit": 407.84,
+        "takeProfitPct": 14,
+        "riskRewardRatio": 1.1,
+        "maxHoldBars": 15,
+        "executionGuide": "【スマホ操作】証券アプリで「アルファベット (GOOGL) 成行 / 逆指値 310円 / 利確 408円」をセット！"
+      },
       "backtest": {
         "trades": 13,
         "wins": 7,
@@ -443,6 +514,7 @@
         "mtfFilter": "weekly"
       },
       "latestSignal": null,
+      "tradeInstruction": null,
       "backtest": {
         "trades": 7,
         "wins": 4,
@@ -478,6 +550,7 @@
         "mtfFilter": "weekly"
       },
       "latestSignal": null,
+      "tradeInstruction": null,
       "backtest": {
         "trades": 9,
         "wins": 6,
@@ -513,6 +586,7 @@
         "mtfFilter": "weekly"
       },
       "latestSignal": null,
+      "tradeInstruction": null,
       "backtest": {
         "trades": 3,
         "wins": 1,
@@ -554,6 +628,22 @@
         "rsi": 64.59885562300501,
         "status": "confirmed",
         "barsAgo": 9
+      },
+      "tradeInstruction": {
+        "action": "BUY",
+        "symbol": "6758.T",
+        "name": "ソニーグループ (6758)",
+        "orderType": "LIMIT",
+        "orderTypeJp": "押し目指値買い (LIMIT BUY)",
+        "entryPrice": 3609.4,
+        "entryRangeStr": "¥3,609 (25日線サポート目安)",
+        "stopLoss": 3256.41,
+        "stopLossPct": -9.78,
+        "takeProfit": 4114.72,
+        "takeProfitPct": 14,
+        "riskRewardRatio": 1.4,
+        "maxHoldBars": 15,
+        "executionGuide": "【スマホ操作】証券アプリで「ソニーグループ (6758) 指値 3,609円 / 逆指値 3,256円 / 利確 4,115円」をセット！"
       },
       "backtest": {
         "trades": 17,
@@ -597,6 +687,22 @@
         "status": "confirmed",
         "barsAgo": 2
       },
+      "tradeInstruction": {
+        "action": "BUY",
+        "symbol": "NVDA",
+        "name": "エヌビディア (NVDA)",
+        "orderType": "LIMIT",
+        "orderTypeJp": "押し目指値買い (LIMIT BUY)",
+        "entryPrice": 212.4,
+        "entryRangeStr": "¥212 (25日線サポート目安)",
+        "stopLoss": 187.16,
+        "stopLossPct": -11.88,
+        "takeProfit": 242.14,
+        "takeProfitPct": 14,
+        "riskRewardRatio": 1.2,
+        "maxHoldBars": 15,
+        "executionGuide": "【スマホ操作】証券アプリで「エヌビディア (NVDA) 指値 212円 / 逆指値 187円 / 利確 242円」をセット！"
+      },
       "backtest": {
         "trades": 6,
         "wins": 3,
@@ -638,6 +744,22 @@
         "rsi": 51.97858353785089,
         "status": "confirmed",
         "barsAgo": 2
+      },
+      "tradeInstruction": {
+        "action": "BUY",
+        "symbol": "AMD",
+        "name": "アドバンスト・マイクロ・デバイセズ (AMD)",
+        "orderType": "MARKET_OPEN",
+        "orderTypeJp": "翌日寄り付き成行買い (MARKET BUY)",
+        "entryPrice": 489.28,
+        "entryRangeStr": "¥489 近辺 (寄り成行)",
+        "stopLoss": 417.67,
+        "stopLossPct": -14.64,
+        "takeProfit": 579.94,
+        "takeProfitPct": 18.53,
+        "riskRewardRatio": 1.3,
+        "maxHoldBars": 15,
+        "executionGuide": "【スマホ操作】証券アプリで「アドバンスト・マイクロ・デバイセズ (AMD) 成行 / 逆指値 418円 / 利確 580円」をセット！"
       },
       "backtest": {
         "trades": 11,
@@ -681,6 +803,22 @@
         "status": "confirmed",
         "barsAgo": 4
       },
+      "tradeInstruction": {
+        "action": "BUY",
+        "symbol": "AVGO",
+        "name": "ブロードコム (AVGO)",
+        "orderType": "LIMIT",
+        "orderTypeJp": "押し目指値買い (LIMIT BUY)",
+        "entryPrice": 408,
+        "entryRangeStr": "¥408 (25日線サポート目安)",
+        "stopLoss": 352.43,
+        "stopLossPct": -13.62,
+        "takeProfit": 465.12,
+        "takeProfitPct": 14,
+        "riskRewardRatio": 1,
+        "maxHoldBars": 15,
+        "executionGuide": "【スマホ操作】証券アプリで「ブロードコム (AVGO) 指値 408円 / 逆指値 352円 / 利確 465円」をセット！"
+      },
       "backtest": {
         "trades": 13,
         "wins": 8,
@@ -716,6 +854,7 @@
         "mtfFilter": "weekly"
       },
       "latestSignal": null,
+      "tradeInstruction": null,
       "backtest": {
         "trades": 8,
         "wins": 5,
@@ -757,6 +896,22 @@
         "rsi": 57.789599432532526,
         "status": "confirmed",
         "barsAgo": 5
+      },
+      "tradeInstruction": {
+        "action": "BUY",
+        "symbol": "6857.T",
+        "name": "アドバンテスト (6857)",
+        "orderType": "LIMIT",
+        "orderTypeJp": "押し目指値買い (LIMIT BUY)",
+        "entryPrice": 31224.3,
+        "entryRangeStr": "¥31,224 (25日線サポート目安)",
+        "stopLoss": 23772.97,
+        "stopLossPct": -23.86,
+        "takeProfit": 35595.7,
+        "takeProfitPct": 14,
+        "riskRewardRatio": 0.6,
+        "maxHoldBars": 15,
+        "executionGuide": "【スマホ操作】証券アプリで「アドバンテスト (6857) 指値 31,224円 / 逆指値 23,773円 / 利確 35,596円」をセット！"
       },
       "backtest": {
         "trades": 10,
@@ -800,6 +955,22 @@
         "status": "confirmed",
         "barsAgo": 12
       },
+      "tradeInstruction": {
+        "action": "BUY",
+        "symbol": "6146.T",
+        "name": "ディスコ (6146)",
+        "orderType": "LIMIT",
+        "orderTypeJp": "逆張り指値買い (LIMIT BUY)",
+        "entryPrice": 57563.4,
+        "entryRangeStr": "¥57,563 (押し目買い)",
+        "stopLoss": 48659,
+        "stopLossPct": -15.47,
+        "takeProfit": 75679.3,
+        "takeProfitPct": 31.47,
+        "riskRewardRatio": 2,
+        "maxHoldBars": 15,
+        "executionGuide": "【スマホ操作】証券アプリで「ディスコ (6146) 指値 57,563円 / 逆指値 48,659円 / 利確 75,679円」をセット！"
+      },
       "backtest": {
         "trades": 5,
         "wins": 3,
@@ -835,6 +1006,7 @@
         "mtfFilter": "weekly"
       },
       "latestSignal": null,
+      "tradeInstruction": null,
       "backtest": {
         "trades": 8,
         "wins": 5,
@@ -870,6 +1042,7 @@
         "mtfFilter": "weekly"
       },
       "latestSignal": null,
+      "tradeInstruction": null,
       "backtest": {
         "trades": 11,
         "wins": 6,
@@ -905,6 +1078,7 @@
         "mtfFilter": "weekly"
       },
       "latestSignal": null,
+      "tradeInstruction": null,
       "backtest": {
         "trades": 6,
         "wins": 3,
@@ -947,6 +1121,22 @@
         "status": "confirmed",
         "barsAgo": 13
       },
+      "tradeInstruction": {
+        "action": "BUY",
+        "symbol": "5019.T",
+        "name": "出光興産 (5019)",
+        "orderType": "LIMIT",
+        "orderTypeJp": "押し目指値買い (LIMIT BUY)",
+        "entryPrice": 1281.4,
+        "entryRangeStr": "¥1,281 (25日線サポート目安)",
+        "stopLoss": 1209.58,
+        "stopLossPct": -5.6,
+        "takeProfit": 1460.8,
+        "takeProfitPct": 14,
+        "riskRewardRatio": 2.5,
+        "maxHoldBars": 15,
+        "executionGuide": "【スマホ操作】証券アプリで「出光興産 (5019) 指値 1,281円 / 逆指値 1,210円 / 利確 1,461円」をセット！"
+      },
       "backtest": {
         "trades": 9,
         "wins": 4,
@@ -982,6 +1172,7 @@
         "mtfFilter": "weekly"
       },
       "latestSignal": null,
+      "tradeInstruction": null,
       "backtest": {
         "trades": 15,
         "wins": 6,
@@ -1017,6 +1208,7 @@
         "mtfFilter": "weekly"
       },
       "latestSignal": null,
+      "tradeInstruction": null,
       "backtest": {
         "trades": 5,
         "wins": 3,
@@ -1058,6 +1250,22 @@
         "rsi": 46.07971222657426,
         "status": "confirmed",
         "barsAgo": 4
+      },
+      "tradeInstruction": {
+        "action": "SELL",
+        "symbol": "7011.T",
+        "name": "三菱重工業 (7011)",
+        "orderType": "MARKET_OPEN",
+        "orderTypeJp": "翌日寄り付き成行売り (MARKET SELL)",
+        "entryPrice": 4044,
+        "entryRangeStr": "¥4,044 近辺 (寄り成行)",
+        "stopLoss": 4217.32,
+        "stopLossPct": 4.29,
+        "takeProfit": 3477.84,
+        "takeProfitPct": -14,
+        "riskRewardRatio": 3.3,
+        "maxHoldBars": 15,
+        "executionGuide": "【スマホ操作】証券アプリで「三菱重工業 (7011) 成行売り / 逆指値 4,217円 / 返済利確 3,478円」をセット！"
       },
       "backtest": {
         "trades": 7,
@@ -1101,6 +1309,7 @@
         "status": "replayOnly",
         "barsAgo": 14
       },
+      "tradeInstruction": null,
       "backtest": {
         "trades": 13,
         "wins": 7,
@@ -1143,6 +1352,22 @@
         "status": "confirmed",
         "barsAgo": 1
       },
+      "tradeInstruction": {
+        "action": "SELL",
+        "symbol": "7013.T",
+        "name": "IHI (7013)",
+        "orderType": "MARKET_OPEN",
+        "orderTypeJp": "翌日寄り付き成行売り (MARKET SELL)",
+        "entryPrice": 2744.5,
+        "entryRangeStr": "¥2,745 近辺 (寄り成行)",
+        "stopLoss": 3009.47,
+        "stopLossPct": 9.65,
+        "takeProfit": 2360.27,
+        "takeProfitPct": -14,
+        "riskRewardRatio": 1.5,
+        "maxHoldBars": 15,
+        "executionGuide": "【スマホ操作】証券アプリで「IHI (7013) 成行売り / 逆指値 3,009円 / 返済利確 2,360円」をセット！"
+      },
       "backtest": {
         "trades": 10,
         "wins": 7,
@@ -1178,6 +1403,7 @@
         "mtfFilter": "weekly"
       },
       "latestSignal": null,
+      "tradeInstruction": null,
       "backtest": {
         "trades": 4,
         "wins": 2,
@@ -1213,6 +1439,7 @@
         "mtfFilter": "weekly"
       },
       "latestSignal": null,
+      "tradeInstruction": null,
       "backtest": {
         "trades": 5,
         "wins": 4,
@@ -1248,6 +1475,7 @@
         "mtfFilter": "weekly"
       },
       "latestSignal": null,
+      "tradeInstruction": null,
       "backtest": {
         "trades": 9,
         "wins": 5,
@@ -1283,6 +1511,7 @@
         "mtfFilter": "weekly"
       },
       "latestSignal": null,
+      "tradeInstruction": null,
       "backtest": {
         "trades": 11,
         "wins": 5,
@@ -1324,6 +1553,22 @@
         "rsi": 55.72906374020934,
         "status": "confirmed",
         "barsAgo": 2
+      },
+      "tradeInstruction": {
+        "action": "BUY",
+        "symbol": "8411.T",
+        "name": "みずほフィナンシャルG (8411)",
+        "orderType": "MARKET_OPEN",
+        "orderTypeJp": "翌日寄り付き成行買い (MARKET BUY)",
+        "entryPrice": 8446,
+        "entryRangeStr": "¥8,446 近辺 (寄り成行)",
+        "stopLoss": 7644.59,
+        "stopLossPct": -9.49,
+        "takeProfit": 9628.44,
+        "takeProfitPct": 14,
+        "riskRewardRatio": 1.5,
+        "maxHoldBars": 15,
+        "executionGuide": "【スマホ操作】証券アプリで「みずほフィナンシャルG (8411) 成行 / 逆指値 7,645円 / 利確 9,628円」をセット！"
       },
       "backtest": {
         "trades": 10,
@@ -1367,6 +1612,22 @@
         "status": "confirmed",
         "barsAgo": 8
       },
+      "tradeInstruction": {
+        "action": "BUY",
+        "symbol": "JPM",
+        "name": "JPモルガン・チェース (JPM)",
+        "orderType": "LIMIT",
+        "orderTypeJp": "押し目指値買い (LIMIT BUY)",
+        "entryPrice": 345.6,
+        "entryRangeStr": "¥346 (25日線サポート目安)",
+        "stopLoss": 320.86,
+        "stopLossPct": -7.16,
+        "takeProfit": 393.98,
+        "takeProfitPct": 14,
+        "riskRewardRatio": 2,
+        "maxHoldBars": 15,
+        "executionGuide": "【スマホ操作】証券アプリで「JPモルガン・チェース (JPM) 指値 346円 / 逆指値 321円 / 利確 394円」をセット！"
+      },
       "backtest": {
         "trades": 9,
         "wins": 5,
@@ -1402,6 +1663,7 @@
         "mtfFilter": "weekly"
       },
       "latestSignal": null,
+      "tradeInstruction": null,
       "backtest": {
         "trades": 6,
         "wins": 4,
@@ -1437,6 +1699,7 @@
         "mtfFilter": "weekly"
       },
       "latestSignal": null,
+      "tradeInstruction": null,
       "backtest": {
         "trades": 2,
         "wins": 2,
@@ -1472,6 +1735,7 @@
         "mtfFilter": "weekly"
       },
       "latestSignal": null,
+      "tradeInstruction": null,
       "backtest": {
         "trades": 6,
         "wins": 3,
@@ -1514,6 +1778,22 @@
         "status": "confirmed",
         "barsAgo": 9
       },
+      "tradeInstruction": {
+        "action": "BUY",
+        "symbol": "7267.T",
+        "name": "ホンダ (7267)",
+        "orderType": "LIMIT",
+        "orderTypeJp": "押し目指値買い (LIMIT BUY)",
+        "entryPrice": 1632.5,
+        "entryRangeStr": "¥1,633 (25日線サポート目安)",
+        "stopLoss": 1467.65,
+        "stopLossPct": -10.1,
+        "takeProfit": 1861.05,
+        "takeProfitPct": 14,
+        "riskRewardRatio": 1.4,
+        "maxHoldBars": 15,
+        "executionGuide": "【スマホ操作】証券アプリで「ホンダ (7267) 指値 1,633円 / 逆指値 1,468円 / 利確 1,861円」をセット！"
+      },
       "backtest": {
         "trades": 13,
         "wins": 5,
@@ -1549,6 +1829,7 @@
         "mtfFilter": "weekly"
       },
       "latestSignal": null,
+      "tradeInstruction": null,
       "backtest": {
         "trades": 6,
         "wins": 0,
@@ -1584,6 +1865,7 @@
         "mtfFilter": "weekly"
       },
       "latestSignal": null,
+      "tradeInstruction": null,
       "backtest": {
         "trades": 10,
         "wins": 5,
@@ -1619,6 +1901,7 @@
         "mtfFilter": "weekly"
       },
       "latestSignal": null,
+      "tradeInstruction": null,
       "backtest": {
         "trades": 8,
         "wins": 4,
@@ -1654,6 +1937,7 @@
         "mtfFilter": "weekly"
       },
       "latestSignal": null,
+      "tradeInstruction": null,
       "backtest": {
         "trades": 8,
         "wins": 5,
@@ -1689,6 +1973,7 @@
         "mtfFilter": "weekly"
       },
       "latestSignal": null,
+      "tradeInstruction": null,
       "backtest": {
         "trades": 8,
         "wins": 7,
@@ -1730,6 +2015,22 @@
         "rsi": 48.12241996526691,
         "status": "confirmed",
         "barsAgo": 5
+      },
+      "tradeInstruction": {
+        "action": "BUY",
+        "symbol": "5016.T",
+        "name": "JX金属 (5016)",
+        "orderType": "MARKET_OPEN",
+        "orderTypeJp": "翌日寄り付き成行買い (MARKET BUY)",
+        "entryPrice": 3886,
+        "entryRangeStr": "¥3,886 近辺 (寄り成行)",
+        "stopLoss": 3169.73,
+        "stopLossPct": -18.43,
+        "takeProfit": 4430.04,
+        "takeProfitPct": 14,
+        "riskRewardRatio": 0.8,
+        "maxHoldBars": 15,
+        "executionGuide": "【スマホ操作】証券アプリで「JX金属 (5016) 成行 / 逆指値 3,170円 / 利確 4,430円」をセット！"
       },
       "backtest": {
         "trades": 6,
@@ -1773,6 +2074,22 @@
         "status": "confirmed",
         "barsAgo": 14
       },
+      "tradeInstruction": {
+        "action": "SELL",
+        "symbol": "8001.T",
+        "name": "伊藤忠商事 (8001)",
+        "orderType": "MARKET_OPEN",
+        "orderTypeJp": "翌日寄り付き成行売り (MARKET SELL)",
+        "entryPrice": 2080,
+        "entryRangeStr": "¥2,080 近辺 (寄り成行)",
+        "stopLoss": 2163.2,
+        "stopLossPct": 4,
+        "takeProfit": 1788.8,
+        "takeProfitPct": -14,
+        "riskRewardRatio": 3.5,
+        "maxHoldBars": 15,
+        "executionGuide": "【スマホ操作】証券アプリで「伊藤忠商事 (8001) 成行売り / 逆指値 2,163円 / 返済利確 1,789円」をセット！"
+      },
       "backtest": {
         "trades": 10,
         "wins": 4,
@@ -1808,6 +2125,7 @@
         "mtfFilter": "weekly"
       },
       "latestSignal": null,
+      "tradeInstruction": null,
       "backtest": {
         "trades": 9,
         "wins": 6,
@@ -1843,6 +2161,7 @@
         "mtfFilter": "weekly"
       },
       "latestSignal": null,
+      "tradeInstruction": null,
       "backtest": {
         "trades": 10,
         "wins": 5,
@@ -1885,6 +2204,22 @@
         "status": "confirmed",
         "barsAgo": 5
       },
+      "tradeInstruction": {
+        "action": "BUY",
+        "symbol": "8053.T",
+        "name": "住友商事 (8053)",
+        "orderType": "LIMIT",
+        "orderTypeJp": "押し目指値買い (LIMIT BUY)",
+        "entryPrice": 1734.4,
+        "entryRangeStr": "¥1,734 (25日線サポート目安)",
+        "stopLoss": 1466.66,
+        "stopLossPct": -15.44,
+        "takeProfit": 1977.22,
+        "takeProfitPct": 14,
+        "riskRewardRatio": 0.9,
+        "maxHoldBars": 15,
+        "executionGuide": "【スマホ操作】証券アプリで「住友商事 (8053) 指値 1,734円 / 逆指値 1,467円 / 利確 1,977円」をセット！"
+      },
       "backtest": {
         "trades": 8,
         "wins": 5,
@@ -1920,6 +2255,7 @@
         "mtfFilter": "weekly"
       },
       "latestSignal": null,
+      "tradeInstruction": null,
       "backtest": {
         "trades": 8,
         "wins": 7,
@@ -1955,6 +2291,7 @@
         "mtfFilter": "weekly"
       },
       "latestSignal": null,
+      "tradeInstruction": null,
       "backtest": {
         "trades": 7,
         "wins": 4,
@@ -1990,6 +2327,7 @@
         "mtfFilter": "weekly"
       },
       "latestSignal": null,
+      "tradeInstruction": null,
       "backtest": {
         "trades": 12,
         "wins": 3,
@@ -2025,6 +2363,7 @@
         "mtfFilter": "weekly"
       },
       "latestSignal": null,
+      "tradeInstruction": null,
       "backtest": {
         "trades": 6,
         "wins": 4,
@@ -2067,6 +2406,7 @@
         "status": "phantom",
         "barsAgo": 8
       },
+      "tradeInstruction": null,
       "backtest": {
         "trades": 5,
         "wins": 1,
@@ -2102,6 +2442,7 @@
         "mtfFilter": "weekly"
       },
       "latestSignal": null,
+      "tradeInstruction": null,
       "backtest": {
         "trades": 7,
         "wins": 5,
@@ -2137,6 +2478,7 @@
         "mtfFilter": "weekly"
       },
       "latestSignal": null,
+      "tradeInstruction": null,
       "backtest": {
         "trades": 11,
         "wins": 6,
@@ -2179,6 +2521,22 @@
         "status": "confirmed",
         "barsAgo": 14
       },
+      "tradeInstruction": {
+        "action": "SELL",
+        "symbol": "9434.T",
+        "name": "ソフトバンク (9434)",
+        "orderType": "MARKET_OPEN",
+        "orderTypeJp": "翌日寄り付き成行売り (MARKET SELL)",
+        "entryPrice": 230.9,
+        "entryRangeStr": "¥231 近辺 (寄り成行)",
+        "stopLoss": 241.27,
+        "stopLossPct": 4.49,
+        "takeProfit": 198.57,
+        "takeProfitPct": -14,
+        "riskRewardRatio": 3.1,
+        "maxHoldBars": 15,
+        "executionGuide": "【スマホ操作】証券アプリで「ソフトバンク (9434) 成行売り / 逆指値 241円 / 返済利確 199円」をセット！"
+      },
       "backtest": {
         "trades": 8,
         "wins": 4,
@@ -2214,6 +2572,7 @@
         "mtfFilter": "weekly"
       },
       "latestSignal": null,
+      "tradeInstruction": null,
       "backtest": {
         "trades": 7,
         "wins": 3,
@@ -2256,6 +2615,22 @@
         "status": "confirmed",
         "barsAgo": 1
       },
+      "tradeInstruction": {
+        "action": "BUY",
+        "symbol": "9983.T",
+        "name": "ファーストリテイリング (9983)",
+        "orderType": "MARKET_OPEN",
+        "orderTypeJp": "翌日寄り付き成行買い (MARKET BUY)",
+        "entryPrice": 79310,
+        "entryRangeStr": "¥79,310 近辺 (寄り成行)",
+        "stopLoss": 74308.4,
+        "stopLossPct": -6.31,
+        "takeProfit": 90413.4,
+        "takeProfitPct": 14,
+        "riskRewardRatio": 2.2,
+        "maxHoldBars": 15,
+        "executionGuide": "【スマホ操作】証券アプリで「ファーストリテイリング (9983) 成行 / 逆指値 74,308円 / 利確 90,413円」をセット！"
+      },
       "backtest": {
         "trades": 12,
         "wins": 8,
@@ -2291,6 +2666,7 @@
         "mtfFilter": "weekly"
       },
       "latestSignal": null,
+      "tradeInstruction": null,
       "backtest": {
         "trades": 10,
         "wins": 8,
@@ -2333,6 +2709,7 @@
         "status": "phantom",
         "barsAgo": 3
       },
+      "tradeInstruction": null,
       "backtest": {
         "trades": 9,
         "wins": 4,
@@ -2368,6 +2745,7 @@
         "mtfFilter": "weekly"
       },
       "latestSignal": null,
+      "tradeInstruction": null,
       "backtest": {
         "trades": 11,
         "wins": 5,
@@ -2410,6 +2788,22 @@
         "status": "confirmed",
         "barsAgo": 2
       },
+      "tradeInstruction": {
+        "action": "BUY",
+        "symbol": "6981.T",
+        "name": "村田製作所 (6981)",
+        "orderType": "LIMIT",
+        "orderTypeJp": "逆張り指値買い (LIMIT BUY)",
+        "entryPrice": 7154.1,
+        "entryRangeStr": "¥7,154 (押し目買い)",
+        "stopLoss": 5773.09,
+        "stopLossPct": -19.3,
+        "takeProfit": 10185.85,
+        "takeProfitPct": 42.38,
+        "riskRewardRatio": 2.2,
+        "maxHoldBars": 15,
+        "executionGuide": "【スマホ操作】証券アプリで「村田製作所 (6981) 指値 7,154円 / 逆指値 5,773円 / 利確 10,186円」をセット！"
+      },
       "backtest": {
         "trades": 8,
         "wins": 4,
@@ -2445,6 +2839,7 @@
         "mtfFilter": "weekly"
       },
       "latestSignal": null,
+      "tradeInstruction": null,
       "backtest": {
         "trades": 4,
         "wins": 3,
@@ -2463,10 +2858,10 @@
       "name": "ビットコイン (BTC/USD)",
       "type": "crypto",
       "sector": "暗号資産",
-      "close": 64309.5508,
-      "changePercent": 0.07,
-      "rsi": 49.24,
-      "kairi25": -0.11,
+      "close": 64538.6406,
+      "changePercent": 0.43,
+      "rsi": 49.6,
+      "kairi25": 0.24,
       "bestParams": {
         "rsiPeriod": 25,
         "maPeriod": 20,
@@ -2487,17 +2882,33 @@
         "status": "confirmed",
         "barsAgo": 6
       },
+      "tradeInstruction": {
+        "action": "SELL",
+        "symbol": "BTC-USD",
+        "name": "ビットコイン (BTC/USD)",
+        "orderType": "MARKET_OPEN",
+        "orderTypeJp": "翌日寄り付き成行売り (MARKET SELL)",
+        "entryPrice": 64538.64,
+        "entryRangeStr": "¥64,539 近辺 (寄り成行)",
+        "stopLoss": 67913.71,
+        "stopLossPct": 5.23,
+        "takeProfit": 55503.23,
+        "takeProfitPct": -14,
+        "riskRewardRatio": 2.7,
+        "maxHoldBars": 15,
+        "executionGuide": "【スマホ操作】証券アプリで「ビットコイン (BTC/USD) 成行売り / 逆指値 67,914円 / 返済利確 55,503円」をセット！"
+      },
       "backtest": {
         "trades": 20,
         "wins": 9,
         "winRatePct": 45,
-        "profitFactor": 0.73,
-        "totalReturnPct": -34.75,
-        "buyHoldReturnPct": 16.87,
+        "profitFactor": 0.72,
+        "totalReturnPct": -35,
+        "buyHoldReturnPct": 17.28,
         "maxDrawdownPct": 51.13,
-        "expectancyPct": -1.283,
+        "expectancyPct": -1.3,
         "avgHoldBars": 13.3,
-        "score": -0.421
+        "score": -0.427
       }
     },
     {
@@ -2505,10 +2916,10 @@
       "name": "イーサリアム (ETH/USD)",
       "type": "crypto",
       "sector": "暗号資産",
-      "close": 1902.71,
-      "changePercent": 0.03,
-      "rsi": 53.45,
-      "kairi25": 0.71,
+      "close": 1908.39,
+      "changePercent": 0.33,
+      "rsi": 53.74,
+      "kairi25": 1,
       "bestParams": {
         "rsiPeriod": 25,
         "maPeriod": 75,
@@ -2522,13 +2933,14 @@
         "mtfFilter": "weekly"
       },
       "latestSignal": null,
+      "tradeInstruction": null,
       "backtest": {
         "trades": 11,
         "wins": 4,
         "winRatePct": 36.4,
         "profitFactor": 0.87,
         "totalReturnPct": -24.02,
-        "buyHoldReturnPct": -18.57,
+        "buyHoldReturnPct": -18.33,
         "maxDrawdownPct": 49.62,
         "expectancyPct": -1.075,
         "avgHoldBars": 15,
@@ -2557,6 +2969,7 @@
         "mtfFilter": "weekly"
       },
       "latestSignal": null,
+      "tradeInstruction": null,
       "backtest": {
         "trades": 7,
         "wins": 4,
@@ -2592,6 +3005,7 @@
         "mtfFilter": "weekly"
       },
       "latestSignal": null,
+      "tradeInstruction": null,
       "backtest": {
         "trades": 4,
         "wins": 2,
@@ -2634,6 +3048,22 @@
         "status": "confirmed",
         "barsAgo": 0
       },
+      "tradeInstruction": {
+        "action": "SELL",
+        "symbol": "9519.T",
+        "name": "レノバ (9519)",
+        "orderType": "LIMIT",
+        "orderTypeJp": "戻り売り指値 (LIMIT SELL)",
+        "entryPrice": 910.5,
+        "entryRangeStr": "¥911 (戻り売り目安)",
+        "stopLoss": 1071.84,
+        "stopLossPct": 17.72,
+        "takeProfit": 783.03,
+        "takeProfitPct": -14,
+        "riskRewardRatio": 0.8,
+        "maxHoldBars": 15,
+        "executionGuide": "【スマホ操作】証券アプリで「レノバ (9519) 成行売り / 逆指値 1,072円 / 返済利確 783円」をセット！"
+      },
       "backtest": {
         "trades": 7,
         "wins": 3,
@@ -2669,6 +3099,7 @@
         "mtfFilter": "weekly"
       },
       "latestSignal": null,
+      "tradeInstruction": null,
       "backtest": {
         "trades": 7,
         "wins": 2,
@@ -2704,6 +3135,7 @@
         "mtfFilter": "weekly"
       },
       "latestSignal": null,
+      "tradeInstruction": null,
       "backtest": {
         "trades": 11,
         "wins": 2,
@@ -2739,6 +3171,7 @@
         "mtfFilter": "weekly"
       },
       "latestSignal": null,
+      "tradeInstruction": null,
       "backtest": {
         "trades": 11,
         "wins": 3,
