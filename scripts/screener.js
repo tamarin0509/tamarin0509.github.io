@@ -88,7 +88,13 @@ const WATCH_SYMBOLS = [
     // 暗号資産
     { symbol: 'BTC-USD', name: 'ビットコイン (BTC/USD)', type: 'crypto', sector: '暗号資産' },
     { symbol: 'ETH-USD', name: 'イーサリアム (ETH/USD)', type: 'crypto', sector: '暗号資産' },
-    { symbol: '3350.T', name: 'メタプラネット (3350)', type: 'stock', sector: '暗号資産' }
+    { symbol: '3350.T', name: 'メタプラネット (3350)', type: 'stock', sector: '暗号資産' },
+    // 再エネ・営農型太陽光
+    { symbol: '1407.T', name: 'ウエストホールディングス (1407)', type: 'stock', sector: '再エネ・太陽光' },
+    { symbol: '9519.T', name: 'レノバ (9519)', type: 'stock', sector: '再エネ・太陽光' },
+    { symbol: 'ENPH', name: 'エンフェーズ・エナジー (ENPH)', type: 'stock', sector: '再エネ・太陽光' },
+    { symbol: 'FSLR', name: 'ファーストソーラー (FSLR)', type: 'stock', sector: '再エネ・太陽光' },
+    { symbol: 'NEE', name: 'ネクステラ・エナジー (NEE)', type: 'stock', sector: '再エネ・太陽光' }
 ];
 
 function calculateKairi(candles, period = 25) {
