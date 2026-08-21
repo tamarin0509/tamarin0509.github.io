@@ -1,0 +1,1675 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>週次レポート 2026-08-22 | RSI Breakout Screener</title>
+<style>
+    :root {
+        --bg-primary: #0a0e17; --bg-card: rgba(22, 30, 49, 0.65);
+        --border-color: rgba(255, 255, 255, 0.08);
+        --text-main: #f1f5f9; --text-muted: #94a3b8; --text-dim: #64748b;
+        --accent: #6366f1;
+        --color-buy: #10b981; --color-sell: #f43f5e;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+        background: var(--bg-primary); color: var(--text-main);
+        font-family: 'Noto Sans JP', 'Outfit', sans-serif;
+        line-height: 1.7; padding: 2rem 1rem;
+    }
+    .container { max-width: 960px; margin: 0 auto; }
+    h1 { font-size: 1.6rem; margin-bottom: 0.25rem; }
+    h2 { font-size: 1.2rem; margin: 2rem 0 0.75rem; border-left: 4px solid var(--accent); padding-left: 0.6rem; }
+    .meta { color: var(--text-dim); font-size: 0.85rem; margin-bottom: 1.5rem; }
+    .summary-cards { display: flex; flex-wrap: wrap; gap: 0.75rem; margin: 1rem 0; }
+    .summary-card {
+        background: var(--bg-card); border: 1px solid var(--border-color);
+        border-radius: 10px; padding: 0.75rem 1.25rem; min-width: 140px;
+    }
+    .summary-card .label { font-size: 0.75rem; color: var(--text-muted); }
+    .summary-card .value { font-size: 1.4rem; font-weight: 700; }
+    .table-wrap { overflow-x: auto; border: 1px solid var(--border-color); border-radius: 10px; }
+    table { border-collapse: collapse; width: 100%; font-size: 0.85rem; }
+    th, td { padding: 0.5rem 0.75rem; text-align: right; white-space: nowrap; border-bottom: 1px solid var(--border-color); }
+    th { background: rgba(99, 102, 241, 0.12); color: var(--text-muted); font-weight: 600; }
+    td:first-child, th:first-child, td.name, th.name { text-align: left; }
+    tr:last-child td { border-bottom: none; }
+    .buy { color: var(--color-buy); font-weight: 700; }
+    .sell { color: var(--color-sell); font-weight: 700; }
+    .pos { color: var(--color-buy); }
+    .neg { color: var(--color-sell); }
+    .hit { color: var(--color-buy); font-weight: 700; }
+    .miss { color: var(--color-sell); font-weight: 700; }
+    .badge-fresh {
+        display: inline-block; font-size: 0.7rem; background: rgba(99,102,241,0.25);
+        color: #a5b4fc; border-radius: 999px; padding: 0 0.5rem; margin-left: 0.4rem;
+    }
+    a { color: #a5b4fc; }
+    .entry-list { list-style: none; }
+    .entry-list li {
+        background: var(--bg-card); border: 1px solid var(--border-color);
+        border-radius: 10px; padding: 1rem 1.25rem; margin-bottom: 0.75rem;
+    }
+    .entry-list .date { font-size: 1.05rem; font-weight: 700; }
+    .entry-list .desc { color: var(--text-muted); font-size: 0.85rem; }
+    .note { color: var(--text-dim); font-size: 0.8rem; margin-top: 0.75rem; }
+    .back-link { display: inline-block; margin-bottom: 1rem; font-size: 0.85rem; }
+</style>
+<div class="container">
+    <a class="back-link" href="./index.html">&larr; レポート一覧に戻る</a>
+    <h1>週次スクリーニングレポート 2026-08-22</h1>
+    <p class="meta">RSI Breakout 自動スクリーナー（kairi法）による週次予測と答え合わせの記録</p>
+    <h2>前週予測の答え合わせ（2026-08-08 時点 → 2026-08-22、14日後）</h2>
+<div class="summary-cards">
+    <div class="summary-card"><div class="label">評価シグナル数</div><div class="value">28</div></div>
+    <div class="summary-card"><div class="label">的中 / 外れ</div><div class="value">11 / 17</div></div>
+    <div class="summary-card"><div class="label">的中率</div><div class="value">39.3%</div></div>
+    <div class="summary-card"><div class="label">新規シグナル的中率</div><div class="value">29.4%</div></div>
+</div>
+<div class="table-wrap">
+<table>
+<thead><tr><th class="name">銘柄</th><th>シンボル</th><th>予測</th><th>シグナル日</th><th>記録時終値</th><th>1週間後終値</th><th>変化率</th><th>判定</th></tr></thead>
+<tbody>
+<tr>
+<td class="name">S&amp;P 500 Index<span class="badge-fresh">新規</span></td>
+<td>^GSPC</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-08-04</td>
+<td>7,757.6</td>
+<td>7,674.4</td>
+<td class="neg">-1.07%</td>
+<td class="miss">外れ</td>
+</tr>
+<tr>
+<td class="name">NYダウ (Dow Jones)<span class="badge-fresh">新規</span></td>
+<td>^DJI</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-08-03</td>
+<td>54,036.9</td>
+<td>53,277</td>
+<td class="neg">-1.41%</td>
+<td class="miss">外れ</td>
+</tr>
+<tr>
+<td class="name">マイクロソフト (MSFT)</td>
+<td>MSFT</td>
+<td><span class="sell">SELL</span></td>
+<td>2026-07-24</td>
+<td>500</td>
+<td>483.2</td>
+<td class="neg">-3.35%</td>
+<td class="hit">的中</td>
+</tr>
+<tr>
+<td class="name">アルファベット (GOOGL)<span class="badge-fresh">新規</span></td>
+<td>GOOGL</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-08-03</td>
+<td>354.3</td>
+<td>344.8</td>
+<td class="neg">-2.68%</td>
+<td class="miss">外れ</td>
+</tr>
+<tr>
+<td class="name">ソニーグループ (6758)</td>
+<td>6758.T</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-07-27</td>
+<td>3,721</td>
+<td>3,785</td>
+<td class="pos">+1.72%</td>
+<td class="hit">的中</td>
+</tr>
+<tr>
+<td class="name">エヌビディア (NVDA)<span class="badge-fresh">新規</span></td>
+<td>NVDA</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-08-04</td>
+<td>224</td>
+<td>214.7</td>
+<td class="neg">-4.13%</td>
+<td class="miss">外れ</td>
+</tr>
+<tr>
+<td class="name">アドバンスト・マイクロ・デバイセズ (AMD)<span class="badge-fresh">新規</span></td>
+<td>AMD</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-08-04</td>
+<td>483.4</td>
+<td>473.3</td>
+<td class="neg">-2.09%</td>
+<td class="miss">外れ</td>
+</tr>
+<tr>
+<td class="name">ブロードコム (AVGO)<span class="badge-fresh">新規</span></td>
+<td>AVGO</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-07-31</td>
+<td>427.8</td>
+<td>368.5</td>
+<td class="neg">-13.87%</td>
+<td class="miss">外れ</td>
+</tr>
+<tr>
+<td class="name">アドバンテスト (6857)<span class="badge-fresh">新規</span></td>
+<td>6857.T</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-07-31</td>
+<td>32,190</td>
+<td>35,900</td>
+<td class="pos">+11.53%</td>
+<td class="hit">的中</td>
+</tr>
+<tr>
+<td class="name">ディスコ (6146)</td>
+<td>6146.T</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-07-22</td>
+<td>58,440</td>
+<td>61,360</td>
+<td class="pos">+5.00%</td>
+<td class="hit">的中</td>
+</tr>
+<tr>
+<td class="name">出光興産 (5019)</td>
+<td>5019.T</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-07-21</td>
+<td>1,321</td>
+<td>1,383.5</td>
+<td class="pos">+4.73%</td>
+<td class="hit">的中</td>
+</tr>
+<tr>
+<td class="name">三菱重工業 (7011)<span class="badge-fresh">新規</span></td>
+<td>7011.T</td>
+<td><span class="sell">SELL</span></td>
+<td>2026-08-03</td>
+<td>4,044</td>
+<td>3,932</td>
+<td class="neg">-2.77%</td>
+<td class="hit">的中</td>
+</tr>
+<tr>
+<td class="name">川崎重工業 (7012)</td>
+<td>7012.T</td>
+<td><span class="sell">SELL</span></td>
+<td>2026-07-17</td>
+<td>2,778.5</td>
+<td>2,603.5</td>
+<td class="neg">-6.30%</td>
+<td class="hit">的中</td>
+</tr>
+<tr>
+<td class="name">IHI (7013)<span class="badge-fresh">新規</span></td>
+<td>7013.T</td>
+<td><span class="sell">SELL</span></td>
+<td>2026-08-06</td>
+<td>2,744.5</td>
+<td>2,673</td>
+<td class="neg">-2.61%</td>
+<td class="hit">的中</td>
+</tr>
+<tr>
+<td class="name">RTX (旧レイセオン)</td>
+<td>RTX</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-07-23</td>
+<td>223</td>
+<td>209.9</td>
+<td class="neg">-5.88%</td>
+<td class="miss">外れ</td>
+</tr>
+<tr>
+<td class="name">みずほフィナンシャルG (8411)<span class="badge-fresh">新規</span></td>
+<td>8411.T</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-08-05</td>
+<td>8,446</td>
+<td>8,110</td>
+<td class="neg">-3.98%</td>
+<td class="miss">外れ</td>
+</tr>
+<tr>
+<td class="name">JPモルガン・チェース (JPM)</td>
+<td>JPM</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-07-27</td>
+<td>357.5</td>
+<td>351.6</td>
+<td class="neg">-1.66%</td>
+<td class="miss">外れ</td>
+</tr>
+<tr>
+<td class="name">ホンダ (7267)</td>
+<td>7267.T</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-07-27</td>
+<td>1,683</td>
+<td>1,753</td>
+<td class="pos">+4.16%</td>
+<td class="hit">的中</td>
+</tr>
+<tr>
+<td class="name">JX金属 (5016)<span class="badge-fresh">新規</span></td>
+<td>5016.T</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-07-31</td>
+<td>3,886</td>
+<td>3,591</td>
+<td class="neg">-7.59%</td>
+<td class="miss">外れ</td>
+</tr>
+<tr>
+<td class="name">伊藤忠商事 (8001)</td>
+<td>8001.T</td>
+<td><span class="sell">SELL</span></td>
+<td>2026-07-17</td>
+<td>2,080</td>
+<td>2,080</td>
+<td class="pos">0.00%</td>
+<td class="miss">外れ</td>
+</tr>
+<tr>
+<td class="name">住友商事 (8053)<span class="badge-fresh">新規</span></td>
+<td>8053.T</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-07-31</td>
+<td>1,788</td>
+<td>1,709</td>
+<td class="neg">-4.42%</td>
+<td class="miss">外れ</td>
+</tr>
+<tr>
+<td class="name">ソフトバンク (9434)</td>
+<td>9434.T</td>
+<td><span class="sell">SELL</span></td>
+<td>2026-07-17</td>
+<td>230.9</td>
+<td>233.8</td>
+<td class="pos">+1.26%</td>
+<td class="miss">外れ</td>
+</tr>
+<tr>
+<td class="name">ファーストリテイリング (9983)<span class="badge-fresh">新規</span></td>
+<td>9983.T</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-08-06</td>
+<td>79,310</td>
+<td>73,510</td>
+<td class="neg">-7.31%</td>
+<td class="miss">外れ</td>
+</tr>
+<tr>
+<td class="name">ウォルマート (WMT)<span class="badge-fresh">新規</span></td>
+<td>WMT</td>
+<td><span class="sell">SELL</span></td>
+<td>2026-08-03</td>
+<td>111.9</td>
+<td>103.7</td>
+<td class="neg">-7.29%</td>
+<td class="hit">的中</td>
+</tr>
+<tr>
+<td class="name">コストコ (COST)<span class="badge-fresh">新規</span></td>
+<td>COST</td>
+<td><span class="sell">SELL</span></td>
+<td>2026-08-07</td>
+<td>947.8</td>
+<td>947.7</td>
+<td class="neg">-0.01%</td>
+<td class="hit">的中</td>
+</tr>
+<tr>
+<td class="name">村田製作所 (6981)<span class="badge-fresh">新規</span></td>
+<td>6981.T</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-08-05</td>
+<td>7,263</td>
+<td>7,091</td>
+<td class="neg">-2.37%</td>
+<td class="miss">外れ</td>
+</tr>
+<tr>
+<td class="name">ビットコイン (BTC/USD)</td>
+<td>BTC-USD</td>
+<td><span class="sell">SELL</span></td>
+<td>2026-08-01</td>
+<td>64,859</td>
+<td>78,653.8</td>
+<td class="pos">+21.27%</td>
+<td class="miss">外れ</td>
+</tr>
+<tr>
+<td class="name">レノバ (9519)<span class="badge-fresh">新規</span></td>
+<td>9519.T</td>
+<td><span class="sell">SELL</span></td>
+<td>2026-08-07</td>
+<td>884</td>
+<td>960</td>
+<td class="pos">+8.60%</td>
+<td class="miss">外れ</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="note">判定基準: BUYシグナルは記録時終値より上昇していれば的中、SELLシグナルは下落していれば的中。「新規」はスナップショット時点でシグナル発生から5本以内のもの。</p>
+    <h2>今週の予測（2026-08-22 時点のシグナル一覧）</h2>
+<div class="summary-cards">
+    <div class="summary-card"><div class="label">スクリーニング対象</div><div class="value">73</div></div>
+    <div class="summary-card"><div class="label">シグナルあり</div><div class="value">38</div></div>
+    <div class="summary-card"><div class="label">BUY / SELL</div><div class="value">29 / 9</div></div>
+</div>
+<div class="table-wrap">
+<table>
+<thead><tr><th class="name">銘柄</th><th>シンボル</th><th>セクター</th><th>予測</th><th>シグナル日</th><th>終値</th><th>RSI</th></tr></thead>
+<tbody>
+<tr>
+<td class="name">S&amp;P 500 Index</td>
+<td>^GSPC</td>
+<td>指数</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-08-04</td>
+<td>7,674.4</td>
+<td>56.3</td>
+</tr>
+<tr>
+<td class="name">NYダウ (Dow Jones)</td>
+<td>^DJI</td>
+<td>指数</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-08-03</td>
+<td>53,277</td>
+<td>41.2</td>
+</tr>
+<tr>
+<td class="name">ユーロ / 米ドル (EUR/USD)</td>
+<td>EURUSD=X</td>
+<td>為替</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-08-13</td>
+<td>1.168</td>
+<td>79.3</td>
+</tr>
+<tr>
+<td class="name">英ポンド / 円 (GBP/JPY)<span class="badge-fresh">新規</span></td>
+<td>GBPJPY=X</td>
+<td>為替</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-08-20</td>
+<td>216.8</td>
+<td>57.7</td>
+</tr>
+<tr>
+<td class="name">マイクロソフト (MSFT)<span class="badge-fresh">新規</span></td>
+<td>MSFT</td>
+<td>テクノロジー</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-08-20</td>
+<td>483.2</td>
+<td>61.1</td>
+</tr>
+<tr>
+<td class="name">アルファベット (GOOGL)</td>
+<td>GOOGL</td>
+<td>テクノロジー</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-08-03</td>
+<td>344.8</td>
+<td>47.0</td>
+</tr>
+<tr>
+<td class="name">メタ・プラットフォームズ (META)</td>
+<td>META</td>
+<td>テクノロジー</td>
+<td><span class="sell">SELL</span></td>
+<td>2026-08-13</td>
+<td>549.9</td>
+<td>34.0</td>
+</tr>
+<tr>
+<td class="name">ソフトバンクグループ (9984)<span class="badge-fresh">新規</span></td>
+<td>9984.T</td>
+<td>テクノロジー</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-08-14</td>
+<td>5,255</td>
+<td>44.5</td>
+</tr>
+<tr>
+<td class="name">ソニーグループ (6758)<span class="badge-fresh">新規</span></td>
+<td>6758.T</td>
+<td>テクノロジー</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-08-14</td>
+<td>3,785</td>
+<td>56.7</td>
+</tr>
+<tr>
+<td class="name">エヌビディア (NVDA)</td>
+<td>NVDA</td>
+<td>半導体</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-08-04</td>
+<td>214.7</td>
+<td>52.5</td>
+</tr>
+<tr>
+<td class="name">アドバンスト・マイクロ・デバイセズ (AMD)<span class="badge-fresh">新規</span></td>
+<td>AMD</td>
+<td>半導体</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-08-14</td>
+<td>473.3</td>
+<td>45.0</td>
+</tr>
+<tr>
+<td class="name">ブロードコム (AVGO)</td>
+<td>AVGO</td>
+<td>半導体</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-08-04</td>
+<td>368.5</td>
+<td>33.2</td>
+</tr>
+<tr>
+<td class="name">アドバンテスト (6857)</td>
+<td>6857.T</td>
+<td>半導体</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-08-05</td>
+<td>35,900</td>
+<td>58.1</td>
+</tr>
+<tr>
+<td class="name">キオクシアホールディングス (285A)<span class="badge-fresh">新規</span></td>
+<td>285A.T</td>
+<td>半導体</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-08-18</td>
+<td>54,320</td>
+<td>47.3</td>
+</tr>
+<tr>
+<td class="name">三菱重工業 (7011)</td>
+<td>7011.T</td>
+<td>防衛・重工</td>
+<td><span class="sell">SELL</span></td>
+<td>2026-08-03</td>
+<td>3,932</td>
+<td>47.6</td>
+</tr>
+<tr>
+<td class="name">川崎重工業 (7012)<span class="badge-fresh">新規</span></td>
+<td>7012.T</td>
+<td>防衛・重工</td>
+<td><span class="sell">SELL</span></td>
+<td>2026-08-19</td>
+<td>2,603.5</td>
+<td>40.6</td>
+</tr>
+<tr>
+<td class="name">IHI (7013)</td>
+<td>7013.T</td>
+<td>防衛・重工</td>
+<td><span class="sell">SELL</span></td>
+<td>2026-08-05</td>
+<td>2,673</td>
+<td>45.4</td>
+</tr>
+<tr>
+<td class="name">みずほフィナンシャルG (8411)</td>
+<td>8411.T</td>
+<td>金融</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-08-13</td>
+<td>8,110</td>
+<td>41.1</td>
+</tr>
+<tr>
+<td class="name">JPモルガン・チェース (JPM)</td>
+<td>JPM</td>
+<td>金融</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-08-11</td>
+<td>351.6</td>
+<td>40.8</td>
+</tr>
+<tr>
+<td class="name">トヨタ自動車 (7203)<span class="badge-fresh">新規</span></td>
+<td>7203.T</td>
+<td>自動車</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-08-20</td>
+<td>3,132</td>
+<td>67.9</td>
+</tr>
+<tr>
+<td class="name">ホンダ (7267)<span class="badge-fresh">新規</span></td>
+<td>7267.T</td>
+<td>自動車</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-08-20</td>
+<td>1,753</td>
+<td>72.4</td>
+</tr>
+<tr>
+<td class="name">スズキ (7269)<span class="badge-fresh">新規</span></td>
+<td>7269.T</td>
+<td>自動車</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-08-20</td>
+<td>2,103.5</td>
+<td>56.0</td>
+</tr>
+<tr>
+<td class="name">日産自動車 (7201)<span class="badge-fresh">新規</span></td>
+<td>7201.T</td>
+<td>自動車</td>
+<td><span class="sell">SELL</span></td>
+<td>2026-08-19</td>
+<td>336</td>
+<td>53.8</td>
+</tr>
+<tr>
+<td class="name">JX金属 (5016)</td>
+<td>5016.T</td>
+<td>素材・非鉄</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-07-31</td>
+<td>3,591</td>
+<td>44.2</td>
+</tr>
+<tr>
+<td class="name">三井物産 (8031)<span class="badge-fresh">新規</span></td>
+<td>8031.T</td>
+<td>商社</td>
+<td><span class="sell">SELL</span></td>
+<td>2026-08-19</td>
+<td>4,899</td>
+<td>52.3</td>
+</tr>
+<tr>
+<td class="name">三菱商事 (8058)</td>
+<td>8058.T</td>
+<td>商社</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-08-12</td>
+<td>4,794</td>
+<td>51.0</td>
+</tr>
+<tr>
+<td class="name">武田薬品工業 (4502)<span class="badge-fresh">新規</span></td>
+<td>4502.T</td>
+<td>医薬品</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-08-18</td>
+<td>5,764</td>
+<td>65.9</td>
+</tr>
+<tr>
+<td class="name">第一三共 (4568)<span class="badge-fresh">新規</span></td>
+<td>4568.T</td>
+<td>医薬品</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-08-20</td>
+<td>2,833.5</td>
+<td>60.2</td>
+</tr>
+<tr>
+<td class="name">ジョンソン・エンド・ジョンソン (JNJ)<span class="badge-fresh">新規</span></td>
+<td>JNJ</td>
+<td>医薬品</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-08-17</td>
+<td>270.2</td>
+<td>60.1</td>
+</tr>
+<tr>
+<td class="name">イーライリリー (LLY)</td>
+<td>LLY</td>
+<td>医薬品</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-08-10</td>
+<td>1,255.4</td>
+<td>60.4</td>
+</tr>
+<tr>
+<td class="name">KDDI (9433)<span class="badge-fresh">新規</span></td>
+<td>9433.T</td>
+<td>通信</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-08-14</td>
+<td>2,915.5</td>
+<td>54.3</td>
+</tr>
+<tr>
+<td class="name">ファーストリテイリング (9983)</td>
+<td>9983.T</td>
+<td>消費・小売</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-08-07</td>
+<td>73,510</td>
+<td>28.8</td>
+</tr>
+<tr>
+<td class="name">ウォルマート (WMT)<span class="badge-fresh">新規</span></td>
+<td>WMT</td>
+<td>消費・小売</td>
+<td><span class="sell">SELL</span></td>
+<td>2026-08-20</td>
+<td>103.7</td>
+<td>27.2</td>
+</tr>
+<tr>
+<td class="name">ヒューリック (3003)<span class="badge-fresh">新規</span></td>
+<td>3003.T</td>
+<td>不動産</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-08-18</td>
+<td>1,780</td>
+<td>52.0</td>
+</tr>
+<tr>
+<td class="name">ビットコイン (BTC/USD)</td>
+<td>BTC-USD</td>
+<td>暗号資産</td>
+<td><span class="sell">SELL</span></td>
+<td>2026-08-10</td>
+<td>78,653.8</td>
+<td>73.5</td>
+</tr>
+<tr>
+<td class="name">イーサリアム (ETH/USD)</td>
+<td>ETH-USD</td>
+<td>暗号資産</td>
+<td><span class="sell">SELL</span></td>
+<td>2026-08-13</td>
+<td>2,537.3</td>
+<td>90.7</td>
+</tr>
+<tr>
+<td class="name">ウエストホールディングス (1407)</td>
+<td>1407.T</td>
+<td>再エネ・太陽光</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-08-13</td>
+<td>2,845</td>
+<td>55.9</td>
+</tr>
+<tr>
+<td class="name">ファーストソーラー (FSLR)<span class="badge-fresh">新規</span></td>
+<td>FSLR</td>
+<td>再エネ・太陽光</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-08-18</td>
+<td>214.3</td>
+<td>44.9</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="note">この一覧が来週の答え合わせの対象になります。</p>
+    <p class="note">&copy; 2026 tamarin0509-art — このページは自動生成されています。</p>
+</div>
+<script type="application/json" id="weekly-report-data">
+{
+ "date": "2026-08-22",
+ "snapshot": {
+  "date": "2026-08-22",
+  "screenerUpdatedAt": "2026-08-21T22:22:57.137Z",
+  "totalSymbols": 73,
+  "signalCount": 38,
+  "entries": [
+   {
+    "symbol": "^GSPC",
+    "name": "S&P 500 Index",
+    "type": "index",
+    "sector": "指数",
+    "close": 7674.3701,
+    "rsi": 56.34,
+    "signal": {
+     "time": "2026-08-04",
+     "type": "BUY",
+     "price": 7736.52,
+     "status": "confirmed",
+     "barsAgo": 13
+    }
+   },
+   {
+    "symbol": "^DJI",
+    "name": "NYダウ (Dow Jones)",
+    "type": "index",
+    "sector": "指数",
+    "close": 53277.0117,
+    "rsi": 41.21,
+    "signal": {
+     "time": "2026-08-03",
+     "type": "BUY",
+     "price": 53178.4102,
+     "status": "confirmed",
+     "barsAgo": 14
+    }
+   },
+   {
+    "symbol": "EURUSD=X",
+    "name": "ユーロ / 米ドル (EUR/USD)",
+    "type": "forex",
+    "sector": "為替",
+    "close": 1.1678,
+    "rsi": 79.33,
+    "signal": {
+     "time": "2026-08-13",
+     "type": "BUY",
+     "price": 1.1535,
+     "status": "confirmed",
+     "barsAgo": 6
+    }
+   },
+   {
+    "symbol": "GBPJPY=X",
+    "name": "英ポンド / 円 (GBP/JPY)",
+    "type": "forex",
+    "sector": "為替",
+    "close": 216.787,
+    "rsi": 57.66,
+    "signal": {
+     "time": "2026-08-20",
+     "type": "BUY",
+     "price": 216.758,
+     "status": "confirmed",
+     "barsAgo": 1
+    }
+   },
+   {
+    "symbol": "MSFT",
+    "name": "マイクロソフト (MSFT)",
+    "type": "stock",
+    "sector": "テクノロジー",
+    "close": 483.24,
+    "rsi": 61.15,
+    "signal": {
+     "time": "2026-08-20",
+     "type": "BUY",
+     "price": 481.15,
+     "status": "phantom",
+     "barsAgo": 1
+    }
+   },
+   {
+    "symbol": "GOOGL",
+    "name": "アルファベット (GOOGL)",
+    "type": "stock",
+    "sector": "テクノロジー",
+    "close": 344.82,
+    "rsi": 46.98,
+    "signal": {
+     "time": "2026-08-03",
+     "type": "BUY",
+     "price": 373.51,
+     "status": "confirmed",
+     "barsAgo": 14
+    }
+   },
+   {
+    "symbol": "META",
+    "name": "メタ・プラットフォームズ (META)",
+    "type": "stock",
+    "sector": "テクノロジー",
+    "close": 549.9,
+    "rsi": 34.05,
+    "signal": {
+     "time": "2026-08-13",
+     "type": "SELL",
+     "price": 594.97,
+     "status": "phantom",
+     "barsAgo": 6
+    }
+   },
+   {
+    "symbol": "9984.T",
+    "name": "ソフトバンクグループ (9984)",
+    "type": "stock",
+    "sector": "テクノロジー",
+    "close": 5255,
+    "rsi": 44.54,
+    "signal": {
+     "time": "2026-08-14",
+     "type": "BUY",
+     "price": 5739,
+     "status": "confirmed",
+     "barsAgo": 5
+    }
+   },
+   {
+    "symbol": "6758.T",
+    "name": "ソニーグループ (6758)",
+    "type": "stock",
+    "sector": "テクノロジー",
+    "close": 3785,
+    "rsi": 56.71,
+    "signal": {
+     "time": "2026-08-14",
+     "type": "BUY",
+     "price": 3912,
+     "status": "confirmed",
+     "barsAgo": 5
+    }
+   },
+   {
+    "symbol": "NVDA",
+    "name": "エヌビディア (NVDA)",
+    "type": "stock",
+    "sector": "半導体",
+    "close": 214.72,
+    "rsi": 52.45,
+    "signal": {
+     "time": "2026-08-04",
+     "type": "BUY",
+     "price": 211.94,
+     "status": "confirmed",
+     "barsAgo": 13
+    }
+   },
+   {
+    "symbol": "AMD",
+    "name": "アドバンスト・マイクロ・デバイセズ (AMD)",
+    "type": "stock",
+    "sector": "半導体",
+    "close": 473.25,
+    "rsi": 44.96,
+    "signal": {
+     "time": "2026-08-14",
+     "type": "BUY",
+     "price": 514.39,
+     "status": "confirmed",
+     "barsAgo": 5
+    }
+   },
+   {
+    "symbol": "AVGO",
+    "name": "ブロードコム (AVGO)",
+    "type": "stock",
+    "sector": "半導体",
+    "close": 368.45,
+    "rsi": 33.24,
+    "signal": {
+     "time": "2026-08-04",
+     "type": "BUY",
+     "price": 418.16,
+     "status": "confirmed",
+     "barsAgo": 13
+    }
+   },
+   {
+    "symbol": "6857.T",
+    "name": "アドバンテスト (6857)",
+    "type": "stock",
+    "sector": "半導体",
+    "close": 35900,
+    "rsi": 58.15,
+    "signal": {
+     "time": "2026-08-05",
+     "type": "BUY",
+     "price": 33720,
+     "status": "confirmed",
+     "barsAgo": 11
+    }
+   },
+   {
+    "symbol": "285A.T",
+    "name": "キオクシアホールディングス (285A)",
+    "type": "stock",
+    "sector": "半導体",
+    "close": 54320,
+    "rsi": 47.25,
+    "signal": {
+     "time": "2026-08-18",
+     "type": "BUY",
+     "price": 57150,
+     "status": "phantom",
+     "barsAgo": 3
+    }
+   },
+   {
+    "symbol": "7011.T",
+    "name": "三菱重工業 (7011)",
+    "type": "stock",
+    "sector": "防衛・重工",
+    "close": 3932,
+    "rsi": 47.62,
+    "signal": {
+     "time": "2026-08-03",
+     "type": "SELL",
+     "price": 3799,
+     "status": "confirmed",
+     "barsAgo": 13
+    }
+   },
+   {
+    "symbol": "7012.T",
+    "name": "川崎重工業 (7012)",
+    "type": "stock",
+    "sector": "防衛・重工",
+    "close": 2603.5,
+    "rsi": 40.57,
+    "signal": {
+     "time": "2026-08-19",
+     "type": "SELL",
+     "price": 2675.5,
+     "status": "confirmed",
+     "barsAgo": 2
+    }
+   },
+   {
+    "symbol": "7013.T",
+    "name": "IHI (7013)",
+    "type": "stock",
+    "sector": "防衛・重工",
+    "close": 2673,
+    "rsi": 45.36,
+    "signal": {
+     "time": "2026-08-05",
+     "type": "SELL",
+     "price": 2691.5,
+     "status": "confirmed",
+     "barsAgo": 11
+    }
+   },
+   {
+    "symbol": "8411.T",
+    "name": "みずほフィナンシャルG (8411)",
+    "type": "stock",
+    "sector": "金融",
+    "close": 8110,
+    "rsi": 41.07,
+    "signal": {
+     "time": "2026-08-13",
+     "type": "BUY",
+     "price": 8775,
+     "status": "confirmed",
+     "barsAgo": 6
+    }
+   },
+   {
+    "symbol": "JPM",
+    "name": "JPモルガン・チェース (JPM)",
+    "type": "stock",
+    "sector": "金融",
+    "close": 351.58,
+    "rsi": 40.83,
+    "signal": {
+     "time": "2026-08-11",
+     "type": "BUY",
+     "price": 362.04,
+     "status": "confirmed",
+     "barsAgo": 8
+    }
+   },
+   {
+    "symbol": "7203.T",
+    "name": "トヨタ自動車 (7203)",
+    "type": "stock",
+    "sector": "自動車",
+    "close": 3132,
+    "rsi": 67.88,
+    "signal": {
+     "time": "2026-08-20",
+     "type": "BUY",
+     "price": 3066,
+     "status": "confirmed",
+     "barsAgo": 1
+    }
+   },
+   {
+    "symbol": "7267.T",
+    "name": "ホンダ (7267)",
+    "type": "stock",
+    "sector": "自動車",
+    "close": 1753,
+    "rsi": 72.41,
+    "signal": {
+     "time": "2026-08-20",
+     "type": "BUY",
+     "price": 1741.5,
+     "status": "confirmed",
+     "barsAgo": 1
+    }
+   },
+   {
+    "symbol": "7269.T",
+    "name": "スズキ (7269)",
+    "type": "stock",
+    "sector": "自動車",
+    "close": 2103.5,
+    "rsi": 56.04,
+    "signal": {
+     "time": "2026-08-20",
+     "type": "BUY",
+     "price": 2087,
+     "status": "confirmed",
+     "barsAgo": 1
+    }
+   },
+   {
+    "symbol": "7201.T",
+    "name": "日産自動車 (7201)",
+    "type": "stock",
+    "sector": "自動車",
+    "close": 336,
+    "rsi": 53.81,
+    "signal": {
+     "time": "2026-08-19",
+     "type": "SELL",
+     "price": 316,
+     "status": "confirmed",
+     "barsAgo": 2
+    }
+   },
+   {
+    "symbol": "5016.T",
+    "name": "JX金属 (5016)",
+    "type": "stock",
+    "sector": "素材・非鉄",
+    "close": 3591,
+    "rsi": 44.18,
+    "signal": {
+     "time": "2026-07-31",
+     "type": "BUY",
+     "price": 3797,
+     "status": "confirmed",
+     "barsAgo": 14
+    }
+   },
+   {
+    "symbol": "8031.T",
+    "name": "三井物産 (8031)",
+    "type": "stock",
+    "sector": "商社",
+    "close": 4899,
+    "rsi": 52.32,
+    "signal": {
+     "time": "2026-08-19",
+     "type": "SELL",
+     "price": 4779,
+     "status": "confirmed",
+     "barsAgo": 2
+    }
+   },
+   {
+    "symbol": "8058.T",
+    "name": "三菱商事 (8058)",
+    "type": "stock",
+    "sector": "商社",
+    "close": 4794,
+    "rsi": 50.96,
+    "signal": {
+     "time": "2026-08-12",
+     "type": "BUY",
+     "price": 4856,
+     "status": "phantom",
+     "barsAgo": 7
+    }
+   },
+   {
+    "symbol": "4502.T",
+    "name": "武田薬品工業 (4502)",
+    "type": "stock",
+    "sector": "医薬品",
+    "close": 5764,
+    "rsi": 65.87,
+    "signal": {
+     "time": "2026-08-18",
+     "type": "BUY",
+     "price": 5702,
+     "status": "confirmed",
+     "barsAgo": 3
+    }
+   },
+   {
+    "symbol": "4568.T",
+    "name": "第一三共 (4568)",
+    "type": "stock",
+    "sector": "医薬品",
+    "close": 2833.5,
+    "rsi": 60.23,
+    "signal": {
+     "time": "2026-08-20",
+     "type": "BUY",
+     "price": 2867.5,
+     "status": "confirmed",
+     "barsAgo": 1
+    }
+   },
+   {
+    "symbol": "JNJ",
+    "name": "ジョンソン・エンド・ジョンソン (JNJ)",
+    "type": "stock",
+    "sector": "医薬品",
+    "close": 270.24,
+    "rsi": 60.08,
+    "signal": {
+     "time": "2026-08-17",
+     "type": "BUY",
+     "price": 262.37,
+     "status": "confirmed",
+     "barsAgo": 4
+    }
+   },
+   {
+    "symbol": "LLY",
+    "name": "イーライリリー (LLY)",
+    "type": "stock",
+    "sector": "医薬品",
+    "close": 1255.4,
+    "rsi": 60.42,
+    "signal": {
+     "time": "2026-08-10",
+     "type": "BUY",
+     "price": 1231.9399,
+     "status": "confirmed",
+     "barsAgo": 9
+    }
+   },
+   {
+    "symbol": "9433.T",
+    "name": "KDDI (9433)",
+    "type": "stock",
+    "sector": "通信",
+    "close": 2915.5,
+    "rsi": 54.29,
+    "signal": {
+     "time": "2026-08-14",
+     "type": "BUY",
+     "price": 2877.5,
+     "status": "confirmed",
+     "barsAgo": 5
+    }
+   },
+   {
+    "symbol": "9983.T",
+    "name": "ファーストリテイリング (9983)",
+    "type": "stock",
+    "sector": "消費・小売",
+    "close": 73510,
+    "rsi": 28.83,
+    "signal": {
+     "time": "2026-08-07",
+     "type": "BUY",
+     "price": 79310,
+     "status": "confirmed",
+     "barsAgo": 9
+    }
+   },
+   {
+    "symbol": "WMT",
+    "name": "ウォルマート (WMT)",
+    "type": "stock",
+    "sector": "消費・小売",
+    "close": 103.7,
+    "rsi": 27.2,
+    "signal": {
+     "time": "2026-08-20",
+     "type": "SELL",
+     "price": 103.84,
+     "status": "confirmed",
+     "barsAgo": 1
+    }
+   },
+   {
+    "symbol": "3003.T",
+    "name": "ヒューリック (3003)",
+    "type": "stock",
+    "sector": "不動産",
+    "close": 1780,
+    "rsi": 51.97,
+    "signal": {
+     "time": "2026-08-18",
+     "type": "BUY",
+     "price": 1739.5,
+     "status": "confirmed",
+     "barsAgo": 3
+    }
+   },
+   {
+    "symbol": "BTC-USD",
+    "name": "ビットコイン (BTC/USD)",
+    "type": "crypto",
+    "sector": "暗号資産",
+    "close": 78653.7734,
+    "rsi": 73.52,
+    "signal": {
+     "time": "2026-08-10",
+     "type": "SELL",
+     "price": 63910.5859,
+     "status": "confirmed",
+     "barsAgo": 11
+    }
+   },
+   {
+    "symbol": "ETH-USD",
+    "name": "イーサリアム (ETH/USD)",
+    "type": "crypto",
+    "sector": "暗号資産",
+    "close": 2537.27,
+    "rsi": 90.67,
+    "signal": {
+     "time": "2026-08-13",
+     "type": "SELL",
+     "price": 1883.9913,
+     "status": "confirmed",
+     "barsAgo": 8
+    }
+   },
+   {
+    "symbol": "1407.T",
+    "name": "ウエストホールディングス (1407)",
+    "type": "stock",
+    "sector": "再エネ・太陽光",
+    "close": 2845,
+    "rsi": 55.92,
+    "signal": {
+     "time": "2026-08-13",
+     "type": "BUY",
+     "price": 2803,
+     "status": "confirmed",
+     "barsAgo": 6
+    }
+   },
+   {
+    "symbol": "FSLR",
+    "name": "ファーストソーラー (FSLR)",
+    "type": "stock",
+    "sector": "再エネ・太陽光",
+    "close": 214.28,
+    "rsi": 44.94,
+    "signal": {
+     "time": "2026-08-18",
+     "type": "BUY",
+     "price": 220.01,
+     "status": "confirmed",
+     "barsAgo": 3
+    }
+   }
+  ]
+ },
+ "report": {
+  "reportDate": "2026-08-22",
+  "snapshotDate": "2026-08-08",
+  "elapsedDays": 14,
+  "summary": {
+   "total": 28,
+   "wins": 11,
+   "losses": 17,
+   "winRate": 39.3,
+   "freshTotal": 17,
+   "freshWins": 5,
+   "freshWinRate": 29.4
+  },
+  "evaluations": [
+   {
+    "symbol": "^GSPC",
+    "name": "S&P 500 Index",
+    "sector": "指数",
+    "signalType": "BUY",
+    "signalTime": "2026-08-04",
+    "signalPrice": 7736.52,
+    "snapClose": 7757.6401,
+    "fresh": true,
+    "evalClose": 7674.3701,
+    "changePercent": -1.0733934408738492,
+    "correct": false
+   },
+   {
+    "symbol": "^DJI",
+    "name": "NYダウ (Dow Jones)",
+    "sector": "指数",
+    "signalType": "BUY",
+    "signalTime": "2026-08-03",
+    "signalPrice": 53178.4102,
+    "snapClose": 54036.9297,
+    "fresh": true,
+    "evalClose": 53277.0117,
+    "changePercent": -1.4062938146539399,
+    "correct": false
+   },
+   {
+    "symbol": "MSFT",
+    "name": "マイクロソフト (MSFT)",
+    "sector": "テクノロジー",
+    "signalType": "SELL",
+    "signalTime": "2026-07-24",
+    "signalPrice": 381.7,
+    "snapClose": 499.99,
+    "fresh": false,
+    "evalClose": 483.24,
+    "changePercent": -3.350067001340027,
+    "correct": true
+   },
+   {
+    "symbol": "GOOGL",
+    "name": "アルファベット (GOOGL)",
+    "sector": "テクノロジー",
+    "signalType": "BUY",
+    "signalTime": "2026-08-03",
+    "signalPrice": 373.51,
+    "snapClose": 354.3,
+    "fresh": true,
+    "evalClose": 344.82,
+    "changePercent": -2.675698560541919,
+    "correct": false
+   },
+   {
+    "symbol": "6758.T",
+    "name": "ソニーグループ (6758)",
+    "sector": "テクノロジー",
+    "signalType": "BUY",
+    "signalTime": "2026-07-27",
+    "signalPrice": 3574,
+    "snapClose": 3721,
+    "fresh": false,
+    "evalClose": 3785,
+    "changePercent": 1.719967750604676,
+    "correct": true
+   },
+   {
+    "symbol": "NVDA",
+    "name": "エヌビディア (NVDA)",
+    "sector": "半導体",
+    "signalType": "BUY",
+    "signalTime": "2026-08-04",
+    "signalPrice": 211.94,
+    "snapClose": 223.96,
+    "fresh": true,
+    "evalClose": 214.72,
+    "changePercent": -4.125736738703344,
+    "correct": false
+   },
+   {
+    "symbol": "AMD",
+    "name": "アドバンスト・マイクロ・デバイセズ (AMD)",
+    "sector": "半導体",
+    "signalType": "BUY",
+    "signalTime": "2026-08-04",
+    "signalPrice": 518.58,
+    "snapClose": 483.36,
+    "fresh": true,
+    "evalClose": 473.25,
+    "changePercent": -2.091608738828205,
+    "correct": false
+   },
+   {
+    "symbol": "AVGO",
+    "name": "ブロードコム (AVGO)",
+    "sector": "半導体",
+    "signalType": "BUY",
+    "signalTime": "2026-07-31",
+    "signalPrice": 389.28,
+    "snapClose": 427.76,
+    "fresh": true,
+    "evalClose": 368.45,
+    "changePercent": -13.865251542921264,
+    "correct": false
+   },
+   {
+    "symbol": "6857.T",
+    "name": "アドバンテスト (6857)",
+    "sector": "半導体",
+    "signalType": "BUY",
+    "signalTime": "2026-07-31",
+    "signalPrice": 32500,
+    "snapClose": 32190,
+    "fresh": true,
+    "evalClose": 35900,
+    "changePercent": 11.525318421870146,
+    "correct": true
+   },
+   {
+    "symbol": "6146.T",
+    "name": "ディスコ (6146)",
+    "sector": "半導体",
+    "signalType": "BUY",
+    "signalTime": "2026-07-22",
+    "signalPrice": 68590,
+    "snapClose": 58440,
+    "fresh": false,
+    "evalClose": 61360,
+    "changePercent": 4.996577686516085,
+    "correct": true
+   },
+   {
+    "symbol": "5019.T",
+    "name": "出光興産 (5019)",
+    "sector": "エネルギー",
+    "signalType": "BUY",
+    "signalTime": "2026-07-21",
+    "signalPrice": 1292.5,
+    "snapClose": 1321,
+    "fresh": false,
+    "evalClose": 1383.5,
+    "changePercent": 4.7312641937925815,
+    "correct": true
+   },
+   {
+    "symbol": "7011.T",
+    "name": "三菱重工業 (7011)",
+    "sector": "防衛・重工",
+    "signalType": "SELL",
+    "signalTime": "2026-08-03",
+    "signalPrice": 3799,
+    "snapClose": 4044,
+    "fresh": true,
+    "evalClose": 3932,
+    "changePercent": -2.7695351137487636,
+    "correct": true
+   },
+   {
+    "symbol": "7012.T",
+    "name": "川崎重工業 (7012)",
+    "sector": "防衛・重工",
+    "signalType": "SELL",
+    "signalTime": "2026-07-17",
+    "signalPrice": 2604.5,
+    "snapClose": 2778.5,
+    "fresh": false,
+    "evalClose": 2603.5,
+    "changePercent": -6.2983624257693,
+    "correct": true
+   },
+   {
+    "symbol": "7013.T",
+    "name": "IHI (7013)",
+    "sector": "防衛・重工",
+    "signalType": "SELL",
+    "signalTime": "2026-08-06",
+    "signalPrice": 2638.5,
+    "snapClose": 2744.5,
+    "fresh": true,
+    "evalClose": 2673,
+    "changePercent": -2.6052104208416833,
+    "correct": true
+   },
+   {
+    "symbol": "RTX",
+    "name": "RTX (旧レイセオン)",
+    "sector": "防衛・重工",
+    "signalType": "BUY",
+    "signalTime": "2026-07-23",
+    "signalPrice": 209.16,
+    "snapClose": 223.03,
+    "fresh": false,
+    "evalClose": 209.91,
+    "changePercent": -5.882616688337894,
+    "correct": false
+   },
+   {
+    "symbol": "8411.T",
+    "name": "みずほフィナンシャルG (8411)",
+    "sector": "金融",
+    "signalType": "BUY",
+    "signalTime": "2026-08-05",
+    "signalPrice": 8470,
+    "snapClose": 8446,
+    "fresh": true,
+    "evalClose": 8110,
+    "changePercent": -3.9782145394269475,
+    "correct": false
+   },
+   {
+    "symbol": "JPM",
+    "name": "JPモルガン・チェース (JPM)",
+    "sector": "金融",
+    "signalType": "BUY",
+    "signalTime": "2026-07-27",
+    "signalPrice": 356.2,
+    "snapClose": 357.52,
+    "fresh": false,
+    "evalClose": 351.58,
+    "changePercent": -1.6614455135377035,
+    "correct": false
+   },
+   {
+    "symbol": "7267.T",
+    "name": "ホンダ (7267)",
+    "sector": "自動車",
+    "signalType": "BUY",
+    "signalTime": "2026-07-27",
+    "signalPrice": 1583,
+    "snapClose": 1683,
+    "fresh": false,
+    "evalClose": 1753,
+    "changePercent": 4.159239453357101,
+    "correct": true
+   },
+   {
+    "symbol": "5016.T",
+    "name": "JX金属 (5016)",
+    "sector": "素材・非鉄",
+    "signalType": "BUY",
+    "signalTime": "2026-07-31",
+    "signalPrice": 3797,
+    "snapClose": 3886,
+    "fresh": true,
+    "evalClose": 3591,
+    "changePercent": -7.591353576942872,
+    "correct": false
+   },
+   {
+    "symbol": "8001.T",
+    "name": "伊藤忠商事 (8001)",
+    "sector": "商社",
+    "signalType": "SELL",
+    "signalTime": "2026-07-17",
+    "signalPrice": 1902.5,
+    "snapClose": 2080,
+    "fresh": false,
+    "evalClose": 2080,
+    "changePercent": 0,
+    "correct": false
+   },
+   {
+    "symbol": "8053.T",
+    "name": "住友商事 (8053)",
+    "sector": "商社",
+    "signalType": "BUY",
+    "signalTime": "2026-07-31",
+    "signalPrice": 1670,
+    "snapClose": 1788,
+    "fresh": true,
+    "evalClose": 1709,
+    "changePercent": -4.41834451901566,
+    "correct": false
+   },
+   {
+    "symbol": "9434.T",
+    "name": "ソフトバンク (9434)",
+    "sector": "通信",
+    "signalType": "SELL",
+    "signalTime": "2026-07-17",
+    "signalPrice": 220.5,
+    "snapClose": 230.9,
+    "fresh": false,
+    "evalClose": 233.8,
+    "changePercent": 1.2559549588566503,
+    "correct": false
+   },
+   {
+    "symbol": "9983.T",
+    "name": "ファーストリテイリング (9983)",
+    "sector": "消費・小売",
+    "signalType": "BUY",
+    "signalTime": "2026-08-06",
+    "signalPrice": 78890,
+    "snapClose": 79310,
+    "fresh": true,
+    "evalClose": 73510,
+    "changePercent": -7.313075274240323,
+    "correct": false
+   },
+   {
+    "symbol": "WMT",
+    "name": "ウォルマート (WMT)",
+    "sector": "消費・小売",
+    "signalType": "SELL",
+    "signalTime": "2026-08-03",
+    "signalPrice": 110.71,
+    "snapClose": 111.85,
+    "fresh": true,
+    "evalClose": 103.7,
+    "changePercent": -7.286544479213225,
+    "correct": true
+   },
+   {
+    "symbol": "COST",
+    "name": "コストコ (COST)",
+    "sector": "消費・小売",
+    "signalType": "SELL",
+    "signalTime": "2026-08-07",
+    "signalPrice": 947.82,
+    "snapClose": 947.82,
+    "fresh": true,
+    "evalClose": 947.74,
+    "changePercent": -0.00844042117702105,
+    "correct": true
+   },
+   {
+    "symbol": "6981.T",
+    "name": "村田製作所 (6981)",
+    "sector": "電子部品",
+    "signalType": "BUY",
+    "signalTime": "2026-08-05",
+    "signalPrice": 7829,
+    "snapClose": 7263,
+    "fresh": true,
+    "evalClose": 7091,
+    "changePercent": -2.3681674239295054,
+    "correct": false
+   },
+   {
+    "symbol": "BTC-USD",
+    "name": "ビットコイン (BTC/USD)",
+    "sector": "暗号資産",
+    "signalType": "SELL",
+    "signalTime": "2026-08-01",
+    "signalPrice": 62763.3203,
+    "snapClose": 64859.0391,
+    "fresh": false,
+    "evalClose": 78653.7734,
+    "changePercent": 21.26879227848444,
+    "correct": false
+   },
+   {
+    "symbol": "9519.T",
+    "name": "レノバ (9519)",
+    "sector": "再エネ・太陽光",
+    "signalType": "SELL",
+    "signalTime": "2026-08-07",
+    "signalPrice": 884,
+    "snapClose": 884,
+    "fresh": true,
+    "evalClose": 960,
+    "changePercent": 8.597285067873303,
+    "correct": false
+   }
+  ]
+ }
+}
+</script>
