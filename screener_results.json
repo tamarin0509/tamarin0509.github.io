@@ -1,21 +1,21 @@
 {
-  "updatedAt": "2026-08-21T22:22:57.137Z",
+  "updatedAt": "2026-08-22T21:26:59.255Z",
   "results": [
     {
       "symbol": "^N225",
       "name": "日経平均株価 (Nikkei 225)",
       "type": "index",
       "sector": "指数",
-      "close": 66216.7891,
-      "changePercent": 1.36,
-      "rsi": 45.18,
-      "kairi25": 0.75,
+      "close": 66016.3594,
+      "changePercent": -0.3,
+      "rsi": 45.6,
+      "kairi25": 0.61,
       "bestParams": {
-        "rsiPeriod": 7,
-        "maPeriod": 20,
+        "rsiPeriod": 9,
+        "maPeriod": 60,
         "maMethod": "EMA",
         "offset": -3,
-        "margin": 0.5,
+        "margin": 0.2,
         "nLines": 3,
         "peakMethod": "kairi",
         "swingPeriod": 10,
@@ -25,16 +25,16 @@
       "latestSignal": null,
       "tradeInstruction": null,
       "backtest": {
-        "trades": 12,
-        "wins": 8,
-        "winRatePct": 66.7,
-        "profitFactor": 2.12,
-        "totalReturnPct": 27.06,
-        "buyHoldReturnPct": 74.48,
-        "maxDrawdownPct": 14.32,
-        "expectancyPct": 2.223,
+        "trades": 7,
+        "wins": 6,
+        "winRatePct": 85.7,
+        "profitFactor": 5.63,
+        "totalReturnPct": 33.47,
+        "buyHoldReturnPct": 73.95,
+        "maxDrawdownPct": 7.71,
+        "expectancyPct": 4.325,
         "avgHoldBars": 15,
-        "score": 1.095
+        "score": 1.955
       }
     },
     {
@@ -158,7 +158,7 @@
       "name": "ナスダック総合 (NASDAQ)",
       "type": "index",
       "sector": "指数",
-      "close": 26180.4551,
+      "close": 26180.4609,
       "changePercent": 0.43,
       "rsi": 51.41,
       "kairi25": 0.93,
@@ -194,10 +194,10 @@
       "name": "米ドル / 円 (USD/JPY)",
       "type": "forex",
       "sector": "為替",
-      "close": 158.862,
-      "changePercent": -0.01,
-      "rsi": 42.32,
-      "kairi25": -0.84,
+      "close": 158.94,
+      "changePercent": 0.04,
+      "rsi": 42.48,
+      "kairi25": -0.8,
       "bestParams": {
         "rsiPeriod": 18,
         "maPeriod": 45,
@@ -218,7 +218,7 @@
         "winRatePct": 30,
         "profitFactor": 0.17,
         "totalReturnPct": -10.6,
-        "buyHoldReturnPct": 9.3,
+        "buyHoldReturnPct": 9.35,
         "maxDrawdownPct": 11.43,
         "expectancyPct": -1.097,
         "avgHoldBars": 15,
@@ -348,7 +348,7 @@
       "sector": "為替",
       "close": 0.7175,
       "changePercent": 0.79,
-      "rsi": 76.64,
+      "rsi": 79.91,
       "kairi25": 1.87,
       "bestParams": {
         "rsiPeriod": 7,
@@ -521,7 +521,7 @@
       "sector": "テクノロジー",
       "close": 258.63,
       "changePercent": -0.57,
-      "rsi": 49.67,
+      "rsi": 49.68,
       "kairi25": 0.47,
       "bestParams": {
         "rsiPeriod": 14,
@@ -1171,7 +1171,7 @@
       "sector": "エネルギー",
       "close": 165.11,
       "changePercent": -0.63,
-      "rsi": 63.83,
+      "rsi": 63.82,
       "kairi25": 4.9,
       "bestParams": {
         "rsiPeriod": 25,
@@ -1207,7 +1207,7 @@
       "sector": "エネルギー",
       "close": 205.27,
       "changePercent": -0.24,
-      "rsi": 70.74,
+      "rsi": 70.75,
       "kairi25": 5.19,
       "bestParams": {
         "rsiPeriod": 14,
@@ -2472,7 +2472,7 @@
       "sector": "医薬品",
       "close": 270.24,
       "changePercent": 1.07,
-      "rsi": 60.08,
+      "rsi": 60.07,
       "kairi25": 3.61,
       "bestParams": {
         "rsiPeriod": 25,
@@ -2718,7 +2718,7 @@
       "sector": "通信",
       "close": 49.45,
       "changePercent": 0.53,
-      "rsi": 75.96,
+      "rsi": 75.99,
       "kairi25": 5.23,
       "bestParams": {
         "rsiPeriod": 7,
@@ -3034,10 +3034,10 @@
       "name": "ビットコイン (BTC/USD)",
       "type": "crypto",
       "sector": "暗号資産",
-      "close": 78653.7734,
-      "changePercent": 7.7,
-      "rsi": 73.52,
-      "kairi25": 20.95,
+      "close": 77183.1172,
+      "changePercent": -1.47,
+      "rsi": 73.17,
+      "kairi25": 17.74,
       "bestParams": {
         "rsiPeriod": 25,
         "maPeriod": 30,
@@ -3054,9 +3054,9 @@
         "time": "2026-08-10",
         "type": "SELL",
         "price": 63910.5859,
-        "rsi": 49.31697890744021,
+        "rsi": 49.3169789074403,
         "status": "confirmed",
-        "barsAgo": 11
+        "barsAgo": 12
       },
       "tradeInstruction": {
         "action": "SELL",
@@ -3064,27 +3064,27 @@
         "name": "ビットコイン (BTC/USD)",
         "orderType": "MARKET_OPEN",
         "orderTypeJp": "翌日寄り付き成行売り (MARKET SELL)",
-        "entryPrice": 78653.77,
-        "entryRangeStr": "¥78,654 近辺 (寄り成行)",
-        "stopLoss": 81799.92,
-        "stopLossPct": 4,
+        "entryPrice": 77183.12,
+        "entryRangeStr": "¥77,183 近辺 (寄り成行)",
+        "stopLoss": 80655.67,
+        "stopLossPct": 4.5,
         "takeProfit": 61604.31,
-        "takeProfitPct": -21.68,
-        "riskRewardRatio": 5.4,
+        "takeProfitPct": -20.18,
+        "riskRewardRatio": 4.5,
         "maxHoldBars": 15,
-        "executionGuide": "【スマホ操作】証券アプリで「ビットコイン (BTC/USD) 成行売り / 逆指値 81,800円 / 返済利確 61,604円」をセット！"
+        "executionGuide": "【スマホ操作】証券アプリで「ビットコイン (BTC/USD) 成行売り / 逆指値 80,656円 / 返済利確 61,604円」をセット！"
       },
       "backtest": {
-        "trades": 18,
-        "wins": 8,
-        "winRatePct": 44.4,
-        "profitFactor": 0.78,
-        "totalReturnPct": -26.42,
-        "buyHoldReturnPct": 28.57,
+        "trades": 16,
+        "wins": 7,
+        "winRatePct": 43.8,
+        "profitFactor": 0.94,
+        "totalReturnPct": -11.38,
+        "buyHoldReturnPct": 27.82,
         "maxDrawdownPct": 36.16,
-        "expectancyPct": -1.059,
-        "avgHoldBars": 14,
-        "score": -0.41
+        "expectancyPct": -0.247,
+        "avgHoldBars": 13.9,
+        "score": -0.09
       }
     },
     {
@@ -3092,10 +3092,10 @@
       "name": "イーサリアム (ETH/USD)",
       "type": "crypto",
       "sector": "暗号資産",
-      "close": 2537.27,
-      "changePercent": 9.06,
-      "rsi": 90.67,
-      "kairi25": 30.25,
+      "close": 2420.6899,
+      "changePercent": -3.76,
+      "rsi": 86.06,
+      "kairi25": 23.06,
       "bestParams": {
         "rsiPeriod": 11,
         "maPeriod": 45,
@@ -3114,7 +3114,7 @@
         "price": 1883.9913,
         "rsi": 49.66636334452482,
         "status": "confirmed",
-        "barsAgo": 8
+        "barsAgo": 9
       },
       "tradeInstruction": {
         "action": "SELL",
@@ -3122,27 +3122,27 @@
         "name": "イーサリアム (ETH/USD)",
         "orderType": "MARKET_OPEN",
         "orderTypeJp": "翌日寄り付き成行売り (MARKET SELL)",
-        "entryPrice": 2537.27,
-        "entryRangeStr": "¥2,537 近辺 (寄り成行)",
-        "stopLoss": 2638.76,
-        "stopLossPct": 4,
+        "entryPrice": 2420.69,
+        "entryRangeStr": "¥2,421 近辺 (寄り成行)",
+        "stopLoss": 2584.07,
+        "stopLossPct": 6.75,
         "takeProfit": 1809.42,
-        "takeProfitPct": -28.69,
-        "riskRewardRatio": 7.2,
+        "takeProfitPct": -25.25,
+        "riskRewardRatio": 3.7,
         "maxHoldBars": 15,
-        "executionGuide": "【スマホ操作】証券アプリで「イーサリアム (ETH/USD) 成行売り / 逆指値 2,639円 / 返済利確 1,809円」をセット！"
+        "executionGuide": "【スマホ操作】証券アプリで「イーサリアム (ETH/USD) 成行売り / 逆指値 2,584円 / 返済利確 1,809円」をセット！"
       },
       "backtest": {
         "trades": 17,
         "wins": 9,
         "winRatePct": 52.9,
-        "profitFactor": 1.15,
-        "totalReturnPct": -6.92,
-        "buyHoldReturnPct": -3.58,
-        "maxDrawdownPct": 52.01,
-        "expectancyPct": 0.853,
-        "avgHoldBars": 13.9,
-        "score": 0.255
+        "profitFactor": 1.23,
+        "totalReturnPct": 1.95,
+        "buyHoldReturnPct": -7.71,
+        "maxDrawdownPct": 51.15,
+        "expectancyPct": 1.218,
+        "avgHoldBars": 14,
+        "score": 0.369
       }
     },
     {
@@ -3282,7 +3282,7 @@
       "sector": "再エネ・太陽光",
       "close": 38.61,
       "changePercent": 0.65,
-      "rsi": 43.86,
+      "rsi": 43.87,
       "kairi25": -1.34,
       "bestParams": {
         "rsiPeriod": 18,
@@ -3376,7 +3376,7 @@
       "sector": "再エネ・太陽光",
       "close": 83.65,
       "changePercent": -1.62,
-      "rsi": 30.48,
+      "rsi": 30.37,
       "kairi25": -3.66,
       "bestParams": {
         "rsiPeriod": 9,
