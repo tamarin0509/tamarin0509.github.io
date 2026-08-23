@@ -893,6 +893,29 @@ function calculateRSI(candles, period) {
     return rsi;
 }
 
+// ATR（Average True Range）— 損切り価格の算出に使用（Wilderのスムージング）
+function calculateATR(candles, period) {
+    const n = candles.length;
+    const tr = new Array(n).fill(0);
+    for (let i = 0; i < n; i++) {
+        if (i === 0) { tr[i] = candles[i].high - candles[i].low; continue; }
+        tr[i] = Math.max(
+            candles[i].high - candles[i].low,
+            Math.abs(candles[i].high - candles[i - 1].close),
+            Math.abs(candles[i].low - candles[i - 1].close)
+        );
+    }
+    const atr = new Array(n).fill(null);
+    if (n < period) return atr;
+    let sum = 0;
+    for (let i = 0; i < period; i++) sum += tr[i];
+    atr[period - 1] = sum / period;
+    for (let i = period; i < n; i++) {
+        atr[i] = (atr[i - 1] * (period - 1) + tr[i]) / period;
+    }
+    return atr;
+}
+
 // Moving Average (SMA / EMA)
 function calculateMA(data, period, method) {
     const ma = new Array(data.length).fill(null);
@@ -2658,12 +2681,18 @@ function renderOrbitMap(data) {
                 sigLine = `<div class="tt-row"><span class="heat-sig ${cls}">${sig.type === 'BUY' ? '▲' : '▼'} ${sig.type}</span> <span>${sig.barsAgo}日前 (${sig.time})</span></div>`;
             }
             const chgSign = itemData.changePercent > 0 ? '+' : '';
+            let btLine = '';
+            if (itemData.backtest && itemData.backtest.trades > 0) {
+                const bt = itemData.backtest;
+                btLine = `<div class="tt-row"><span>実戦勝率</span><strong class="${bt.winRate >= 50 ? 'tt-up' : 'tt-down'}">${bt.winRate}% <small style="font-weight:400;color:var(--text-muted);">(${bt.trades}回)</small></strong></div>`;
+            }
             tooltip.innerHTML = `
                 <div class="tt-name">${itemData.name}</div>
                 <div class="tt-row"><span>RSI</span><strong style="color:${rsiToHeatColor(itemData.rsi)}; filter: brightness(1.7);">${itemData.rsi.toFixed(1)}</strong></div>
                 <div class="tt-row"><span>終値</span><strong>${itemData.close.toLocaleString(undefined, { maximumFractionDigits: 4 })}</strong></div>
                 <div class="tt-row"><span>前日比</span><strong class="${itemData.changePercent >= 0 ? 'tt-up' : 'tt-down'}">${chgSign}${itemData.changePercent}%</strong></div>
                 ${sigLine}
+                ${btLine}
                 <div class="tt-hint">クリック：アプリ内分析 / シンボル名クリック：別窓表示</div>
             `;
             tooltip.hidden = false;
@@ -2751,6 +2780,15 @@ function renderSectorHeatmap(data) {
             if (item.changePercent > 0) { changeClass = 'up'; changeSign = '+'; }
             else if (item.changePercent < 0) { changeClass = 'down'; }
 
+            // 実戦成績（反対シグナル/損切りで決済した過去のバックテスト勝率）。取引回数が少ない銘柄は参考程度なので薄字で
+            let winRateBadge = '';
+            if (item.backtest && item.backtest.trades > 0) {
+                const wr = item.backtest.winRate;
+                const reliable = item.backtest.trades >= 5;
+                const wrClass = wr >= 50 ? 'up' : 'down';
+                winRateBadge = `<div class="heat-winrate" style="opacity:${reliable ? 1 : 0.55};">勝率 <strong class="${wrClass}">${wr}%</strong> <small>(${item.backtest.trades}回)</small></div>`;
+            }
+
             return `
                 <div class="heat-tile" data-symbol="${item.symbol}" title="${item.name}" style="background:${rsiToHeatColor(item.rsi)};">
                     <div class="heat-tile-head">
@@ -2762,6 +2800,7 @@ function renderSectorHeatmap(data) {
                     </div>
                     <div class="heat-rsi">${item.rsi.toFixed(1)}</div>
                     <div class="heat-change ${changeClass}">${changeSign}${item.changePercent}%</div>
+                    ${winRateBadge}
                 </div>
             `;
         }).join('');
@@ -3049,6 +3088,12 @@ function setupReplayControls() {
     dateInput.addEventListener('change', () => {
         if (state.candles) replayReset();
     });
+    const stopMultInput = document.getElementById('replay-stop-atr-mult');
+    if (stopMultInput) {
+        stopMultInput.addEventListener('change', () => {
+            if (state.candles) replayReset();
+        });
+    }
 }
 
 function ensureReplayCharts() {
@@ -3157,6 +3202,13 @@ function replayGetSignals() {
     return signals;
 }
 
+// エントリー時に確定させる損切りのATR倍率（0 = 損切りなし、逆シグナルのみで決済）
+function replayGetStopMult() {
+    const el = document.getElementById('replay-stop-atr-mult');
+    const v = el ? parseFloat(el.value) : 0;
+    return isNaN(v) || v < 0 ? 0 : v;
+}
+
 // エンジンが最新データで準備できているか確認し、必要なら（再）構築
 function replayEnsureReady(alertIfNoData) {
     if (!state.candles || state.candles.length < 80) {
@@ -3166,14 +3218,17 @@ function replayEnsureReady(alertIfNoData) {
     ensureReplayCharts();
     const key = replayDataKey();
     const dateVal = document.getElementById('replay-start-date').value;
-    if (!REPLAY.engine || REPLAY.engine.key !== key || REPLAY.engine.startDate !== dateVal) {
+    const stopMult = replayGetStopMult();
+    if (!REPLAY.engine || REPLAY.engine.key !== key || REPLAY.engine.startDate !== dateVal || REPLAY.engine.stopMult !== stopMult) {
         replayReset();
     }
     return !!REPLAY.engine;
 }
 
 // タイムライン構築: 各営業日のイベント（エントリー/決済）と日次評価損益を事前計算
-function buildReplayTimeline(candles, signals, startIdx) {
+// stopOpts: { atrMultiplier } — エントリー時点でATR×倍率の損切り価格を確定し、
+// 逆シグナル待ちとは独立に、踏み上げ等のトレンド逆行を早期に切る（その場の判断を不要にする）
+function buildReplayTimeline(candles, signals, startIdx, stopOpts) {
     const N = candles.length;
     const events = new Map();
     const getEv = (i) => {
@@ -3185,31 +3240,47 @@ function buildReplayTimeline(candles, signals, startIdx) {
     const sigByIdx = new Map();
     signals.forEach(s => { if (s.index >= startIdx) sigByIdx.set(s.index, s); });
 
+    const atrMult = stopOpts && stopOpts.atrMultiplier > 0 ? stopOpts.atrMultiplier : 0;
+    const atr = atrMult > 0 ? calculateATR(candles, stopOpts.atrPeriod || 14) : null;
+
     let pos = null;
     let closedEq = 100;
 
+    const closePosition = (t, exitPrice, reason) => {
+        const ret = pos.dir * (exitPrice - pos.entryPrice) / pos.entryPrice;
+        closedEq *= (1 + ret);
+        const trade = {
+            dir: pos.dir,
+            entryIdx: pos.entryIdx, entryTime: candles[pos.entryIdx].time, entryPrice: pos.entryPrice,
+            exitIdx: t, exitTime: candles[t].time, exitPrice,
+            returnPct: ret * 100, cumEq: closedEq, reason
+        };
+        trades.push(trade);
+        getEv(t).exit = trade;
+        pos = null;
+    };
+
     for (let t = startIdx; t < N; t++) {
+        // 0. 損切り判定（シグナルより先に判定。エントリー当日は対象外）
+        if (pos && t > pos.entryIdx && pos.stopPrice != null) {
+            const hit = pos.dir === 1 ? candles[t].low <= pos.stopPrice : candles[t].high >= pos.stopPrice;
+            if (hit) closePosition(t, pos.stopPrice, 'stop');
+        }
+
         const sig = sigByIdx.get(t);
         if (sig) {
             const dir = sig.type === 'BUY' ? 1 : -1;
             if (pos && pos.dir !== dir) {
                 // 逆シグナルで決済
-                const exitPrice = candles[t].close;
-                const ret = pos.dir * (exitPrice - pos.entryPrice) / pos.entryPrice;
-                closedEq *= (1 + ret);
-                const trade = {
-                    dir: pos.dir,
-                    entryIdx: pos.entryIdx, entryTime: candles[pos.entryIdx].time, entryPrice: pos.entryPrice,
-                    exitIdx: t, exitTime: candles[t].time, exitPrice,
-                    returnPct: ret * 100, cumEq: closedEq
-                };
-                trades.push(trade);
-                getEv(t).exit = trade;
-                pos = null;
+                closePosition(t, candles[t].close, 'signal');
             }
             if (!pos && !getEv(t).entry) {
-                // 新規エントリー（ドテン含む）
-                pos = { dir, entryIdx: t, entryPrice: candles[t].close };
+                // 新規エントリー（ドテン含む）。ATR設定があれば損切り価格を同時に確定
+                const entryPrice = candles[t].close;
+                pos = { dir, entryIdx: t, entryPrice };
+                if (atr && atr[t] != null) {
+                    pos.stopPrice = dir === 1 ? entryPrice - atrMult * atr[t] : entryPrice + atrMult * atr[t];
+                }
                 getEv(t).entry = { dir, time: candles[t].time, price: pos.entryPrice, type: sig.type };
             }
         }
@@ -3244,10 +3315,12 @@ function replayReset() {
     if (startIdx < minIdx) startIdx = minIdx;
 
     const signals = replayGetSignals();
-    const timeline = buildReplayTimeline(candles, signals, startIdx);
+    const stopMult = replayGetStopMult();
+    const timeline = buildReplayTimeline(candles, signals, startIdx, { atrMultiplier: stopMult });
     REPLAY.engine = {
         key: replayDataKey(),
         startDate: dateInput.value,
+        stopMult,
         startIdx,
         events: timeline.events,
         equity: timeline.equity,
@@ -3278,7 +3351,7 @@ function replayReset() {
 
     // トレード履歴テーブルをクリア
     const tbody = document.querySelector('#replay-trades-table tbody');
-    tbody.innerHTML = '<tr><td colspan="8" class="no-data">「再生」を押すとバックテストが始まります。</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="9" class="no-data">「再生」を押すとバックテストが始まります。</td></tr>';
 
     // 表示範囲を開始日付近へ
     // （setData直後はチャート内部のスクロール処理と競合するため、次フレームでも再適用する）
@@ -3404,12 +3477,13 @@ function replayHandleExit(trade) {
         try { REPLAY.series.candles.removePriceLine(REPLAY.entryPriceLine); } catch (e) {}
         REPLAY.entryPriceLine = null;
     }
+    const isStop = trade.reason === 'stop';
     REPLAY.markers.push({
         time: trade.exitTime,
         position: trade.dir === 1 ? 'aboveBar' : 'belowBar',
-        color: '#f59e0b',
+        color: isStop ? '#ef4444' : '#f59e0b',
         shape: 'circle',
-        text: '決済',
+        text: isStop ? '損切' : '決済',
     });
 
     // エントリーと決済を結ぶライン（緑=利益 / 赤=損失）
@@ -3442,6 +3516,7 @@ function replayHandleExit(trade) {
         '<td>' + trade.entryPrice.toLocaleString() + '</td>' +
         '<td>' + trade.exitTime + '</td>' +
         '<td>' + trade.exitPrice.toLocaleString() + '</td>' +
+        '<td>' + (isStop ? '<span style="color:#ef4444;">損切り</span>' : '<span style="color:#f59e0b;">シグナル</span>') + '</td>' +
         '<td style="color:' + plColor + ';font-weight:600;">' + fmtPct(trade.returnPct) + '</td>' +
         '<td style="color:' + (cumPct >= 0 ? '#10b981' : '#f43f5e') + ';">' + fmtPct(cumPct) + '</td>';
     tbody.insertBefore(row, tbody.firstChild);

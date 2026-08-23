@@ -927,13 +927,15 @@
                                 <span id="replay-asset-name" class="badge-symbol" style="font-size: 0.75rem;">---</span>
                             </h2>
                             <p style="font-size: 0.75rem; color: #64748b; margin-top: 4px;">
-                                「個別チャート分析」タブで選択中の銘柄・パラメータを使用します。サイン発動でエントリー、逆サインで決済（ドテン）します。
+                                「個別チャート分析」タブで選択中の銘柄・パラメータを使用します。サイン発動でエントリー、逆サインまたは損切りで決済します。
                             </p>
                         </div>
                         <div style="flex: 1;"></div>
                         <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem;">
                             <label style="font-size: 0.75rem; color: #94a3b8;">開始日</label>
                             <input type="date" id="replay-start-date" class="form-control" style="width: auto; padding: 6px 10px; font-size: 0.85rem;">
+                            <label style="font-size: 0.75rem; color: #94a3b8;" title="エントリー時点でATR×倍率の損切り価格を確定します。0で無効（逆サインのみで決済）">損切りATR倍率</label>
+                            <input type="number" id="replay-stop-atr-mult" class="form-control" value="2.5" min="0" max="10" step="0.1" style="width: 70px; padding: 6px 10px; font-size: 0.85rem;">
                             <label style="font-size: 0.75rem; color: #94a3b8;">速度</label>
                             <select id="replay-speed" class="form-control" style="width: auto; padding: 6px 10px; font-size: 0.85rem;">
                                 <option value="400">ゆっくり</option>
@@ -1009,12 +1011,13 @@
                                     <th>エントリー価格</th>
                                     <th>決済日</th>
                                     <th>決済価格</th>
+                                    <th>決済理由</th>
                                     <th>損益率</th>
                                     <th>累積損益</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr><td colspan="8" class="no-data">「再生」を押すとバックテストが始まります。</td></tr>
+                                <tr><td colspan="9" class="no-data">「再生」を押すとバックテストが始まります。</td></tr>
                             </tbody>
                         </table>
                     </div>
