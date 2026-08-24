@@ -25,13 +25,16 @@ jobs:
       - name: Run Screener Script
         run: node scripts/screener.js
 
+      - name: Run Daily Watchlist Analyzer
+        run: node scripts/daily_analyzer.js
+
       - name: Commit and Push results
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          
-          # 差分がある場合のみコミット＆プッシュ (スクリーナー結果＋ローソク足データ)
-          git add screener_results.json data
+
+          # 差分がある場合のみコミット＆プッシュ (スクリーナー結果＋日足ウォッチリスト＋ローソク足データ)
+          git add screener_results.json daily_watchlist.json data
           if ! git diff --cached --quiet; then
             git commit -m "chore: update screener results [skip ci]"
             git push origin main

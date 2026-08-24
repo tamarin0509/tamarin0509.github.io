@@ -108,6 +108,7 @@ function initApp() {
     initReflectionJournal();
     loadScreenerData();
     loadWeeklyWatchlistData();
+    loadDailyWatchlistData();
     loadData();
 }
 
@@ -3956,6 +3957,120 @@ function renderWeeklyWatchlist() {
             <td>${escapeHtml(a.sector)}</td>
             <td style="color:${kairiColor}; font-weight:600;">${a.weeklyKairi25 > 0 ? '+' : ''}${a.weeklyKairi25.toFixed(1)}%</td>
             <td>${a.weeklyRsi.toFixed(1)}</td>
+            <td style="font-size:0.85rem; max-width:200px; white-space:normal;">${escapeHtml(a.triggerDetails)}</td>
+            <td style="font-size:0.82rem; max-width:340px; white-space:normal;">${fullNote}</td>
+        </tr>`;
+    }).join('');
+}
+
+// ===== Daily Watchlist Tab Integration =====
+const watchlistDailyState = {
+    data: null,
+    priorityFilter: 'HIGH',
+    actionFilter: 'ALL'
+};
+
+async function loadDailyWatchlistData() {
+    try {
+        const resp = await fetch('daily_watchlist.json');
+        if (!resp.ok) return;
+        watchlistDailyState.data = await resp.json();
+        renderDailyWatchlist();
+        setupDailyWatchlistFilters();
+    } catch (e) {
+        console.warn('Daily watchlist data could not be loaded:', e);
+    }
+}
+
+function setupDailyWatchlistFilters() {
+    const pFilter = document.getElementById('watchlist-daily-priority-filter');
+    const aFilter = document.getElementById('watchlist-daily-action-filter');
+    if (pFilter) {
+        pFilter.addEventListener('change', (e) => {
+            watchlistDailyState.priorityFilter = e.target.value;
+            renderDailyWatchlist();
+        });
+    }
+    if (aFilter) {
+        aFilter.addEventListener('change', (e) => {
+            watchlistDailyState.actionFilter = e.target.value;
+            renderDailyWatchlist();
+        });
+    }
+}
+
+function renderDailyWatchlist() {
+    if (!watchlistDailyState.data) return;
+    const { generatedAt, tradingDay, alerts, marketSummary } = watchlistDailyState.data;
+
+    const updatedEl = document.getElementById('watchlist-daily-updated-at');
+    if (updatedEl) {
+        const dateStr = tradingDay || (generatedAt ? generatedAt.slice(0, 10) : '');
+        updatedEl.textContent = `最終更新: ${dateStr} 引け時点`;
+    }
+
+    const marketGrid = document.getElementById('watchlist-daily-market-grid');
+    if (marketGrid && marketSummary) {
+        const m = marketSummary;
+        marketGrid.innerHTML = `
+            <div class="stat-card card-glass">
+                <span class="stat-label">🇯🇵 日経平均 (日足)</span>
+                <div class="stat-value" style="font-size:1.3rem;">${m.nikkei ? m.nikkei.close.toLocaleString() : '---'}</div>
+                <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">RSI: ${m.nikkei ? m.nikkei.dailyRsi : '--'} (${m.nikkei ? m.nikkei.trend : ''})</div>
+            </div>
+            <div class="stat-card card-glass">
+                <span class="stat-label">🇺🇸 S&P 500 (日足)</span>
+                <div class="stat-value" style="font-size:1.3rem;">${m.sp500 ? m.sp500.close.toLocaleString() : '---'}</div>
+                <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">RSI: ${m.sp500 ? m.sp500.dailyRsi : '--'} (${m.sp500 ? m.sp500.trend : ''})</div>
+            </div>
+            <div class="stat-card card-glass">
+                <span class="stat-label">💱 ドル円 (日足)</span>
+                <div class="stat-value" style="font-size:1.3rem;">${m.usdjpy ? m.usdjpy.close : '---'}</div>
+                <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">RSI: ${m.usdjpy ? m.usdjpy.dailyRsi : '--'} (${m.usdjpy ? m.usdjpy.trend : ''})</div>
+            </div>
+        `;
+    }
+
+    const tbody = document.getElementById('watchlist-daily-tbody');
+    if (!tbody) return;
+
+    let filtered = alerts || [];
+    if (watchlistDailyState.priorityFilter === 'HIGH') {
+        filtered = filtered.filter(a => a.priority === 'HIGH');
+    } else if (watchlistDailyState.priorityFilter === 'MEDIUM') {
+        filtered = filtered.filter(a => a.priority === 'HIGH' || a.priority === 'MEDIUM');
+    }
+    if (watchlistDailyState.actionFilter !== 'ALL') {
+        filtered = filtered.filter(a => a.action === watchlistDailyState.actionFilter);
+    }
+
+    if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="10" class="no-data">条件に一致するウォッチリスト銘柄はありません。</td></tr>`;
+        return;
+    }
+
+    tbody.innerHTML = filtered.map(a => {
+        const badgeActionClass = a.action === 'BUY' ? 'badge-buy' : a.action === 'SELL' ? 'badge-sell' : 'badge-neutral';
+        const priorityStyle = a.priority === 'HIGH' ? 'style="color:#f59e0b; font-weight:bold;"' : 'style="color:#a5b4fc;"';
+        const kairiColor = a.dailyKairi25 > 0 ? '#ef4444' : a.dailyKairi25 < 0 ? '#10b981' : 'inherit';
+
+        const crossText = a.maCross === 'golden' ? '<span style="color:#10b981;">GC ▲</span>' : a.maCross === 'dead' ? '<span style="color:#ef4444;">DC ▼</span>' : '<span style="color:var(--text-muted);">--</span>';
+        const pctB = a.bollinger && a.bollinger.percentB != null ? a.bollinger.percentB : null;
+        const bbColor = pctB == null ? 'inherit' : pctB >= 1 ? '#ef4444' : pctB <= 0 ? '#10b981' : 'inherit';
+        const bbText = pctB == null ? '--' : `${(pctB * 100).toFixed(0)}%`;
+
+        const tradePlanText = a.tradePlan ? `<div style="font-weight:600; color:${a.action === 'BUY' ? '#10b981' : '#ef4444'}; margin-bottom:3px; line-height:1.3;">${escapeHtml(a.tradePlan.executionNote)}</div>` : '';
+        const fullNote = tradePlanText + `<div style="color:#94a3b8; font-size:0.8rem;">💡 ${escapeHtml(a.note)}</div>`;
+
+        return `<tr style="cursor:pointer;" onclick="jumpToAnalysis({ symbol: '${a.symbol}', name: '${a.name.replace(/'/g, "\\'")}', bestParams: {} })">
+            <td class="name"><strong>${escapeHtml(a.name)}</strong></td>
+            <td><span class="badge ${badgeActionClass}">${a.action}</span></td>
+            <td ${priorityStyle}>${a.priority === 'HIGH' ? '⭐ HIGH' : a.priority}</td>
+            <td>${escapeHtml(a.sector)}</td>
+            <td style="color:${kairiColor}; font-weight:600;">${a.dailyKairi25 > 0 ? '+' : ''}${a.dailyKairi25.toFixed(1)}%</td>
+            <td>${a.dailyRsi.toFixed(1)}</td>
+            <td>${crossText}</td>
+            <td style="color:${bbColor}; font-weight:600;">${bbText}</td>
             <td style="font-size:0.85rem; max-width:200px; white-space:normal;">${escapeHtml(a.triggerDetails)}</td>
             <td style="font-size:0.82rem; max-width:340px; white-space:normal;">${fullNote}</td>
         </tr>`;

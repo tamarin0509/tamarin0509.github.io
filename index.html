@@ -314,6 +314,9 @@
                 <button type="button" class="tab-btn" data-tab="tab-watchlist" style="border-bottom-color: #10b981;">
                     <i data-lucide="list-checks" style="color: #10b981;"></i> 週足ウォッチリスト
                 </button>
+                <button type="button" class="tab-btn" data-tab="tab-watchlist-daily" style="border-bottom-color: #38bdf8;">
+                    <i data-lucide="calendar-check" style="color: #38bdf8;"></i> 日足ウォッチリスト
+                </button>
                 <button type="button" class="tab-btn" data-tab="tab-reflection" style="border-bottom-color: #6366f1;">
                     <i data-lucide="notebook-pen" style="color: #a5b4fc;"></i> トレード内省ノート
                 </button>
@@ -606,6 +609,73 @@
                             </thead>
                             <tbody id="watchlist-tbody">
                                 <tr><td colspan="8" class="no-data">週足ウォッチリストを読み込んでいます...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Daily Watchlist (日足ウォッチリスト) -->
+            <div id="tab-watchlist-daily" class="tab-content">
+                <div class="screener-header card-glass" style="padding: 1.25rem 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; border-left: 4px solid #38bdf8;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                        <div>
+                            <h2 style="display: flex; align-items: center; gap: 8px; font-size: 1.35rem; color: #f1f5f9; margin: 0;">
+                                <i data-lucide="calendar-check" style="color: #38bdf8;"></i> 日足ウォッチリスト (毎営業日更新)
+                            </h2>
+                            <p style="margin: 6px 0 0 0; font-size: 0.85rem; color: var(--text-muted);">
+                                スクリーナー更新のタイミングで毎営業日自動分析。日足RSIブレイクアウト・25日移動平均線乖離率（±2.5%）・移動平均クロス(5/25日)・ボリンジャーバンド(20日, ±2σ)を掛け合わせ、注目銘柄をランク付けします。
+                            </p>
+                        </div>
+                        <div style="font-size: 0.85rem; color: var(--text-muted);" id="watchlist-daily-updated-at">
+                            最終更新: 読み込み中...
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Market Summary Cards -->
+                <div class="stats-grid" id="watchlist-daily-market-grid" style="margin-bottom: 1.5rem;">
+                    <!-- JavaScript にて動的描画 -->
+                </div>
+
+                <!-- Watchlist Filter & Table Container -->
+                <div class="screener-table-container card-glass" style="padding: 1.25rem; border-radius: 12px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 10px;">
+                        <h3 style="font-size: 1.1rem; font-weight: 600; color: #f1f5f9; display: flex; align-items: center; gap: 6px; margin: 0;">
+                            <i data-lucide="star" style="color: #f59e0b; width: 18px; height: 18px;"></i> 注目・警戒銘柄一覧（日足）
+                        </h3>
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <select id="watchlist-daily-priority-filter" class="form-control" style="font-size: 0.8rem; padding: 4px 8px; min-width: 140px;">
+                                <option value="ALL">すべての優先度 (ALL)</option>
+                                <option value="HIGH" selected>⭐ 最優先 (HIGHのみ)</option>
+                                <option value="MEDIUM">⚠️ 注目 (MEDIUM以上)</option>
+                            </select>
+                            <select id="watchlist-daily-action-filter" class="form-control" style="font-size: 0.8rem; padding: 4px 8px; min-width: 140px;">
+                                <option value="ALL" selected>すべての売買 (BUY &amp; SELL)</option>
+                                <option value="BUY">🟢 BUY (買い注目)</option>
+                                <option value="SELL">🔴 SELL (売り警戒)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="table-wrapper">
+                        <table id="watchlist-daily-table">
+                            <thead>
+                                <tr>
+                                    <th class="name">銘柄名</th>
+                                    <th>売買</th>
+                                    <th>優先度</th>
+                                    <th>セクター</th>
+                                    <th>25日乖離率</th>
+                                    <th>日足RSI</th>
+                                    <th>MAクロス</th>
+                                    <th>BB %B</th>
+                                    <th>トリガー詳細</th>
+                                    <th>トレードメモ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="watchlist-daily-tbody">
+                                <tr><td colspan="10" class="no-data">日足ウォッチリストを読み込んでいます...</td></tr>
                             </tbody>
                         </table>
                     </div>
