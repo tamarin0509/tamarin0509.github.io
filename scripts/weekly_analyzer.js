@@ -20,7 +20,7 @@ const CONFIG = {
     rsiPeriod: 14,
     kairiPeriod: 25,
     kairiBuyThreshold: -5.0,    // 25週乖離率 <= -5.0% で逆張り買い圏
-    kairiSellThreshold: +5.0,   // 25週乖離率 >= +5.0% で過熱・逆張り売り圏
+    kairiSellThreshold: +15.0,  // 25週乖離率 >= +15.0% で過熱・逆張り売り圏（健全な上昇トレンドでの誤検知を防止）
     rsiOversold: 25.0,
     rsiOverbought: 75.0,
     freshWeeklyBars: 2,         // 週足シグナルは直近2週以内を検出
@@ -520,9 +520,16 @@ function runAnalyzer() {
             if (triggers.length >= 2 || triggers.includes('T1')) priority = 'HIGH';
             else priority = 'MEDIUM';
         } else if (isSellCandidate && !isBuyCandidate) {
-            action = 'SELL';
-            if (triggers.length >= 2 || triggers.includes('T2')) priority = 'HIGH';
-            else priority = 'MEDIUM';
+            // トレンドフィルター: 25週移動平均線乖離率がプラスかつ週足RSI>=50の銘柄では、
+            // 押し目買いによる踏み上げリスクが高いため、安易な空売りSELLシグナルを抑制し「NEUTRAL (利確・様子見)」とする
+            if (currentWKairi > 0 && currentWRsi >= 50) {
+                action = 'NEUTRAL';
+                priority = 'LOW';
+            } else {
+                action = 'SELL';
+                if (triggers.length >= 2 || triggers.includes('T2')) priority = 'HIGH';
+                else priority = 'MEDIUM';
+            }
         } else if (isBuyCandidate && isSellCandidate) {
             action = 'NEUTRAL';
             priority = 'MEDIUM';
@@ -531,7 +538,8 @@ function runAnalyzer() {
             priority = 'LOW';
         }
 
-        if (priority !== 'NONE') {
+        // 主要指数はマクロサマリー専用とし、個別売買推奨アラートからは除外
+        if (priority !== 'NONE' && info.type !== 'index' && info.sector !== '指数') {
             const triggerDetailsParts = [];
             if (triggers.includes('T1')) triggerDetailsParts.push('週足RSIブレイク(BUY)');
             if (triggers.includes('T2')) triggerDetailsParts.push('週足RSI下抜け(SELL)');

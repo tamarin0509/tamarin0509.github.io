@@ -77,8 +77,9 @@ function getLatestClose(symbol, resultsMap) {
 // ---------- スナップショット（今週の予測を保存） ----------
 
 function createSnapshot(screener, today) {
+    // 指数は売買シグナル評価から除外（環境認識専用）、直近5営業日以内の新鮮なシグナルのみを週次レポート対象とする
     const entries = screener.results
-        .filter(r => r.latestSignal)
+        .filter(r => r.latestSignal && r.type !== 'index' && r.sector !== '指数' && r.latestSignal.barsAgo <= FRESH_BARS)
         .map(r => ({
             symbol: r.symbol,
             name: r.name,
@@ -136,7 +137,9 @@ function evaluateSnapshot(snapshotDate, today, resultsMap) {
     const snapshot = JSON.parse(fs.readFileSync(path.join(WEEKLY_DIR, `snapshot-${snapshotDate}.json`), 'utf8'));
 
     const evaluations = [];
-    for (const e of snapshot.entries) {
+    // 指数は売買評価から除外
+    const targetEntries = (snapshot.entries || []).filter(e => e.type !== 'index' && e.sector !== '指数');
+    for (const e of targetEntries) {
         const latest = getLatestClose(e.symbol, resultsMap);
         if (!latest || !e.close) {
             evaluations.push({ ...baseEval(e), evalClose: null, changePercent: null, correct: null });

@@ -1013,24 +1013,39 @@ async function runScreener() {
             compared.replayOnly.forEach(s => allSignals.push({ ...s, status: 'replayOnly' }));
             allSignals.sort((a, b) => new Date(a.time) - new Date(b.time));
             
+            const latestCandle = candles[candles.length - 1];
+            const prevCandle = candles[candles.length - 2];
+            const changePercent = prevCandle ? ((latestCandle.close - prevCandle.close) / prevCandle.close) * 100 : 0;
+
+            const kairiArr = calculateKairi(candles, 25);
+            const latestKairi = kairiArr[kairiArr.length - 1];
+
             // Find the active/latest signal
             // An active signal is defined as a confirmed [確] or replay-only [実] signal that occurred in the last 15 bars
+            // ※ 主要指数(index)は売買シグナルを出さず環境認識（地合い把握）専用とする
             let latestSig = null;
-            if (allSignals.length > 0) {
+            if (item.type !== 'index' && allSignals.length > 0) {
                 const last = allSignals[allSignals.length - 1];
                 const lastIdx = candles.findIndex(c => c.time === last.time);
                 const barsAgo = candles.length - 1 - lastIdx;
                 
                 // We show signals from last 15 days as "recent"
                 if (barsAgo <= 15) {
-                    latestSig = {
-                        time: last.time,
-                        type: last.type,
-                        price: last.price,
-                        rsi: last.rsi,
-                        status: last.status,
-                        barsAgo: barsAgo
-                    };
+                    // トレンドフィルター: 25日移動平均線乖離率がプラス(>0)の上昇相場では、
+                    // 逆張りSELLシグナル（浅い押し目でのRSI支持線割れダマシ）を遮断して勝率低下を防止
+                    const isUptrendSell = last.type === 'SELL' && latestKairi != null && latestKairi > 0;
+                    if (!isUptrendSell) {
+                        latestSig = {
+                            time: last.time,
+                            type: last.type,
+                            price: last.price,
+                            rsi: last.rsi,
+                            status: last.status,
+                            barsAgo: barsAgo
+                        };
+                    } else {
+                        console.log(`[Trend Filter] Suppressed SELL signal for ${item.symbol} due to positive 25-day kairi (+${latestKairi.toFixed(2)}%)`);
+                    }
                 }
             }
             
@@ -1043,7 +1058,9 @@ async function runScreener() {
                 costPct: 0.1
             });
             const m = simulation.metrics;
-            const score = computeBacktestScore(m);
+            // 指数の場合は売買推奨ランキングに掲載しないためスコアをnullにする
+            const rawScore = computeBacktestScore(m);
+            const score = item.type === 'index' ? null : rawScore;
             const backtest = {
                 trades: m.trades,
                 wins: m.wins,
@@ -1056,13 +1073,6 @@ async function runScreener() {
                 avgHoldBars: parseFloat(m.avgHoldBars.toFixed(1)),
                 score: score === null ? null : parseFloat(score.toFixed(3))
             };
-
-            const latestCandle = candles[candles.length - 1];
-            const prevCandle = candles[candles.length - 2];
-            const changePercent = prevCandle ? ((latestCandle.close - prevCandle.close) / prevCandle.close) * 100 : 0;
-
-            const kairiArr = calculateKairi(candles, 25);
-            const latestKairi = kairiArr[kairiArr.length - 1];
 
             const { generateTradeInstruction } = require('./trade_instruction_generator');
             let tradeInst = null;
