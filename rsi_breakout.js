@@ -95,6 +95,42 @@ const PRESETS = {
     }
 };
 
+// URLパラメータから銘柄設定を読み込む
+function applySymbolFromUrl() {
+    const params = new URLSearchParams(window.location.search);
+    const symbolParam = params.get('symbol');
+    if (!symbolParam) return;
+
+    const trimmed = symbolParam.trim();
+    if (!trimmed) return;
+
+    const assetSelector = document.getElementById('asset-selector');
+    let matchedOption = null;
+    if (assetSelector) {
+        matchedOption = Array.from(assetSelector.options).find(opt => 
+            opt.value.toUpperCase() === trimmed.toUpperCase()
+        );
+    }
+
+    if (matchedOption) {
+        state.symbol = matchedOption.value;
+        state.assetName = matchedOption.text;
+        assetSelector.value = matchedOption.value;
+    } else {
+        const upper = trimmed.toUpperCase();
+        state.symbol = upper;
+        state.assetName = `カスタム銘柄: ${upper}`;
+        const customInput = document.getElementById('custom-symbol');
+        if (customInput) customInput.value = upper;
+    }
+
+    // 個別チャート分析タブを表示（URLハッシュによる別タブ指定がない場合）
+    if (!location.hash) {
+        const analysisTabBtn = document.querySelector('.tab-btn[data-tab="tab-analysis"]');
+        if (analysisTabBtn) analysisTabBtn.click();
+    }
+}
+
 // Initialize Application
 function initApp() {
     setupSliders();
@@ -106,6 +142,7 @@ function initApp() {
     setupHeatmapViewToggle();
     setupReplayControls();
     initReflectionJournal();
+    applySymbolFromUrl();
     loadScreenerData();
     loadWeeklyWatchlistData();
     loadDailyWatchlistData();
@@ -700,6 +737,15 @@ async function loadData() {
     // Update Title in UI
     document.getElementById('current-asset-name').textContent = state.assetName;
     document.getElementById('current-asset-symbol').textContent = state.symbol;
+
+    // Sync URL query param
+    if (window.history && window.history.replaceState) {
+        const currentUrl = new URL(window.location);
+        if (currentUrl.searchParams.get('symbol') !== state.symbol) {
+            currentUrl.searchParams.set('symbol', state.symbol);
+            window.history.replaceState({}, '', currentUrl);
+        }
+    }
 
     const targetUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${state.symbol}?range=${state.period}&interval=1d`;
     const wantsLongRange = state.period === '5y'; // ローカルデータは2年分しか無い
