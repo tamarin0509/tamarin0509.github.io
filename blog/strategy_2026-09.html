@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>【2026年9月戦略特選】軍資金100万円から+30万円を掴む！秋の集中突破投資戦略 | RSI Breakout Screener</title>
+<style>
+    :root {
+        --bg-primary: #0a0e17; --bg-card: rgba(22, 30, 49, 0.65);
+        --border-color: rgba(255, 255, 255, 0.08);
+        --text-main: #f1f5f9; --text-muted: #94a3b8; --text-dim: #64748b;
+        --accent: #6366f1;
+        --color-buy: #10b981; --color-sell: #f43f5e;
+        --color-gold: #f59e0b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+        background: var(--bg-primary); color: var(--text-main);
+        font-family: 'Noto Sans JP', 'Outfit', sans-serif;
+        line-height: 1.75; padding: 2rem 1rem;
+    }
+    .container { max-width: 960px; margin: 0 auto; }
+    h1 { font-size: 1.7rem; margin-bottom: 0.35rem; color: #fff; line-height: 1.35; }
+    h2 { font-size: 1.25rem; margin: 2.2rem 0 0.85rem; border-left: 4px solid var(--accent); padding-left: 0.75rem; color: #e2e8f0; }
+    h3 { font-size: 1.05rem; margin: 1.4rem 0 0.6rem; color: #cbd5e1; }
+    .meta { color: var(--text-dim); font-size: 0.85rem; margin-bottom: 1.8rem; }
+    
+    .target-banner {
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.25), rgba(16, 185, 129, 0.2));
+        border: 1px solid rgba(99, 102, 241, 0.4);
+        border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 2rem;
+        display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem;
+    }
+    .target-title { font-size: 0.9rem; color: #a5b4fc; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+    .target-main { font-size: 1.8rem; font-weight: 800; color: #fff; }
+    .target-highlight { color: #10b981; }
+
+    .summary-cards { display: flex; flex-wrap: wrap; gap: 0.75rem; margin: 1rem 0 1.5rem; }
+    .summary-card {
+        background: var(--bg-card); border: 1px solid var(--border-color);
+        border-radius: 10px; padding: 0.85rem 1.25rem; min-width: 140px; flex: 1;
+    }
+    .summary-card .label { font-size: 0.75rem; color: var(--text-muted); }
+    .summary-card .value { font-size: 1.35rem; font-weight: 700; margin-top: 2px; }
+
+    .table-wrap { overflow-x: auto; border: 1px solid var(--border-color); border-radius: 10px; margin: 1rem 0 1.5rem; }
+    table { border-collapse: collapse; width: 100%; font-size: 0.85rem; }
+    th, td { padding: 0.65rem 0.85rem; text-align: right; white-space: nowrap; border-bottom: 1px solid var(--border-color); }
+    th { background: rgba(99, 102, 241, 0.12); color: var(--text-muted); font-weight: 600; }
+    td:first-child, th:first-child, td.name, th.name { text-align: left; }
+    tr:last-child td { border-bottom: none; }
+
+    .card-box {
+        background: var(--bg-card); border: 1px solid var(--border-color);
+        border-radius: 10px; padding: 1.25rem 1.5rem; margin-bottom: 1.25rem;
+    }
+    .card-box-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.5rem; }
+    .card-box-title { font-size: 1.15rem; font-weight: 700; color: #fff; }
+    .card-box-sub { font-size: 0.85rem; color: var(--text-muted); }
+
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; }
+    .badge-buy { background: rgba(16, 185, 129, 0.2); color: #10b981; border: 1px solid #10b981; }
+    .badge-gold { background: rgba(245, 158, 11, 0.2); color: #f59e0b; border: 1px solid #f59e0b; }
+    .badge-accent { background: rgba(99, 102, 241, 0.25); color: #a5b4fc; border: 1px solid #6366f1; }
+
+    .step-list { list-style: none; margin: 1rem 0; counter-reset: step-counter; }
+    .step-list li {
+        position: relative; padding-left: 2.2rem; margin-bottom: 1rem;
+        font-size: 0.9rem; color: var(--text-main);
+    }
+    .step-list li::before {
+        content: counter(step-counter);
+        counter-increment: step-counter;
+        position: absolute; left: 0; top: 0.15rem;
+        width: 1.5rem; height: 1.5rem; border-radius: 50%;
+        background: #6366f1; color: #fff; font-size: 0.75rem; font-weight: bold;
+        display: flex; align-items: center; justify-content: center;
+    }
+
+    .callout {
+        background: rgba(99, 102, 241, 0.08); border-left: 4px solid #6366f1;
+        padding: 0.9rem 1.1rem; border-radius: 0 8px 8px 0; margin: 1rem 0; font-size: 0.85rem;
+    }
+    .callout-title { font-weight: 700; color: #a5b4fc; margin-bottom: 0.25rem; }
+
+    a { color: #a5b4fc; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .back-link { display: inline-block; margin-bottom: 1rem; font-size: 0.85rem; }
+    .note { color: var(--text-dim); font-size: 0.8rem; margin-top: 1.5rem; }
+</style>
+</head>
+<body>
+<div class="container">
+    <a class="back-link" href="./index.html">&larr; レポート一覧に戻る</a>
+    
+    <h1>🚀 【2026年9月戦略特選】軍資金100万円から+30万円を掴む！秋の集中突破投資戦略</h1>
+    <p class="meta">公開日: 2026-08-30 ｜ 分析対象期間: 2026年8月31日(月) 〜 9月30日(水) ｜ RSI Breakout Analyzer 投資戦略室</p>
+
+    <!-- Target Banner -->
+    <div class="target-banner">
+        <div>
+            <div class="target-title">Mission Target (2026年9月作戦)</div>
+            <div class="target-main">軍資金 100万円 &rarr; <span class="target-highlight">130万円 (+30.0%)</span></div>
+        </div>
+        <div style="text-align:right;">
+            <div style="font-size:0.85rem; color:#94a3b8;">目標獲得純利益</div>
+            <div style="font-size:1.6rem; font-weight:800; color:#10b981;">+300,000 円</div>
+        </div>
+    </div>
+
+    <h2>1. 🎯 30万円必達のための資金管理＆ポートフォリオ設計</h2>
+    <p>軍資金100万円で月利+30%を達成するためには、<strong>「1銘柄に全額突っ込んで祈る」ギャンブルを完全に排除</strong>し、期待値・損益比（リスクリワード比）の高い3銘柄へ資金を3分割（各25万〜37万円）配分します。</p>
+    <p>各トレードの許容リスク（損切りSL）を資金の<strong>2.5%〜3%（2.5万〜3.0万円）以内</strong>に厳格に抑え、リワード（利確TP）で<strong>1トレードあたり+6万〜+12万円</strong>を抜き取ることで、2勝1敗でも目標の+30万円に到達できる数学的・実践的な布陣を構築しました。</p>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th style="text-align:left;">役割・銘柄</th>
+                    <th>投入資金</th>
+                    <th>株数/ロット</th>
+                    <th>エントリー上限</th>
+                    <th>損切り (SL)</th>
+                    <th>目標利確 (TP)</th>
+                    <th>想定純利益</th>
+                    <th>RR比</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="name"><strong><a href="../index.html?symbol=285A.T" style="color:inherit; text-decoration:underline;">👑 キオクシア (285A)</a></strong><br><span style="font-size:0.75rem; color:#a5b4fc;">【本命・爆発力枠】半導体</span></td>
+                    <td style="font-weight:bold;">約 335,000 円</td>
+                    <td>7 株 (単元未満)</td>
+                    <td>47,900 円</td>
+                    <td style="color:#ef4444;">43,500 円 (-9.2%)</td>
+                    <td style="color:#10b981; font-weight:bold;">63,350 円 (+32.3%)</td>
+                    <td style="color:#10b981; font-weight:bold; font-size:0.95rem;">+108,150 円</td>
+                    <td style="font-weight:bold; color:#a5b4fc;">1 : 3.5</td>
+                </tr>
+                <tr>
+                    <td class="name"><strong><a href="../index.html?symbol=8306.T" style="color:inherit; text-decoration:underline;">🛡️ 三菱UFJ FG (8306)</a></strong><br><span style="font-size:0.75rem; color:#a5b4fc;">【鉄板・高勝率枠】金融</span></td>
+                    <td style="font-weight:bold;">約 366,000 円</td>
+                    <td>100 株</td>
+                    <td>3,660 円</td>
+                    <td style="color:#ef4444;">3,420 円 (-6.5%)</td>
+                    <td style="color:#10b981; font-weight:bold;">4,350 円 (+18.9%)</td>
+                    <td style="color:#10b981; font-weight:bold; font-size:0.95rem;">+69,000 円</td>
+                    <td style="font-weight:bold; color:#a5b4fc;">1 : 2.9</td>
+                </tr>
+                <tr>
+                    <td class="name"><strong><a href="../index.html?symbol=9519.T" style="color:inherit; text-decoration:underline;">⚡ レノバ (9519)</a></strong><br><span style="font-size:0.75rem; color:#a5b4fc;">【大底反発・押し目枠】再エネ</span></td>
+                    <td style="font-weight:bold;">約 272,000 円</td>
+                    <td>300 株</td>
+                    <td>905 円</td>
+                    <td style="color:#ef4444;">850 円 (-6.1%)</td>
+                    <td style="color:#10b981; font-weight:bold;">1,180 円 (+30.4%)</td>
+                    <td style="color:#10b981; font-weight:bold; font-size:0.95rem;">+82,500 円</td>
+                    <td style="font-weight:bold; color:#a5b4fc;">1 : 5.0</td>
+                </tr>
+                <tr>
+                    <td class="name"><strong><a href="../index.html?symbol=USDJPY=X" style="color:inherit; text-decoration:underline;">💱 米ドル/円 (USD/JPY)</a></strong><br><span style="font-size:0.75rem; color:#a5b4fc;">【予備・ブースト枠】為替</span></td>
+                    <td style="font-weight:bold;">約 27,000 円<br><span style="font-size:0.7rem; color:#64748b;">(キャッシュ待機)</span></td>
+                    <td>0.5 万通貨<br><span style="font-size:0.7rem; color:#64748b;">(レバ10倍)</span></td>
+                    <td>160.00 円</td>
+                    <td style="color:#ef4444;">157.50 円 (-1.5%)</td>
+                    <td style="color:#10b981; font-weight:bold;">168.00 円 (+5.0%)</td>
+                    <td style="color:#10b981; font-weight:bold; font-size:0.95rem;">+40,000 円</td>
+                    <td style="font-weight:bold; color:#a5b4fc;">1 : 3.3</td>
+                </tr>
+                <tr style="background: rgba(16, 185, 129, 0.08);">
+                    <td class="name" style="font-weight:bold; color:#10b981;">全ポジション合計 / 想定総合リターン</td>
+                    <td style="font-weight:bold;">1,000,000 円</td>
+                    <td colspan="4" style="text-align:center; color:#a5b4fc; font-weight:600;">3銘柄主力集中 ＋ 為替サブ展開</td>
+                    <td style="color:#10b981; font-weight:bold; font-size:1.15rem;">+299,650 円 〜 +339,650 円</td>
+                    <td style="font-weight:bold; color:#10b981;">達成率 100〜113%</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h2>2. 🔍 厳選銘柄の精密テクニカル分析＆執行シナリオ</h2>
+
+    <!-- Stock 1: Kioxia -->
+    <div class="card-box">
+        <div class="card-box-header">
+            <div>
+                <span class="badge badge-gold" style="margin-right:6px;">本命爆発力 No.1</span>
+                <span class="card-box-title"><a href="../index.html?symbol=285A.T">キオクシアホールディングス (285A)</a></span>
+            </div>
+            <span class="badge badge-buy">BUY 推奨</span>
+        </div>
+        <div class="card-box-sub">半導体セクター ｜ 現在株価: 47,900 円 ｜ 25週移動平均乖離率: -8.46% ｜ 週足RSI: 50.02</div>
+        
+        <p style="font-size:0.9rem; margin:0.75rem 0 0.5rem;">
+            <strong>【選定理由と勝算】</strong><br>
+            AIサーバー向けNAND型フラッシュメモリの世界的需要逼迫を背景に、スクリーナーの過去バックテストで<strong>「期待値 +15.5%、プロフィットファクター(PF) 3.78」</strong>と全監視銘柄の中で圧倒的トップのパフォーマンスを記録しています。25週移動平均線から-8.5%下落した絶好の押し目ゾーンで日足・週足のRSI支持線反発がダブル点灯。上値抵抗線を上抜けると6万円台までの真空地帯を駆け上がるチャートパターンです。
+        </p>
+        <div class="callout">
+            <div class="callout-title">執行指示（Plan）</div>
+            ・エントリー: <strong>47,900 円以下</strong>（8月31日寄り付き、または指値）<br>
+            ・保有数: <strong>7 株</strong>（SBI証券S株・楽天かぶミニ等で約33.5万円投入）<br>
+            ・損切り(SL): <strong>43,500 円</strong>（直近安値割れ -9.2%到達で即時撤退、最大損失 -30,800円）<br>
+            ・利確(TP): <strong>63,350 円</strong>（前回高値ブレイクアウト目標 +32.3%、獲得利益 +108,150円）
+        </div>
+    </div>
+
+    <!-- Stock 2: MUFG -->
+    <div class="card-box">
+        <div class="card-box-header">
+            <div>
+                <span class="badge badge-accent" style="margin-right:6px;">鉄板高勝率 No.1</span>
+                <span class="card-box-title"><a href="../index.html?symbol=8306.T">三菱UFJフィナンシャル・グループ (8306)</a></span>
+            </div>
+            <span class="badge badge-buy">BUY 推奨</span>
+        </div>
+        <div class="card-box-sub">金融セクター ｜ 現在株価: 3,658 円 ｜ 直近シグナル: BUY (0日前・週末初点灯) ｜ スクリーナー勝率: 69.2%</div>
+        
+        <p style="font-size:0.9rem; margin:0.75rem 0 0.5rem;">
+            <strong>【選定理由と勝算】</strong><br>
+            過去7回の週次レポート答え合わせにおいて、<strong>金融セクターは的中率66.7%〜100%</strong>と全セクター中最強の安定度を誇ります。日銀の追加利上げ観測と利ザヤ拡大思惑を背景に、金曜日大引け（8/28）で待望のRSI上値ブレイクアウトBUYシグナルが「0日前（初動）」で点灯しました。値動きが極めて堅牢で、ポートフォリオの守りの要として計算できます。
+        </p>
+        <div class="callout">
+            <div class="callout-title">執行指示（Plan）</div>
+            ・エントリー: <strong>3,660 円前後</strong>（月曜寄り付きで100株、約36.6万円投入）<br>
+            ・保有数: <strong>100 株</strong>（単元株）<br>
+            ・損切り(SL): <strong>3,420 円</strong>（25日線サポート割れ -6.5%、最大損失 -23,800円）<br>
+            ・利確(TP): <strong>4,350 円</strong>（中長期チャネル上限 +18.9%、獲得利益 +69,000円）
+        </div>
+    </div>
+
+    <!-- Stock 3: Renova -->
+    <div class="card-box">
+        <div class="card-box-header">
+            <div>
+                <span class="badge badge-accent" style="margin-right:6px;">大底反発・RR比5.0</span>
+                <span class="card-box-title"><a href="../index.html?symbol=9519.T">レノバ (9519)</a></span>
+            </div>
+            <span class="badge badge-buy">BUY 推奨</span>
+        </div>
+        <div class="card-box-sub">再エネ・太陽光 ｜ 現在株価: 905 円 ｜ 25週移動平均乖離率: -8.25% ｜ リスクリワード比: 1 : 5.0</div>
+        
+        <p style="font-size:0.9rem; margin:0.75rem 0 0.5rem;">
+            <strong>【選定理由と勝算】</strong><br>
+            単価905円と手頃で、ロット調整がしやすい優良反発銘柄。25週乖離率-8.25%まで売り込まれ、売られすぎ（RSI 46）から週足・日足でゴールデンクロスが発生。損切り幅が-55円（-6.1%）と極めて小さく限定できるのに対し、リバウンド目標は1,180円（+30.4%）と、<strong>リスクリワード比 1:5.0</strong>という圧倒的な費用対効果を誇ります。
+        </p>
+        <div class="callout">
+            <div class="callout-title">執行指示（Plan）</div>
+            ・エントリー: <strong>905 円以下</strong>（指値または寄り付き、約27.2万円投入）<br>
+            ・保有数: <strong>300 株</strong><br>
+            ・損切り(SL): <strong>850 円</strong>（850円節目割れ -6.1%、最大損失 -16,500円）<br>
+            ・利確(TP): <strong>1,180 円</strong>（50週線戻り天井 +30.4%、獲得利益 +82,500円）
+        </div>
+    </div>
+
+    <h2>3. 🗓️ 9月中30万円利確への4週間ロードマップ</h2>
+    <ol class="step-list">
+        <li>
+            <strong>第1週 (8月31日 〜 9月4日): ポジション構築と初期防衛</strong><br>
+            月曜日の寄り付きから火曜日にかけて、指示上限価格以下で3銘柄を仕込み完了。約97.3万円を投入し、約2.7万円のキャッシュを手元に残します。約定と同時に各証券口座で<strong>損切り逆指値（SL）を物理的にセット</strong>（感情による躊躇を排除）。
+        </li>
+        <li>
+            <strong>第2週 (9月7日 〜 9月11日): 建値ストップ（ノーリスク化）</strong><br>
+            各銘柄が+5%〜+8%上昇した段階で、損切り逆指値を「買付価格（建値）」に引き上げます。これにより、最悪相場が急変しても損失がゼロ（手数料のみ）で済み、精神的プレッシャーを完全に遮断します。
+        </li>
+        <li>
+            <strong>第3週 (9月14日 〜 9月18日): 利確第1ターゲット到達</strong><br>
+            キオクシアが5.5万〜5.8万円、レノバが1,050円付近に到達したら、一部を部分利確（元本回収）。残りは利確ライン（TP）まで引き伸ばします。
+        </li>
+        <li>
+            <strong>第4週 (9月21日 〜 9月30日): 30万円達成とポジション全解消</strong><br>
+            9月末の権利付き最終日（9月28日前後）の配当・優待取りの上昇エネルギーを利用し、目標利益+30万円に到達した時点で未練を残さず全決済。100万円 &rarr; 130万円を現金化して完勝ゴールとします。
+        </li>
+    </ol>
+
+    <h2>4. ⚡ 絶対遵守ルール（スカベンジャー・プロトコル）</h2>
+    <div class="callout" style="border-left-color: #f43f5e; background: rgba(244, 63, 94, 0.08);">
+        <div class="callout-title" style="color: #f43f5e;">⚠️ 負けないための3大鉄則</div>
+        <ol style="padding-left: 1.2rem; font-size: 0.85rem; line-height: 1.7; color: #cbd5e1;">
+            <li><strong>損切りライン到達時は1秒も迷わず即座に撤退（Fail-Fast）</strong>: 代替理由や「もう少しで戻るかも」という感情的希望は厳禁。損切り額は最大でも3銘柄合計で約7.1万円に抑えられているため、次のチャンスで即座に取り返せます。</li>
+            <li><strong>途中で別銘柄へ浮気しない</strong>: 監視外の急騰株やSNSで話題の仕手株に手を出すと、資金管理が崩壊します。検証済みの期待値銘柄に集中せよ。</li>
+            <li><strong>目標+30万円到達時は即時全利確</strong>: 「もっと上がるかも」と欲を出さず、月末にキャッシュ130万円を口座に確定させることこそがプロの勝ち方です。</li>
+        </ol>
+    </div>
+
+    <p class="note">&copy; 2026 tamarin0509-art — 本戦略はRSI Breakout Screenerの統計バックテストに基づく分析情報であり、投資の最終判断は自己責任でお願いいたします。</p>
+</div>
+</body>
+</html>

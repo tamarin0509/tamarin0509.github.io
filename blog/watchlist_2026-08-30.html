@@ -1,0 +1,422 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>週足ウォッチリストレポート 2026-08-30 | RSI Breakout Screener</title>
+<style>
+
+    :root {
+        --bg-primary: #0a0e17; --bg-card: rgba(22, 30, 49, 0.65);
+        --border-color: rgba(255, 255, 255, 0.08);
+        --text-main: #f1f5f9; --text-muted: #94a3b8; --text-dim: #64748b;
+        --accent: #6366f1;
+        --color-buy: #10b981; --color-sell: #f43f5e;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+        background: var(--bg-primary); color: var(--text-main);
+        font-family: 'Noto Sans JP', 'Outfit', sans-serif;
+        line-height: 1.7; padding: 2rem 1rem;
+    }
+    .container { max-width: 960px; margin: 0 auto; }
+    h1 { font-size: 1.6rem; margin-bottom: 0.25rem; }
+    h2 { font-size: 1.2rem; margin: 2rem 0 0.75rem; border-left: 4px solid var(--accent); padding-left: 0.6rem; }
+    .meta { color: var(--text-dim); font-size: 0.85rem; margin-bottom: 1.5rem; }
+    .summary-cards { display: flex; flex-wrap: wrap; gap: 0.75rem; margin: 1rem 0; }
+    .summary-card {
+        background: var(--bg-card); border: 1px solid var(--border-color);
+        border-radius: 10px; padding: 0.75rem 1.25rem; min-width: 140px;
+    }
+    .summary-card .label { font-size: 0.75rem; color: var(--text-muted); }
+    .summary-card .value { font-size: 1.4rem; font-weight: 700; }
+    .table-wrap { overflow-x: auto; border: 1px solid var(--border-color); border-radius: 10px; }
+    table { border-collapse: collapse; width: 100%; font-size: 0.85rem; }
+    th, td { padding: 0.5rem 0.75rem; text-align: right; white-space: nowrap; border-bottom: 1px solid var(--border-color); }
+    th { background: rgba(99, 102, 241, 0.12); color: var(--text-muted); font-weight: 600; }
+    td:first-child, th:first-child, td.name, th.name { text-align: left; }
+    tr:last-child td { border-bottom: none; }
+    .buy { color: var(--color-buy); font-weight: 700; }
+    .sell { color: var(--color-sell); font-weight: 700; }
+    .pos { color: var(--color-buy); }
+    .neg { color: var(--color-sell); }
+    .hit { color: var(--color-buy); font-weight: 700; }
+    .miss { color: var(--color-sell); font-weight: 700; }
+    .badge-fresh {
+        display: inline-block; font-size: 0.7rem; background: rgba(99,102,241,0.25);
+        color: #a5b4fc; border-radius: 999px; padding: 0 0.5rem; margin-left: 0.4rem;
+    }
+    a { color: #a5b4fc; }
+    .entry-list { list-style: none; }
+    .entry-list li {
+        background: var(--bg-card); border: 1px solid var(--border-color);
+        border-radius: 10px; padding: 1rem 1.25rem; margin-bottom: 0.75rem;
+    }
+    .entry-list .date { font-size: 1.05rem; font-weight: 700; }
+    .entry-list .desc { color: var(--text-muted); font-size: 0.85rem; }
+    .note { color: var(--text-dim); font-size: 0.8rem; margin-top: 0.75rem; }
+    .back-link { display: inline-block; margin-bottom: 1rem; font-size: 0.85rem; }
+
+.badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; }
+.badge-buy { background: rgba(16, 185, 129, 0.2); color: #10b981; border: 1px solid #10b981; }
+.badge-sell { background: rgba(239, 68, 68, 0.2); color: #ef4444; border: 1px solid #ef4444; }
+.badge-neutral { background: rgba(156, 163, 175, 0.2); color: #9ca3af; border: 1px solid #9ca3af; }
+</style>
+<div class="container">
+    <a class="back-link" href="./index.html">&larr; レポート一覧に戻る</a>
+    <h1>📋 週足ウォッチリスト分析レポート (2026-08-30)</h1>
+    <p class="meta">週足RSIブレイクアウト × 25週移動平均乖離率による週末テクニカル分析アラート</p>
+
+    <h3>🌏 主要市場サマリー</h3>
+    
+    <div class="summary-cards" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-bottom: 25px;">
+        <div class="summary-card">
+            <div class="label">🇯🇵 日経平均</div>
+            <div class="value" style="font-size:1.2rem;">66,131.977</div>
+            <div style="font-size:0.85em; margin-top:4px;">週足RSI: 57.6 | 揉み合い・中立</div>
+        </div>
+        <div class="summary-card">
+            <div class="label">🇺🇸 S&P 500</div>
+            <div class="value" style="font-size:1.2rem;">7,730.99</div>
+            <div style="font-size:0.85em; margin-top:4px;">週足RSI: 66.2 | 上昇トレンド強</div>
+        </div>
+        <div class="summary-card">
+            <div class="label">💱 ドル/円</div>
+            <div class="value" style="font-size:1.2rem;">160.038</div>
+            <div style="font-size:0.85em; margin-top:4px;">週足RSI: 52.39 | 円安推移</div>
+        </div>
+    </div>
+
+    <h3>📊 セクターモメンタム (週変化率)</h3>
+    <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap:10px; margin-bottom:30px;">
+        <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); padding:8px 12px; border-radius:6px; text-align:center;">
+            <div style="font-size:0.75rem; color:#888;">テクノロジー</div>
+            <div style="font-size:0.95rem; font-weight:bold; color:#10b981; margin-top:2px;">+1.42%</div>
+        </div>
+<div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); padding:8px 12px; border-radius:6px; text-align:center;">
+            <div style="font-size:0.75rem; color:#888;">半導体</div>
+            <div style="font-size:0.95rem; font-weight:bold; color:#ef4444; margin-top:2px;">-0.79%</div>
+        </div>
+<div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); padding:8px 12px; border-radius:6px; text-align:center;">
+            <div style="font-size:0.75rem; color:#888;">エネルギー</div>
+            <div style="font-size:0.95rem; font-weight:bold; color:#ef4444; margin-top:2px;">-2.14%</div>
+        </div>
+<div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); padding:8px 12px; border-radius:6px; text-align:center;">
+            <div style="font-size:0.75rem; color:#888;">防衛・重工</div>
+            <div style="font-size:0.95rem; font-weight:bold; color:#10b981; margin-top:2px;">+1.61%</div>
+        </div>
+<div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); padding:8px 12px; border-radius:6px; text-align:center;">
+            <div style="font-size:0.75rem; color:#888;">金融</div>
+            <div style="font-size:0.95rem; font-weight:bold; color:#10b981; margin-top:2px;">+2.99%</div>
+        </div>
+<div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); padding:8px 12px; border-radius:6px; text-align:center;">
+            <div style="font-size:0.75rem; color:#888;">自動車</div>
+            <div style="font-size:0.95rem; font-weight:bold; color:#ef4444; margin-top:2px;">-1.38%</div>
+        </div>
+<div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); padding:8px 12px; border-radius:6px; text-align:center;">
+            <div style="font-size:0.75rem; color:#888;">素材・非鉄</div>
+            <div style="font-size:0.95rem; font-weight:bold; color:#10b981; margin-top:2px;">+3.30%</div>
+        </div>
+<div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); padding:8px 12px; border-radius:6px; text-align:center;">
+            <div style="font-size:0.75rem; color:#888;">商社</div>
+            <div style="font-size:0.95rem; font-weight:bold; color:#10b981; margin-top:2px;">+1.49%</div>
+        </div>
+<div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); padding:8px 12px; border-radius:6px; text-align:center;">
+            <div style="font-size:0.75rem; color:#888;">医薬品</div>
+            <div style="font-size:0.95rem; font-weight:bold; color:#ef4444; margin-top:2px;">-0.98%</div>
+        </div>
+<div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); padding:8px 12px; border-radius:6px; text-align:center;">
+            <div style="font-size:0.75rem; color:#888;">通信</div>
+            <div style="font-size:0.95rem; font-weight:bold; color:#10b981; margin-top:2px;">+0.84%</div>
+        </div>
+<div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); padding:8px 12px; border-radius:6px; text-align:center;">
+            <div style="font-size:0.75rem; color:#888;">消費・小売</div>
+            <div style="font-size:0.95rem; font-weight:bold; color:#ef4444; margin-top:2px;">-0.22%</div>
+        </div>
+<div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); padding:8px 12px; border-radius:6px; text-align:center;">
+            <div style="font-size:0.75rem; color:#888;">電子部品</div>
+            <div style="font-size:0.95rem; font-weight:bold; color:#10b981; margin-top:2px;">+4.32%</div>
+        </div>
+<div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); padding:8px 12px; border-radius:6px; text-align:center;">
+            <div style="font-size:0.75rem; color:#888;">不動産</div>
+            <div style="font-size:0.95rem; font-weight:bold; color:#10b981; margin-top:2px;">+0.93%</div>
+        </div>
+<div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); padding:8px 12px; border-radius:6px; text-align:center;">
+            <div style="font-size:0.75rem; color:#888;">暗号資産</div>
+            <div style="font-size:0.95rem; font-weight:bold; color:#10b981; margin-top:2px;">+4.00%</div>
+        </div>
+<div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); padding:8px 12px; border-radius:6px; text-align:center;">
+            <div style="font-size:0.75rem; color:#888;">再エネ・太陽光</div>
+            <div style="font-size:0.95rem; font-weight:bold; color:#ef4444; margin-top:2px;">-1.85%</div>
+        </div>
+    </div>
+
+    <h3>⭐ 最優先注目銘柄 (Priority: HIGH)</h3>
+    <div class="table-wrap">
+    <table>
+    <thead><tr><th>銘柄名</th><th>売買</th><th>セクター</th><th>25週乖離率</th><th>週足RSI</th><th>トリガー詳細</th><th>トレードメモ</th></tr></thead>
+    <tbody>
+    <tr>
+                <td class="name"><strong><a href="../index.html?symbol=285A.T" style="color:inherit; text-decoration:underline;">キオクシアホールディングス (285A)</a></strong></td>
+                <td><span class="badge badge-buy">BUY</span></td>
+                <td>半導体</td>
+                <td style="color:#10b981; font-weight:600;">-8.5%</td>
+                <td>50.0</td>
+                <td style="font-size:0.88em; max-width:240px;">25週乖離率 -8.5% (買圏) ＋ 日足BUY確定(1日前)</td>
+                <td style="font-size:0.85em; max-width:320px;"><div style="font-weight:bold; color:#10b981; margin-bottom:3px;">【買付指示】エントリー: 47,900以下 | 損切り(SL): 43,507 (-9.2%) | 利確(TP): 63,350 (+32.3%) | RR: 1:3.5</div><div style="color:#94a3b8;">💡 25週乖離率(-8.5%)下限到達。売られ過ぎからの自律反発狙い。</div></td>
+            </tr>
+<tr>
+                <td class="name"><strong><a href="../index.html?symbol=TSLA" style="color:inherit; text-decoration:underline;">テスラ (TSLA)</a></strong></td>
+                <td><span class="badge badge-buy">BUY</span></td>
+                <td>自動車</td>
+                <td style="color:#10b981; font-weight:600;">-6.5%</td>
+                <td>44.5</td>
+                <td style="font-size:0.88em; max-width:240px;">週足RSIブレイク(BUY) ＋ 25週乖離率 -6.5% (買圏)</td>
+                <td style="font-size:0.85em; max-width:320px;"><div style="font-weight:bold; color:#10b981; margin-bottom:3px;">【買付指示】エントリー: 355以下 | 損切り(SL): 297 (-16.2%) | 利確(TP): 458 (+29.1%) | RR: 1:1.8</div><div style="color:#94a3b8;">💡 25週乖離率(-6.5%)押し目圏 ＋ 週足RSIブレイクアウト。絶好の打診買いポイント。</div></td>
+            </tr>
+<tr>
+                <td class="name"><strong><a href="../index.html?symbol=9519.T" style="color:inherit; text-decoration:underline;">レノバ (9519)</a></strong></td>
+                <td><span class="badge badge-buy">BUY</span></td>
+                <td>再エネ・太陽光</td>
+                <td style="color:#10b981; font-weight:600;">-8.3%</td>
+                <td>49.1</td>
+                <td style="font-size:0.88em; max-width:240px;">25週乖離率 -8.2% (買圏) ＋ 日足BUY確定(2日前)</td>
+                <td style="font-size:0.85em; max-width:320px;"><div style="font-weight:bold; color:#10b981; margin-bottom:3px;">【買付指示】エントリー: 905以下 | 損切り(SL): 851 (-6.0%) | 利確(TP): 1,002 (+10.7%) | RR: 1:1.8</div><div style="color:#94a3b8;">💡 25週乖離率(-8.2%)下限到達。売られ過ぎからの自律反発狙い。</div></td>
+            </tr>
+<tr>
+                <td class="name"><strong><a href="../index.html?symbol=USDJPY=X" style="color:inherit; text-decoration:underline;">米ドル / 円 (USD/JPY)</a></strong></td>
+                <td><span class="badge badge-buy">BUY</span></td>
+                <td>為替</td>
+                <td style="color:#ef4444; font-weight:600;">+0.2%</td>
+                <td>52.4</td>
+                <td style="font-size:0.88em; max-width:240px;">週足RSIブレイク(BUY)</td>
+                <td style="font-size:0.85em; max-width:320px;"><div style="font-weight:bold; color:#10b981; margin-bottom:3px;">【買付指示】エントリー: 160以下 | 損切り(SL): 153 (-4.5%) | 利確(TP): 173 (+8.1%) | RR: 1:1.8</div><div style="color:#94a3b8;">💡 週足RSI抵抗線を上方ブレイク。上昇トレンド転換の初動、分割エントリー検討。</div></td>
+            </tr>
+<tr>
+                <td class="name"><strong><a href="../index.html?symbol=AUDUSD=X" style="color:inherit; text-decoration:underline;">豪ドル / 米ドル (AUD/USD)</a></strong></td>
+                <td><span class="badge badge-buy">BUY</span></td>
+                <td>為替</td>
+                <td style="color:#ef4444; font-weight:600;">+1.5%</td>
+                <td>62.6</td>
+                <td style="font-size:0.88em; max-width:240px;">週足RSIブレイク(BUY)</td>
+                <td style="font-size:0.85em; max-width:320px;"><div style="font-weight:bold; color:#10b981; margin-bottom:3px;">【買付指示】エントリー: 0.716以下 | 損切り(SL): 0.684 (-4.5%) | 利確(TP): 0.774 (+8.1%) | RR: 1:1.8</div><div style="color:#94a3b8;">💡 週足RSI抵抗線を上方ブレイク。上昇トレンド転換の初動、分割エントリー検討。</div></td>
+            </tr>
+<tr>
+                <td class="name"><strong><a href="../index.html?symbol=AVGO" style="color:inherit; text-decoration:underline;">ブロードコム (AVGO)</a></strong></td>
+                <td><span class="badge badge-sell">SELL</span></td>
+                <td>半導体</td>
+                <td style="color:#10b981; font-weight:600;">-3.2%</td>
+                <td>46.9</td>
+                <td style="font-size:0.88em; max-width:240px;">週足RSI下抜け(SELL)</td>
+                <td style="font-size:0.85em; max-width:320px;"><div style="font-weight:bold; color:#ef4444; margin-bottom:3px;">【空売り指示】エントリー: 372以上 | 損切り(SL): 439 (+18.2%) | 利確(TP): 250 (-32.8%) | RR: 1:1.8</div><div style="color:#94a3b8;">💡 週足RSI支持線を下方ブレイク。下落トレンド入りの警戒、ストップ安値設定。</div></td>
+            </tr>
+<tr>
+                <td class="name"><strong><a href="../index.html?symbol=8411.T" style="color:inherit; text-decoration:underline;">みずほフィナンシャルG (8411)</a></strong></td>
+                <td><span class="badge badge-buy">BUY</span></td>
+                <td>金融</td>
+                <td style="color:#ef4444; font-weight:600;">+14.1%</td>
+                <td>63.9</td>
+                <td style="font-size:0.88em; max-width:240px;">週足RSIブレイク(BUY)</td>
+                <td style="font-size:0.85em; max-width:320px;"><div style="font-weight:bold; color:#10b981; margin-bottom:3px;">【買付指示】エントリー: 8,486以下 | 損切り(SL): 7,739 (-8.8%) | 利確(TP): 9,830 (+15.8%) | RR: 1:1.8</div><div style="color:#94a3b8;">💡 週足RSI抵抗線を上方ブレイク。上昇トレンド転換の初動、分割エントリー検討。</div></td>
+            </tr>
+<tr>
+                <td class="name"><strong><a href="../index.html?symbol=7269.T" style="color:inherit; text-decoration:underline;">スズキ (7269)</a></strong></td>
+                <td><span class="badge badge-buy">BUY</span></td>
+                <td>自動車</td>
+                <td style="color:#ef4444; font-weight:600;">+11.9%</td>
+                <td>56.7</td>
+                <td style="font-size:0.88em; max-width:240px;">週足RSIブレイク(BUY)</td>
+                <td style="font-size:0.85em; max-width:320px;"><div style="font-weight:bold; color:#10b981; margin-bottom:3px;">【買付指示】エントリー: 2,170以下 | 損切り(SL): 1,779 (-18.0%) | 利確(TP): 2,874 (+32.4%) | RR: 1:1.8</div><div style="color:#94a3b8;">💡 週足RSI抵抗線を上方ブレイク。上昇トレンド転換の初動、分割エントリー検討。</div></td>
+            </tr>
+<tr>
+                <td class="name"><strong><a href="../index.html?symbol=8053.T" style="color:inherit; text-decoration:underline;">住友商事 (8053)</a></strong></td>
+                <td><span class="badge badge-buy">BUY</span></td>
+                <td>商社</td>
+                <td style="color:#ef4444; font-weight:600;">+9.2%</td>
+                <td>60.3</td>
+                <td style="font-size:0.88em; max-width:240px;">週足RSIブレイク(BUY)</td>
+                <td style="font-size:0.85em; max-width:320px;"><div style="font-weight:bold; color:#10b981; margin-bottom:3px;">【買付指示】エントリー: 1,776以下 | 損切り(SL): 1,516 (-14.6%) | 利確(TP): 2,242 (+26.3%) | RR: 1:1.8</div><div style="color:#94a3b8;">💡 週足RSI抵抗線を上方ブレイク。上昇トレンド転換の初動、分割エントリー検討。</div></td>
+            </tr>
+<tr>
+                <td class="name"><strong><a href="../index.html?symbol=JNJ" style="color:inherit; text-decoration:underline;">ジョンソン・エンド・ジョンソン (JNJ)</a></strong></td>
+                <td><span class="badge badge-buy">BUY</span></td>
+                <td>医薬品</td>
+                <td style="color:#ef4444; font-weight:600;">+8.9%</td>
+                <td>66.2</td>
+                <td style="font-size:0.88em; max-width:240px;">週足RSIブレイク(BUY)</td>
+                <td style="font-size:0.85em; max-width:320px;"><div style="font-weight:bold; color:#10b981; margin-bottom:3px;">【買付指示】エントリー: 266以下 | 損切り(SL): 247 (-7.2%) | 利確(TP): 300 (+12.9%) | RR: 1:1.8</div><div style="color:#94a3b8;">💡 週足RSI抵抗線を上方ブレイク。上昇トレンド転換の初動、分割エントリー検討。</div></td>
+            </tr>
+    </tbody>
+    </table>
+    </div>
+
+    <h3 style="margin-top:35px;">⚠️ 注目・警戒銘柄 (Priority: MEDIUM)</h3>
+    <div class="table-wrap">
+    <table>
+    <thead><tr><th>銘柄名</th><th>売買</th><th>セクター</th><th>25週乖離率</th><th>週足RSI</th><th>トリガー詳細</th><th>トレードメモ</th></tr></thead>
+    <tbody>
+    <tr>
+                <td class="name"><strong><a href="../index.html?symbol=8306.T" style="color:inherit; text-decoration:underline;">三菱UFJフィナンシャルG (8306)</a></strong></td>
+                <td><span class="badge badge-neutral">NEUTRAL</span></td>
+                <td>金融</td>
+                <td style="color:#ef4444; font-weight:600;">+16.0%</td>
+                <td>68.1</td>
+                <td style="font-size:0.88em; max-width:240px;">25週乖離率 +16.0% (売圏) ＋ 日足BUY確定(0日前)</td>
+                <td style="font-size:0.85em; max-width:320px;"><div style="color:#94a3b8;">💡 レンジ推移。シグナルの明確化まで待機。</div></td>
+            </tr>
+<tr>
+                <td class="name"><strong><a href="../index.html?symbol=WMT" style="color:inherit; text-decoration:underline;">ウォルマート (WMT)</a></strong></td>
+                <td><span class="badge badge-neutral">NEUTRAL</span></td>
+                <td>消費・小売</td>
+                <td style="color:#10b981; font-weight:600;">-13.8%</td>
+                <td>36.0</td>
+                <td style="font-size:0.88em; max-width:240px;">25週乖離率 -13.8% (買圏) ＋ 日足SELL確定(5日前)</td>
+                <td style="font-size:0.85em; max-width:320px;"><div style="color:#94a3b8;">💡 レンジ推移。シグナルの明確化まで待機。</div></td>
+            </tr>
+<tr>
+                <td class="name"><strong><a href="../index.html?symbol=3350.T" style="color:inherit; text-decoration:underline;">メタプラネット (3350)</a></strong></td>
+                <td><span class="badge badge-neutral">NEUTRAL</span></td>
+                <td>暗号資産</td>
+                <td style="color:#ef4444; font-weight:600;">+22.7%</td>
+                <td>53.7</td>
+                <td style="font-size:0.88em; max-width:240px;">週足RSIブレイク(BUY) ＋ 25週乖離率 +22.7% (売圏)</td>
+                <td style="font-size:0.85em; max-width:320px;"><div style="color:#94a3b8;">💡 レンジ推移。シグナルの明確化まで待機。</div></td>
+            </tr>
+<tr>
+                <td class="name"><strong><a href="../index.html?symbol=AMZN" style="color:inherit; text-decoration:underline;">アマゾン (AMZN)</a></strong></td>
+                <td><span class="badge badge-buy">BUY</span></td>
+                <td>テクノロジー</td>
+                <td style="color:#ef4444; font-weight:600;">+3.8%</td>
+                <td>54.6</td>
+                <td style="font-size:0.88em; max-width:240px;">日足BUY確定(3日前)</td>
+                <td style="font-size:0.85em; max-width:320px;"><div style="font-weight:bold; color:#10b981; margin-bottom:3px;">【買付指示】エントリー: 256以下 | 損切り(SL): 245 (-4.5%) | 利確(TP): 287 (+12.1%) | RR: 1:2.7</div><div style="color:#94a3b8;">💡 日足確定シグナル点灯中。直近高値超えで追随買いを狙う。</div></td>
+            </tr>
+<tr>
+                <td class="name"><strong><a href="../index.html?symbol=9984.T" style="color:inherit; text-decoration:underline;">ソフトバンクグループ (9984)</a></strong></td>
+                <td><span class="badge badge-buy">BUY</span></td>
+                <td>テクノロジー</td>
+                <td style="color:#10b981; font-weight:600;">-6.6%</td>
+                <td>46.9</td>
+                <td style="font-size:0.88em; max-width:240px;">25週乖離率 -6.6% (買圏)</td>
+                <td style="font-size:0.85em; max-width:320px;"><div style="font-weight:bold; color:#10b981; margin-bottom:3px;">【買付指示】エントリー: 5,161以下 | 損切り(SL): 4,809 (-6.8%) | 利確(TP): 6,230 (+20.7%) | RR: 1:3.0</div><div style="color:#94a3b8;">💡 25週乖離率(-6.6%)下限到達。売られ過ぎからの自律反発狙い。</div></td>
+            </tr>
+<tr>
+                <td class="name"><strong><a href="../index.html?symbol=6758.T" style="color:inherit; text-decoration:underline;">ソニーグループ (6758)</a></strong></td>
+                <td><span class="badge badge-buy">BUY</span></td>
+                <td>テクノロジー</td>
+                <td style="color:#ef4444; font-weight:600;">+14.3%</td>
+                <td>61.1</td>
+                <td style="font-size:0.88em; max-width:240px;">日足BUY確定(4日前)</td>
+                <td style="font-size:0.85em; max-width:320px;"><div style="font-weight:bold; color:#10b981; margin-bottom:3px;">【買付指示】エントリー: 3,928以下 | 損切り(SL): 3,462 (-11.9%) | 利確(TP): 4,766 (+21.3%) | RR: 1:1.8</div><div style="color:#94a3b8;">💡 日足確定シグナル点灯中。直近高値超えで追随買いを狙う。</div></td>
+            </tr>
+<tr>
+                <td class="name"><strong><a href="../index.html?symbol=6146.T" style="color:inherit; text-decoration:underline;">ディスコ (6146)</a></strong></td>
+                <td><span class="badge badge-buy">BUY</span></td>
+                <td>半導体</td>
+                <td style="color:#10b981; font-weight:600;">-13.7%</td>
+                <td>44.2</td>
+                <td style="font-size:0.88em; max-width:240px;">25週乖離率 -13.7% (買圏)</td>
+                <td style="font-size:0.85em; max-width:320px;"><div style="font-weight:bold; color:#10b981; margin-bottom:3px;">【買付指示】エントリー: 59,350以下 | 損切り(SL): 56,569 (-4.7%) | 利確(TP): 68,120 (+14.8%) | RR: 1:3.2</div><div style="color:#94a3b8;">💡 25週乖離率(-13.7%)下限到達。売られ過ぎからの自律反発狙い。</div></td>
+            </tr>
+<tr>
+                <td class="name"><strong><a href="../index.html?symbol=5020.T" style="color:inherit; text-decoration:underline;">ENEOSホールディングス (5020)</a></strong></td>
+                <td><span class="badge badge-buy">BUY</span></td>
+                <td>エネルギー</td>
+                <td style="color:#ef4444; font-weight:600;">+0.3%</td>
+                <td>56.4</td>
+                <td style="font-size:0.88em; max-width:240px;">日足BUY確定(1日前)</td>
+                <td style="font-size:0.85em; max-width:320px;"><div style="font-weight:bold; color:#10b981; margin-bottom:3px;">【買付指示】エントリー: 1,324以下 | 損切り(SL): 1,246 (-5.9%) | 利確(TP): 1,464 (+10.6%) | RR: 1:1.8</div><div style="color:#94a3b8;">💡 日足確定シグナル点灯中。直近高値超えで追随買いを狙う。</div></td>
+            </tr>
+<tr>
+                <td class="name"><strong><a href="../index.html?symbol=7012.T" style="color:inherit; text-decoration:underline;">川崎重工業 (7012)</a></strong></td>
+                <td><span class="badge badge-buy">BUY</span></td>
+                <td>防衛・重工</td>
+                <td style="color:#10b981; font-weight:600;">-11.8%</td>
+                <td>43.9</td>
+                <td style="font-size:0.88em; max-width:240px;">25週乖離率 -11.8% (買圏)</td>
+                <td style="font-size:0.85em; max-width:320px;"><div style="font-weight:bold; color:#10b981; margin-bottom:3px;">【買付指示】エントリー: 2,623以下 | 損切り(SL): 2,505 (-4.5%) | 利確(TP): 2,956 (+12.7%) | RR: 1:2.8</div><div style="color:#94a3b8;">💡 25週乖離率(-11.8%)下限到達。売られ過ぎからの自律反発狙い。</div></td>
+            </tr>
+<tr>
+                <td class="name"><strong><a href="../index.html?symbol=7013.T" style="color:inherit; text-decoration:underline;">IHI (7013)</a></strong></td>
+                <td><span class="badge badge-buy">BUY</span></td>
+                <td>防衛・重工</td>
+                <td style="color:#10b981; font-weight:600;">-6.2%</td>
+                <td>45.5</td>
+                <td style="font-size:0.88em; max-width:240px;">25週乖離率 -6.2% (買圏)</td>
+                <td style="font-size:0.85em; max-width:320px;"><div style="font-weight:bold; color:#10b981; margin-bottom:3px;">【買付指示】エントリー: 2,766以下 | 損切り(SL): 2,569 (-7.1%) | 利確(TP): 3,121 (+12.8%) | RR: 1:1.8</div><div style="color:#94a3b8;">💡 25週乖離率(-6.2%)下限到達。売られ過ぎからの自律反発狙い。</div></td>
+            </tr>
+<tr>
+                <td class="name"><strong><a href="../index.html?symbol=7201.T" style="color:inherit; text-decoration:underline;">日産自動車 (7201)</a></strong></td>
+                <td><span class="badge badge-buy">BUY</span></td>
+                <td>自動車</td>
+                <td style="color:#10b981; font-weight:600;">-6.4%</td>
+                <td>43.4</td>
+                <td style="font-size:0.88em; max-width:240px;">25週乖離率 -6.4% (買圏)</td>
+                <td style="font-size:0.85em; max-width:320px;"><div style="font-weight:bold; color:#10b981; margin-bottom:3px;">【買付指示】エントリー: 321以下 | 損切り(SL): 307 (-4.5%) | 利確(TP): 352 (+9.5%) | RR: 1:2.1</div><div style="color:#94a3b8;">💡 25週乖離率(-6.4%)下限到達。売られ過ぎからの自律反発狙い。</div></td>
+            </tr>
+<tr>
+                <td class="name"><strong><a href="../index.html?symbol=5016.T" style="color:inherit; text-decoration:underline;">JX金属 (5016)</a></strong></td>
+                <td><span class="badge badge-buy">BUY</span></td>
+                <td>素材・非鉄</td>
+                <td style="color:#10b981; font-weight:600;">-7.0%</td>
+                <td>50.5</td>
+                <td style="font-size:0.88em; max-width:240px;">25週乖離率 -7.0% (買圏)</td>
+                <td style="font-size:0.85em; max-width:320px;"><div style="font-weight:bold; color:#10b981; margin-bottom:3px;">【買付指示】エントリー: 3,810以下 | 損切り(SL): 3,460 (-9.2%) | 利確(TP): 4,439 (+16.5%) | RR: 1:1.8</div><div style="color:#94a3b8;">💡 25週乖離率(-7.0%)下限到達。売られ過ぎからの自律反発狙い。</div></td>
+            </tr>
+<tr>
+                <td class="name"><strong><a href="../index.html?symbol=8031.T" style="color:inherit; text-decoration:underline;">三井物産 (8031)</a></strong></td>
+                <td><span class="badge badge-buy">BUY</span></td>
+                <td>商社</td>
+                <td style="color:#10b981; font-weight:600;">-6.9%</td>
+                <td>47.9</td>
+                <td style="font-size:0.88em; max-width:240px;">25週乖離率 -6.9% (買圏)</td>
+                <td style="font-size:0.85em; max-width:320px;"><div style="font-weight:bold; color:#10b981; margin-bottom:3px;">【買付指示】エントリー: 4,979以下 | 損切り(SL): 4,592 (-7.8%) | 利確(TP): 5,675 (+14.0%) | RR: 1:1.8</div><div style="color:#94a3b8;">💡 25週乖離率(-6.9%)下限到達。売られ過ぎからの自律反発狙い。</div></td>
+            </tr>
+<tr>
+                <td class="name"><strong><a href="../index.html?symbol=8002.T" style="color:inherit; text-decoration:underline;">丸紅 (8002)</a></strong></td>
+                <td><span class="badge badge-buy">BUY</span></td>
+                <td>商社</td>
+                <td style="color:#10b981; font-weight:600;">-7.5%</td>
+                <td>46.5</td>
+                <td style="font-size:0.88em; max-width:240px;">25週乖離率 -7.5% (買圏)</td>
+                <td style="font-size:0.85em; max-width:320px;"><div style="font-weight:bold; color:#10b981; margin-bottom:3px;">【買付指示】エントリー: 4,910以下 | 損切り(SL): 4,674 (-4.8%) | 利確(TP): 5,351 (+9.0%) | RR: 1:1.9</div><div style="color:#94a3b8;">💡 25週乖離率(-7.5%)下限到達。売られ過ぎからの自律反発狙い。</div></td>
+            </tr>
+<tr>
+                <td class="name"><strong><a href="../index.html?symbol=9983.T" style="color:inherit; text-decoration:underline;">ファーストリテイリング (9983)</a></strong></td>
+                <td><span class="badge badge-buy">BUY</span></td>
+                <td>消費・小売</td>
+                <td style="color:#10b981; font-weight:600;">-5.2%</td>
+                <td>46.5</td>
+                <td style="font-size:0.88em; max-width:240px;">25週乖離率 -5.2% (買圏)</td>
+                <td style="font-size:0.85em; max-width:320px;"><div style="font-weight:bold; color:#10b981; margin-bottom:3px;">【買付指示】エントリー: 71,260以下 | 損切り(SL): 68,053 (-4.5%) | 利確(TP): 80,160 (+12.5%) | RR: 1:2.8</div><div style="color:#94a3b8;">💡 25週乖離率(-5.2%)下限到達。売られ過ぎからの自律反発狙い。</div></td>
+            </tr>
+<tr>
+                <td class="name"><strong><a href="../index.html?symbol=ENPH" style="color:inherit; text-decoration:underline;">エンフェーズ・エナジー (ENPH)</a></strong></td>
+                <td><span class="badge badge-buy">BUY</span></td>
+                <td>再エネ・太陽光</td>
+                <td style="color:#10b981; font-weight:600;">-10.0%</td>
+                <td>45.0</td>
+                <td style="font-size:0.88em; max-width:240px;">25週乖離率 -10.0% (買圏)</td>
+                <td style="font-size:0.85em; max-width:320px;"><div style="font-weight:bold; color:#10b981; margin-bottom:3px;">【買付指示】エントリー: 39.250以下 | 損切り(SL): 36.071 (-8.1%) | 利確(TP): 44.973 (+14.6%) | RR: 1:1.8</div><div style="color:#94a3b8;">💡 25週乖離率(-10.0%)下限到達。売られ過ぎからの自律反発狙い。</div></td>
+            </tr>
+<tr>
+                <td class="name"><strong><a href="../index.html?symbol=FSLR" style="color:inherit; text-decoration:underline;">ファーストソーラー (FSLR)</a></strong></td>
+                <td><span class="badge badge-buy">BUY</span></td>
+                <td>再エネ・太陽光</td>
+                <td style="color:#10b981; font-weight:600;">-6.4%</td>
+                <td>44.9</td>
+                <td style="font-size:0.88em; max-width:240px;">25週乖離率 -6.4% (買圏)</td>
+                <td style="font-size:0.85em; max-width:320px;"><div style="font-weight:bold; color:#10b981; margin-bottom:3px;">【買付指示】エントリー: 210以下 | 損切り(SL): 201 (-4.5%) | 利確(TP): 270 (+28.4%) | RR: 1:6.3</div><div style="color:#94a3b8;">💡 25週乖離率(-6.4%)下限到達。売られ過ぎからの自律反発狙い。</div></td>
+            </tr>
+<tr>
+                <td class="name"><strong><a href="../index.html?symbol=NEE" style="color:inherit; text-decoration:underline;">ネクステラ・エナジー (NEE)</a></strong></td>
+                <td><span class="badge badge-buy">BUY</span></td>
+                <td>再エネ・太陽光</td>
+                <td style="color:#10b981; font-weight:600;">-6.6%</td>
+                <td>40.3</td>
+                <td style="font-size:0.88em; max-width:240px;">25週乖離率 -6.6% (買圏)</td>
+                <td style="font-size:0.85em; max-width:320px;"><div style="font-weight:bold; color:#10b981; margin-bottom:3px;">【買付指示】エントリー: 83.470以下 | 損切り(SL): 79.714 (-4.5%) | 利確(TP): 90.231 (+8.1%) | RR: 1:1.8</div><div style="color:#94a3b8;">💡 25週乖離率(-6.6%)下限到達。売られ過ぎからの自律反発狙い。</div></td>
+            </tr>
+    </tbody>
+    </table>
+    </div>
+
+    <p class="note" style="margin-top:30px;">&copy; 2026 tamarin0509-art — このウォッチリストは自動生成されており、投資勧誘を目的としたものではありません。</p>
+</div>

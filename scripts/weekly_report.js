@@ -472,6 +472,16 @@ function rebuildIndexPage() {
         return `<li><a href="./${d}.html"><span class="date">${d}</span></a>${watchlistLink}<div class="desc">${desc}</div></li>`;
     }).join('\n');
 
+    // 特選戦略記事のピン留め
+    let strategyBanner = '';
+    const strategyFile = path.join(BLOG_DIR, 'strategy_2026-09.html');
+    if (fs.existsSync(strategyFile)) {
+        strategyBanner = `<li style="background: linear-gradient(135deg, rgba(99,102,241,0.22), rgba(16,185,129,0.18)); border: 1px solid #6366f1;">
+            <a href="./strategy_2026-09.html" style="color:#fff;"><span class="date" style="color:#a5b4fc;">🔥 【2026年9月特選戦略】軍資金100万円 &rarr; +30万円集中突破投資戦略</span></a>
+            <div class="desc" style="color:#cbd5e1; margin-top:4px;">厳選3銘柄（キオクシア・三菱UFJ・レノバ）による月利+30%達成ロードマップ ＆ 精密執行指示書</div>
+        </li>\n`;
+    }
+
     const html = `<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>週次レポート一覧 | RSI Breakout Screener</title>
@@ -481,7 +491,7 @@ function rebuildIndexPage() {
     <h1>週次スクリーニングレポート</h1>
     <p class="meta">毎週の予測シグナル、週足ウォッチリスト、および1週間後の答え合わせ結果のアーカイブ</p>
     <ul class="entry-list">
-${items}
+${strategyBanner}${items}
     </ul>
     <p class="note">&copy; 2026 tamarin0509-art — このページは自動生成されています。</p>
 </div>
