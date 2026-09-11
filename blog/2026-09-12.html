@@ -1,0 +1,543 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>週次レポート 2026-09-12 | RSI Breakout Screener</title>
+<style>
+    :root {
+        --bg-primary: #0a0e17; --bg-card: rgba(22, 30, 49, 0.65);
+        --border-color: rgba(255, 255, 255, 0.08);
+        --text-main: #f1f5f9; --text-muted: #94a3b8; --text-dim: #64748b;
+        --accent: #6366f1;
+        --color-buy: #10b981; --color-sell: #f43f5e;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+        background: var(--bg-primary); color: var(--text-main);
+        font-family: 'Noto Sans JP', 'Outfit', sans-serif;
+        line-height: 1.7; padding: 2rem 1rem;
+    }
+    .container { max-width: 960px; margin: 0 auto; }
+    h1 { font-size: 1.6rem; margin-bottom: 0.25rem; }
+    h2 { font-size: 1.2rem; margin: 2rem 0 0.75rem; border-left: 4px solid var(--accent); padding-left: 0.6rem; }
+    .meta { color: var(--text-dim); font-size: 0.85rem; margin-bottom: 1.5rem; }
+    .summary-cards { display: flex; flex-wrap: wrap; gap: 0.75rem; margin: 1rem 0; }
+    .summary-card {
+        background: var(--bg-card); border: 1px solid var(--border-color);
+        border-radius: 10px; padding: 0.75rem 1.25rem; min-width: 140px;
+    }
+    .summary-card .label { font-size: 0.75rem; color: var(--text-muted); }
+    .summary-card .value { font-size: 1.4rem; font-weight: 700; }
+    .table-wrap { overflow-x: auto; border: 1px solid var(--border-color); border-radius: 10px; }
+    table { border-collapse: collapse; width: 100%; font-size: 0.85rem; }
+    th, td { padding: 0.5rem 0.75rem; text-align: right; white-space: nowrap; border-bottom: 1px solid var(--border-color); }
+    th { background: rgba(99, 102, 241, 0.12); color: var(--text-muted); font-weight: 600; }
+    td:first-child, th:first-child, td.name, th.name { text-align: left; }
+    tr:last-child td { border-bottom: none; }
+    .buy { color: var(--color-buy); font-weight: 700; }
+    .sell { color: var(--color-sell); font-weight: 700; }
+    .pos { color: var(--color-buy); }
+    .neg { color: var(--color-sell); }
+    .hit { color: var(--color-buy); font-weight: 700; }
+    .miss { color: var(--color-sell); font-weight: 700; }
+    .badge-fresh {
+        display: inline-block; font-size: 0.7rem; background: rgba(99,102,241,0.25);
+        color: #a5b4fc; border-radius: 999px; padding: 0 0.5rem; margin-left: 0.4rem;
+    }
+    a { color: #a5b4fc; }
+    .entry-list { list-style: none; }
+    .entry-list li {
+        background: var(--bg-card); border: 1px solid var(--border-color);
+        border-radius: 10px; padding: 1rem 1.25rem; margin-bottom: 0.75rem;
+    }
+    .entry-list .date { font-size: 1.05rem; font-weight: 700; }
+    .entry-list .desc { color: var(--text-muted); font-size: 0.85rem; }
+    .note { color: var(--text-dim); font-size: 0.8rem; margin-top: 0.75rem; }
+    .back-link { display: inline-block; margin-bottom: 1rem; font-size: 0.85rem; }
+</style>
+<div class="container">
+    <a class="back-link" href="./index.html">&larr; レポート一覧に戻る</a>
+    <h1>週次スクリーニングレポート 2026-09-12</h1>
+    <p class="meta">RSI Breakout 自動スクリーナー（kairi法）による週次予測と答え合わせの記録</p>
+    <h2>前週予測の答え合わせ（2026-08-30 時点 → 2026-09-12、13日後）</h2>
+<div class="summary-cards">
+    <div class="summary-card"><div class="label">評価シグナル数</div><div class="value">8</div></div>
+    <div class="summary-card"><div class="label">的中 / 外れ</div><div class="value">4 / 4</div></div>
+    <div class="summary-card"><div class="label">的中率</div><div class="value">50%</div></div>
+    <div class="summary-card"><div class="label">新規シグナル的中率</div><div class="value">50%</div></div>
+</div>
+<div class="table-wrap">
+<table>
+<thead><tr><th class="name">銘柄</th><th>シンボル</th><th>予測</th><th>シグナル日</th><th>記録時終値</th><th>1週間後終値</th><th>変化率</th><th>判定</th></tr></thead>
+<tbody>
+<tr>
+<td class="name">マイクロソフト (MSFT)<span class="badge-fresh">新規</span></td>
+<td>MSFT</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-08-20</td>
+<td>505.1</td>
+<td>495.6</td>
+<td class="neg">-1.87%</td>
+<td class="miss">外れ</td>
+</tr>
+<tr>
+<td class="name">アマゾン (AMZN)<span class="badge-fresh">新規</span></td>
+<td>AMZN</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-08-24</td>
+<td>256.3</td>
+<td>256.8</td>
+<td class="pos">+0.20%</td>
+<td class="hit">的中</td>
+</tr>
+<tr>
+<td class="name">ソニーグループ (6758)<span class="badge-fresh">新規</span></td>
+<td>6758.T</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-08-24</td>
+<td>3,928</td>
+<td>3,632</td>
+<td class="neg">-7.54%</td>
+<td class="miss">外れ</td>
+</tr>
+<tr>
+<td class="name">キオクシアホールディングス (285A)<span class="badge-fresh">新規</span></td>
+<td>285A.T</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-08-27</td>
+<td>47,900</td>
+<td>54,030</td>
+<td class="pos">+12.80%</td>
+<td class="hit">的中</td>
+</tr>
+<tr>
+<td class="name">ENEOSホールディングス (5020)<span class="badge-fresh">新規</span></td>
+<td>5020.T</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-08-27</td>
+<td>1,324</td>
+<td>1,441</td>
+<td class="pos">+8.84%</td>
+<td class="hit">的中</td>
+</tr>
+<tr>
+<td class="name">三菱UFJフィナンシャルG (8306)<span class="badge-fresh">新規</span></td>
+<td>8306.T</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-08-28</td>
+<td>3,658</td>
+<td>3,661</td>
+<td class="pos">+0.08%</td>
+<td class="hit">的中</td>
+</tr>
+<tr>
+<td class="name">ウォルマート (WMT)<span class="badge-fresh">新規</span></td>
+<td>WMT</td>
+<td><span class="sell">SELL</span></td>
+<td>2026-08-20</td>
+<td>102.6</td>
+<td>107.2</td>
+<td class="pos">+4.40%</td>
+<td class="miss">外れ</td>
+</tr>
+<tr>
+<td class="name">レノバ (9519)<span class="badge-fresh">新規</span></td>
+<td>9519.T</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-08-26</td>
+<td>905</td>
+<td>881</td>
+<td class="neg">-2.65%</td>
+<td class="miss">外れ</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="note">判定基準: BUYシグナルは記録時終値より上昇していれば的中、SELLシグナルは下落していれば的中。「新規」はスナップショット時点でシグナル発生から5本以内のもの。</p>
+    <h2>今週の予測（2026-09-12 時点のシグナル一覧）</h2>
+<div class="summary-cards">
+    <div class="summary-card"><div class="label">スクリーニング対象</div><div class="value">73</div></div>
+    <div class="summary-card"><div class="label">シグナルあり</div><div class="value">10</div></div>
+    <div class="summary-card"><div class="label">BUY / SELL</div><div class="value">8 / 2</div></div>
+</div>
+<div class="table-wrap">
+<table>
+<thead><tr><th class="name">銘柄</th><th>シンボル</th><th>セクター</th><th>予測</th><th>シグナル日</th><th>終値</th><th>RSI</th></tr></thead>
+<tbody>
+<tr>
+<td class="name">アマゾン (AMZN)<span class="badge-fresh">新規</span></td>
+<td>AMZN</td>
+<td>テクノロジー</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-09-11</td>
+<td>256.8</td>
+<td>46.7</td>
+</tr>
+<tr>
+<td class="name">ソフトバンクグループ (9984)<span class="badge-fresh">新規</span></td>
+<td>9984.T</td>
+<td>テクノロジー</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-09-08</td>
+<td>6,540</td>
+<td>59.8</td>
+</tr>
+<tr>
+<td class="name">エヌビディア (NVDA)<span class="badge-fresh">新規</span></td>
+<td>NVDA</td>
+<td>半導体</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-09-03</td>
+<td>218.3</td>
+<td>50.5</td>
+</tr>
+<tr>
+<td class="name">東京エレクトロン (8035)<span class="badge-fresh">新規</span></td>
+<td>8035.T</td>
+<td>半導体</td>
+<td><span class="sell">SELL</span></td>
+<td>2026-09-11</td>
+<td>51,460</td>
+<td>34.3</td>
+</tr>
+<tr>
+<td class="name">エクソンモービル (XOM)<span class="badge-fresh">新規</span></td>
+<td>XOM</td>
+<td>エネルギー</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-09-09</td>
+<td>166</td>
+<td>59.3</td>
+</tr>
+<tr>
+<td class="name">IHI (7013)<span class="badge-fresh">新規</span></td>
+<td>7013.T</td>
+<td>防衛・重工</td>
+<td><span class="sell">SELL</span></td>
+<td>2026-09-11</td>
+<td>2,665</td>
+<td>45.5</td>
+</tr>
+<tr>
+<td class="name">フジクラ (5803)<span class="badge-fresh">新規</span></td>
+<td>5803.T</td>
+<td>素材・非鉄</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-09-09</td>
+<td>4,982</td>
+<td>48.4</td>
+</tr>
+<tr>
+<td class="name">ソフトバンク (9434)<span class="badge-fresh">新規</span></td>
+<td>9434.T</td>
+<td>通信</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-09-11</td>
+<td>246.9</td>
+<td>75.0</td>
+</tr>
+<tr>
+<td class="name">イーサリアム (ETH/USD)<span class="badge-fresh">新規</span></td>
+<td>ETH-USD</td>
+<td>暗号資産</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-09-11</td>
+<td>2,513.4</td>
+<td>64.5</td>
+</tr>
+<tr>
+<td class="name">メタプラネット (3350)<span class="badge-fresh">新規</span></td>
+<td>3350.T</td>
+<td>暗号資産</td>
+<td><span class="buy">BUY</span></td>
+<td>2026-09-11</td>
+<td>249</td>
+<td>35.2</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="note">この一覧が来週の答え合わせの対象になります。</p>
+    <p class="note">&copy; 2026 tamarin0509-art — このページは自動生成されています。</p>
+</div>
+<script type="application/json" id="weekly-report-data">
+{
+ "date": "2026-09-12",
+ "snapshot": {
+  "date": "2026-09-12",
+  "screenerUpdatedAt": "2026-09-11T23:52:43.989Z",
+  "totalSymbols": 73,
+  "signalCount": 10,
+  "entries": [
+   {
+    "symbol": "AMZN",
+    "name": "アマゾン (AMZN)",
+    "type": "stock",
+    "sector": "テクノロジー",
+    "close": 256.78,
+    "rsi": 46.74,
+    "signal": {
+     "time": "2026-09-11",
+     "type": "BUY",
+     "price": 256.78,
+     "status": "confirmed",
+     "barsAgo": 0
+    }
+   },
+   {
+    "symbol": "9984.T",
+    "name": "ソフトバンクグループ (9984)",
+    "type": "stock",
+    "sector": "テクノロジー",
+    "close": 6540,
+    "rsi": 59.83,
+    "signal": {
+     "time": "2026-09-08",
+     "type": "BUY",
+     "price": 6556,
+     "status": "confirmed",
+     "barsAgo": 3
+    }
+   },
+   {
+    "symbol": "NVDA",
+    "name": "エヌビディア (NVDA)",
+    "type": "stock",
+    "sector": "半導体",
+    "close": 218.29,
+    "rsi": 50.45,
+    "signal": {
+     "time": "2026-09-03",
+     "type": "BUY",
+     "price": 228.45,
+     "status": "confirmed",
+     "barsAgo": 5
+    }
+   },
+   {
+    "symbol": "8035.T",
+    "name": "東京エレクトロン (8035)",
+    "type": "stock",
+    "sector": "半導体",
+    "close": 51460,
+    "rsi": 34.31,
+    "signal": {
+     "time": "2026-09-11",
+     "type": "SELL",
+     "price": 51460,
+     "status": "confirmed",
+     "barsAgo": 0
+    }
+   },
+   {
+    "symbol": "XOM",
+    "name": "エクソンモービル (XOM)",
+    "type": "stock",
+    "sector": "エネルギー",
+    "close": 165.99,
+    "rsi": 59.31,
+    "signal": {
+     "time": "2026-09-09",
+     "type": "BUY",
+     "price": 164.23,
+     "status": "confirmed",
+     "barsAgo": 2
+    }
+   },
+   {
+    "symbol": "7013.T",
+    "name": "IHI (7013)",
+    "type": "stock",
+    "sector": "防衛・重工",
+    "close": 2665,
+    "rsi": 45.51,
+    "signal": {
+     "time": "2026-09-11",
+     "type": "SELL",
+     "price": 2665,
+     "status": "confirmed",
+     "barsAgo": 0
+    }
+   },
+   {
+    "symbol": "5803.T",
+    "name": "フジクラ (5803)",
+    "type": "stock",
+    "sector": "素材・非鉄",
+    "close": 4982,
+    "rsi": 48.42,
+    "signal": {
+     "time": "2026-09-09",
+     "type": "BUY",
+     "price": 5493,
+     "status": "confirmed",
+     "barsAgo": 2
+    }
+   },
+   {
+    "symbol": "9434.T",
+    "name": "ソフトバンク (9434)",
+    "type": "stock",
+    "sector": "通信",
+    "close": 246.9,
+    "rsi": 74.96,
+    "signal": {
+     "time": "2026-09-11",
+     "type": "BUY",
+     "price": 246.9,
+     "status": "confirmed",
+     "barsAgo": 0
+    }
+   },
+   {
+    "symbol": "ETH-USD",
+    "name": "イーサリアム (ETH/USD)",
+    "type": "crypto",
+    "sector": "暗号資産",
+    "close": 2513.4299,
+    "rsi": 64.45,
+    "signal": {
+     "time": "2026-09-11",
+     "type": "BUY",
+     "price": 2513.4299,
+     "status": "confirmed",
+     "barsAgo": 0
+    }
+   },
+   {
+    "symbol": "3350.T",
+    "name": "メタプラネット (3350)",
+    "type": "stock",
+    "sector": "暗号資産",
+    "close": 249,
+    "rsi": 35.23,
+    "signal": {
+     "time": "2026-09-11",
+     "type": "BUY",
+     "price": 249,
+     "status": "confirmed",
+     "barsAgo": 0
+    }
+   }
+  ]
+ },
+ "report": {
+  "reportDate": "2026-09-12",
+  "snapshotDate": "2026-08-30",
+  "elapsedDays": 13,
+  "summary": {
+   "total": 8,
+   "wins": 4,
+   "losses": 4,
+   "winRate": 50,
+   "freshTotal": 8,
+   "freshWins": 4,
+   "freshWinRate": 50
+  },
+  "evaluations": [
+   {
+    "symbol": "MSFT",
+    "name": "マイクロソフト (MSFT)",
+    "sector": "テクノロジー",
+    "signalType": "BUY",
+    "signalTime": "2026-08-20",
+    "signalPrice": 481.15,
+    "snapClose": 505.06,
+    "fresh": true,
+    "evalClose": 495.63,
+    "changePercent": -1.8671048984279108,
+    "correct": false
+   },
+   {
+    "symbol": "AMZN",
+    "name": "アマゾン (AMZN)",
+    "sector": "テクノロジー",
+    "signalType": "BUY",
+    "signalTime": "2026-08-24",
+    "signalPrice": 262.07,
+    "snapClose": 256.26,
+    "fresh": true,
+    "evalClose": 256.78,
+    "changePercent": 0.2029189104815351,
+    "correct": true
+   },
+   {
+    "symbol": "6758.T",
+    "name": "ソニーグループ (6758)",
+    "sector": "テクノロジー",
+    "signalType": "BUY",
+    "signalTime": "2026-08-24",
+    "signalPrice": 3850,
+    "snapClose": 3928,
+    "fresh": true,
+    "evalClose": 3632,
+    "changePercent": -7.535641547861507,
+    "correct": false
+   },
+   {
+    "symbol": "285A.T",
+    "name": "キオクシアホールディングス (285A)",
+    "sector": "半導体",
+    "signalType": "BUY",
+    "signalTime": "2026-08-27",
+    "signalPrice": 52500,
+    "snapClose": 47900,
+    "fresh": true,
+    "evalClose": 54030,
+    "changePercent": 12.79749478079332,
+    "correct": true
+   },
+   {
+    "symbol": "5020.T",
+    "name": "ENEOSホールディングス (5020)",
+    "sector": "エネルギー",
+    "signalType": "BUY",
+    "signalTime": "2026-08-27",
+    "signalPrice": 1331,
+    "snapClose": 1324,
+    "fresh": true,
+    "evalClose": 1441,
+    "changePercent": 8.836858006042297,
+    "correct": true
+   },
+   {
+    "symbol": "8306.T",
+    "name": "三菱UFJフィナンシャルG (8306)",
+    "sector": "金融",
+    "signalType": "BUY",
+    "signalTime": "2026-08-28",
+    "signalPrice": 3658,
+    "snapClose": 3658,
+    "fresh": true,
+    "evalClose": 3661,
+    "changePercent": 0.08201202843083652,
+    "correct": true
+   },
+   {
+    "symbol": "WMT",
+    "name": "ウォルマート (WMT)",
+    "sector": "消費・小売",
+    "signalType": "SELL",
+    "signalTime": "2026-08-20",
+    "signalPrice": 103.84,
+    "snapClose": 102.63,
+    "fresh": true,
+    "evalClose": 107.15,
+    "changePercent": 4.404170320569045,
+    "correct": false
+   },
+   {
+    "symbol": "9519.T",
+    "name": "レノバ (9519)",
+    "sector": "再エネ・太陽光",
+    "signalType": "BUY",
+    "signalTime": "2026-08-26",
+    "signalPrice": 976,
+    "snapClose": 905,
+    "fresh": true,
+    "evalClose": 881,
+    "changePercent": -2.6519337016574585,
+    "correct": false
+   }
+  ]
+ }
+}
+</script>
