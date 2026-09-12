@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-12T08:07:57.430Z",
+  "generatedAt": "2026-09-13T07:55:17.148Z",
   "tradingDay": "2026-09-11",
   "totalAlerts": 57,
   "alerts": [
@@ -437,41 +437,6 @@
       }
     },
     {
-      "symbol": "^N225",
-      "name": "日経平均株価 (Nikkei 225)",
-      "sector": "指数",
-      "type": "index",
-      "triggers": [
-        "D1"
-      ],
-      "triggerDetails": "日足RSIブレイク(BUY)",
-      "dailyRsi": 45.35,
-      "dailyKairi25": -1.43,
-      "bollinger": {
-        "upper": 68508.0885,
-        "mid": 66065.4899,
-        "lower": 63622.8912,
-        "percentB": 0.337
-      },
-      "maCross": null,
-      "close": 65270.9492,
-      "changePercent": 0.2,
-      "action": "BUY",
-      "priority": "HIGH",
-      "note": "日足RSI抵抗線を上方ブレイク。短期上昇の初動、分割エントリー検討。",
-      "tradePlan": {
-        "entryType": "成行 / 押し目買付",
-        "entryTarget": 65270.9492,
-        "entryRange": "62,957 〜 65,271",
-        "stopLoss": 62333.76,
-        "stopLossPct": -4.5,
-        "takeProfit": 70557.9,
-        "takeProfitPct": 8.1,
-        "riskRewardRatio": 1.8,
-        "executionNote": "【買付指示】エントリー: 65,271以下 | 損切り(SL): 62,334 (-4.5%) | 利確(TP): 70,558 (+8.1%) | RR: 1:1.8"
-      }
-    },
-    {
       "symbol": "^DJI",
       "name": "NYダウ (Dow Jones)",
       "sector": "指数",
@@ -515,7 +480,7 @@
         "D2"
       ],
       "triggerDetails": "日足RSI下抜け(SELL)",
-      "dailyRsi": 56.13,
+      "dailyRsi": 55.89,
       "dailyKairi25": 0.36,
       "bollinger": {
         "upper": 0.7242,
@@ -550,7 +515,7 @@
         "D1"
       ],
       "triggerDetails": "日足RSIブレイク(BUY)",
-      "dailyRsi": 47.11,
+      "dailyRsi": 47.1,
       "dailyKairi25": -1.22,
       "bollinger": {
         "upper": 350.4634,
@@ -830,7 +795,7 @@
         "D2"
       ],
       "triggerDetails": "日足RSI下抜け(SELL)",
-      "dailyRsi": 50.41,
+      "dailyRsi": 50.42,
       "dailyKairi25": -0.79,
       "bollinger": {
         "upper": 278.3005,
@@ -865,7 +830,7 @@
         "D1"
       ],
       "triggerDetails": "日足RSIブレイク(BUY)",
-      "dailyRsi": 45.62,
+      "dailyRsi": 45.63,
       "dailyKairi25": -1.34,
       "bollinger": {
         "upper": 115.272,
@@ -935,7 +900,7 @@
         "D1"
       ],
       "triggerDetails": "日足RSIブレイク(BUY)",
-      "dailyRsi": 37.97,
+      "dailyRsi": 38,
       "dailyKairi25": -2.25,
       "bollinger": {
         "upper": 86.6116,
@@ -960,34 +925,6 @@
         "riskRewardRatio": 1.8,
         "executionNote": "【買付指示】エントリー: 82.310以下 | 損切り(SL): 78.606 (-4.5%) | 利確(TP): 88.977 (+8.1%) | RR: 1:1.8"
       }
-    },
-    {
-      "symbol": "ETH-USD",
-      "name": "イーサリアム (ETH/USD)",
-      "sector": "暗号資産",
-      "type": "crypto",
-      "triggers": [
-        "D1",
-        "D2",
-        "D4",
-        "D9"
-      ],
-      "triggerDetails": "日足RSIブレイク(BUY) ＋ 日足RSI下抜け(SELL) ＋ 25日乖離率 +3.2% (売圏) ＋ 最適化シグナルBUY確定(0日前)",
-      "dailyRsi": 65.22,
-      "dailyKairi25": 3.24,
-      "bollinger": {
-        "upper": 2535.774,
-        "mid": 2467.4623,
-        "lower": 2399.1507,
-        "percentB": 0.812
-      },
-      "maCross": null,
-      "close": 2510.1499,
-      "changePercent": 3,
-      "action": "NEUTRAL",
-      "priority": "MEDIUM",
-      "note": "レンジ推移。シグナルの明確化まで待機。",
-      "tradePlan": null
     },
     {
       "symbol": "8035.T",
@@ -1098,6 +1035,33 @@
       "tradePlan": null
     },
     {
+      "symbol": "ETH-USD",
+      "name": "イーサリアム (ETH/USD)",
+      "sector": "暗号資産",
+      "type": "crypto",
+      "triggers": [
+        "D1",
+        "D4",
+        "D9"
+      ],
+      "triggerDetails": "日足RSIブレイク(BUY) ＋ 25日乖離率 +2.7% (売圏) ＋ 最適化シグナルBUY確定(1日前)",
+      "dailyRsi": 64.16,
+      "dailyKairi25": 2.72,
+      "bollinger": {
+        "upper": 2543.4945,
+        "mid": 2470.6217,
+        "lower": 2397.749,
+        "percentB": 0.855
+      },
+      "maCross": null,
+      "close": 2522.4199,
+      "changePercent": 0.31,
+      "action": "NEUTRAL",
+      "priority": "MEDIUM",
+      "note": "レンジ推移。シグナルの明確化まで待機。",
+      "tradePlan": null
+    },
+    {
       "symbol": "3350.T",
       "name": "メタプラネット (3350)",
       "sector": "暗号資産",
@@ -1137,13 +1101,13 @@
       "dailyRsi": 52.34,
       "dailyKairi25": -0.17,
       "bollinger": {
-        "upper": 26723.4557,
-        "mid": 26315.8504,
-        "lower": 25908.2451,
+        "upper": 26723.4559,
+        "mid": 26315.8506,
+        "lower": 25908.2452,
         "percentB": 0.521
       },
       "maCross": null,
-      "close": 26333.0352,
+      "close": 26333.0391,
       "changePercent": 0.96,
       "action": "NEUTRAL",
       "priority": "MEDIUM",
@@ -1186,7 +1150,7 @@
         "D9"
       ],
       "triggerDetails": "25日乖離率 +2.8% (売圏) ＋ 最適化シグナルBUY確定(2日前)",
-      "dailyRsi": 61.11,
+      "dailyRsi": 61.13,
       "dailyKairi25": 2.78,
       "bollinger": {
         "upper": 168.3345,
@@ -1305,6 +1269,41 @@
       "priority": "MEDIUM",
       "note": "レンジ推移。シグナルの明確化まで待機。",
       "tradePlan": null
+    },
+    {
+      "symbol": "^N225",
+      "name": "日経平均株価 (Nikkei 225)",
+      "sector": "指数",
+      "type": "index",
+      "triggers": [
+        "D3"
+      ],
+      "triggerDetails": "25日乖離率 -3.2% (買圏)",
+      "dailyRsi": 40.77,
+      "dailyKairi25": -3.23,
+      "bollinger": {
+        "upper": 68107.7246,
+        "mid": 65830.367,
+        "lower": 63553.0095,
+        "percentB": 0.101
+      },
+      "maCross": null,
+      "close": 64011.3398,
+      "changePercent": -1.93,
+      "action": "BUY",
+      "priority": "MEDIUM",
+      "note": "25日乖離率(-3.2%)下限到達。売られ過ぎからの自律反発狙い。",
+      "tradePlan": {
+        "entryType": "成行 / 押し目買付",
+        "entryTarget": 64011.3398,
+        "entryRange": "61,742 〜 64,011",
+        "stopLoss": 61130.83,
+        "stopLossPct": -4.5,
+        "takeProfit": 69225.57,
+        "takeProfitPct": 8.15,
+        "riskRewardRatio": 1.81,
+        "executionNote": "【買付指示】エントリー: 64,011以下 | 損切り(SL): 61,131 (-4.5%) | 利確(TP): 69,226 (+8.1%) | RR: 1:1.8"
+      }
     },
     {
       "symbol": "META",
@@ -1525,7 +1524,7 @@
         "D4"
       ],
       "triggerDetails": "25日乖離率 +4.9% (売圏)",
-      "dailyRsi": 68.12,
+      "dailyRsi": 67.95,
       "dailyKairi25": 4.89,
       "bollinger": {
         "upper": 216.0457,
@@ -1595,7 +1594,7 @@
         "D3"
       ],
       "triggerDetails": "25日乖離率 -7.4% (買圏)",
-      "dailyRsi": 34.79,
+      "dailyRsi": 34.78,
       "dailyKairi25": -7.41,
       "bollinger": {
         "upper": 610.4603,
@@ -1905,9 +1904,9 @@
   "marketSummary": {
     "nikkei": {
       "name": "日経平均",
-      "dailyRsi": 45.35,
-      "changePercent": 0.2,
-      "close": 65270.9492,
+      "dailyRsi": 40.77,
+      "changePercent": -1.93,
+      "close": 64011.3398,
       "trend": "揉み合い・中立"
     },
     "sp500": {
