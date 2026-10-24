@@ -1,0 +1,59 @@
+name: Daily Nikkei LLM Forecast
+
+on:
+  schedule:
+    # 日本時間の平日朝6:30。米国市場終了後、東京市場の寄り付き前に配信する。
+    # UTCでは前日扱いになるため、日曜〜木曜に実行。
+    - cron: '30 21 * * 0-4'
+  workflow_dispatch:
+    inputs:
+      force:
+        description: '同じ市場データでも強制的に再生成・再送信する'
+        required: false
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: daily-nikkei-llm-forecast
+  cancel-in-progress: false
+
+jobs:
+  forecast:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Run unit tests
+        run: node --test scripts/nikkei_llm_forecast.test.js
+
+      - name: Generate forecast and send LINE message
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: gemini-3.8-flash
+          LINE_CHANNEL_ACCESS_TOKEN: ${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}
+          LINE_USER_ID: ${{ secrets.LINE_USER_ID }}
+          FORCE_FORECAST: ${{ github.event.inputs.force || 'false' }}
+        run: node scripts/nikkei_llm_forecast.js
+
+      - name: Commit forecast record
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/nikkei_llm_forecast.json
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: update daily Nikkei LLM forecast [skip ci]"
+            git push origin main
+          else
+            echo "No new Nikkei forecast."
+          fi
