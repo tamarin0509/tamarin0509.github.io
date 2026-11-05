@@ -1,48 +1,85 @@
 {
-  "generatedAt": "2026-11-04T10:08:32.235Z",
-  "tradingDay": "2026-11-02",
-  "totalAlerts": 64,
+  "generatedAt": "2026-11-05T10:24:18.245Z",
+  "tradingDay": "2026-11-03",
+  "totalAlerts": 62,
   "alerts": [
     {
-      "symbol": "GOOGL",
-      "name": "アルファベット (GOOGL)",
-      "sector": "テクノロジー",
+      "symbol": "5019.T",
+      "name": "出光興産 (5019)",
+      "sector": "エネルギー",
       "type": "stock",
       "triggers": [
         "D3",
         "D5",
         "D10"
       ],
-      "triggerDetails": "25日乖離率 -16.2% (買圏) ＋ BB-2σ接触(%B-4%) ＋ RSI極端値(21.5)",
-      "dailyRsi": 21.54,
-      "dailyKairi25": -16.21,
+      "triggerDetails": "25日乖離率 -8.8% (買圏) ＋ BB-2σ接触(%B-22%) ＋ RSI極端値(29.8)",
+      "dailyRsi": 29.79,
+      "dailyKairi25": -8.8,
       "bollinger": {
-        "upper": 378.2895,
-        "mid": 330.5325,
-        "lower": 282.7755,
-        "percentB": -0.04
+        "upper": 1619.0554,
+        "mid": 1527.975,
+        "lower": 1436.8946,
+        "percentB": -0.219
       },
       "maCross": null,
-      "close": 278.99,
-      "changePercent": -0.3,
+      "close": 1397,
+      "changePercent": -2.31,
       "action": "BUY",
       "priority": "HIGH",
-      "note": "ボリンジャーバンド-2σ接触(%B -4%)。売られ過ぎからの自律反発狙い。",
+      "note": "ボリンジャーバンド-2σ接触(%B -22%)。売られ過ぎからの自律反発狙い。",
       "tradePlan": {
         "entryType": "成行 / 押し目買付",
-        "entryTarget": 278.99,
-        "entryRange": "269 〜 279",
-        "stopLoss": 266.44,
+        "entryTarget": 1397,
+        "entryRange": "1,347 〜 1,397",
+        "stopLoss": 1334.13,
         "stopLossPct": -4.5,
-        "takeProfit": 359.4,
-        "takeProfitPct": 28.82,
-        "riskRewardRatio": 6.4,
-        "executionNote": "【買付指示】エントリー: 279以下 | 損切り(SL): 266 (-4.5%) | 利確(TP): 359 (+28.8%) | RR: 1:6.4"
+        "takeProfit": 1588,
+        "takeProfitPct": 13.67,
+        "riskRewardRatio": 3.04,
+        "executionNote": "【買付指示】エントリー: 1,397以下 | 損切り(SL): 1,334 (-4.5%) | 利確(TP): 1,588 (+13.7%) | RR: 1:3.0"
       }
     },
     {
-      "symbol": "LLY",
-      "name": "イーライリリー (LLY)",
+      "symbol": "7011.T",
+      "name": "三菱重工業 (7011)",
+      "sector": "防衛・重工",
+      "type": "stock",
+      "triggers": [
+        "D3",
+        "D5",
+        "D10"
+      ],
+      "triggerDetails": "25日乖離率 -15.0% (買圏) ＋ BB-2σ接触(%B-17%) ＋ RSI極端値(23.5)",
+      "dailyRsi": 23.46,
+      "dailyKairi25": -15.01,
+      "bollinger": {
+        "upper": 3954.4141,
+        "mid": 3584.3,
+        "lower": 3214.1859,
+        "percentB": -0.17
+      },
+      "maCross": null,
+      "close": 3088,
+      "changePercent": -5.04,
+      "action": "BUY",
+      "priority": "HIGH",
+      "note": "ボリンジャーバンド-2σ接触(%B -17%)。売られ過ぎからの自律反発狙い。",
+      "tradePlan": {
+        "entryType": "成行 / 押し目買付",
+        "entryTarget": 3088,
+        "entryRange": "2,979 〜 3,088",
+        "stopLoss": 2949.04,
+        "stopLossPct": -4.5,
+        "takeProfit": 3910,
+        "takeProfitPct": 26.62,
+        "riskRewardRatio": 5.92,
+        "executionNote": "【買付指示】エントリー: 3,088以下 | 損切り(SL): 2,949 (-4.5%) | 利確(TP): 3,910 (+26.6%) | RR: 1:5.9"
+      }
+    },
+    {
+      "symbol": "4502.T",
+      "name": "武田薬品工業 (4502)",
       "sector": "医薬品",
       "type": "stock",
       "triggers": [
@@ -50,68 +87,31 @@
         "D6",
         "D10"
       ],
-      "triggerDetails": "25日乖離率 +13.9% (売圏) ＋ BB+2σ接触(%B100%) ＋ RSI極端値(73.8)",
-      "dailyRsi": 73.81,
-      "dailyKairi25": 13.92,
+      "triggerDetails": "25日乖離率 +12.7% (売圏) ＋ BB+2σ接触(%B105%) ＋ RSI極端値(77.5)",
+      "dailyRsi": 77.49,
+      "dailyKairi25": 12.7,
       "bollinger": {
-        "upper": 1409.9499,
-        "mid": 1259.4035,
-        "lower": 1108.8571,
-        "percentB": 1.003
+        "upper": 6898.393,
+        "mid": 6288.35,
+        "lower": 5678.307,
+        "percentB": 1.046
       },
       "maCross": null,
-      "close": 1410.99,
-      "changePercent": -0.46,
+      "close": 6955,
+      "changePercent": 5.57,
       "action": "SELL",
       "priority": "HIGH",
-      "note": "ボリンジャーバンド+2σ接触(%B 100%)。短期的な過熱、利確検討。",
+      "note": "ボリンジャーバンド+2σ接触(%B 105%)。短期的な過熱、利確検討。",
       "tradePlan": {
         "entryType": "成行 / 戻り売り",
-        "entryTarget": 1410.99,
-        "entryRange": "1,411 〜 1,460",
-        "stopLoss": 1474.48,
+        "entryTarget": 6955,
+        "entryRange": "6,955 〜 7,195",
+        "stopLoss": 7267.97,
         "stopLossPct": 4.5,
-        "takeProfit": 1131.21,
-        "takeProfitPct": -19.83,
-        "riskRewardRatio": 4.41,
-        "executionNote": "【空売り指示】エントリー: 1,411以上 | 損切り(SL): 1,474 (+4.5%) | 利確(TP): 1,131 (-19.8%) | RR: 1:4.4"
-      }
-    },
-    {
-      "symbol": "COST",
-      "name": "コストコ (COST)",
-      "sector": "消費・小売",
-      "type": "stock",
-      "triggers": [
-        "D4",
-        "D6",
-        "D10"
-      ],
-      "triggerDetails": "25日乖離率 +7.2% (売圏) ＋ BB+2σ接触(%B102%) ＋ RSI極端値(72.4)",
-      "dailyRsi": 72.41,
-      "dailyKairi25": 7.19,
-      "bollinger": {
-        "upper": 1038.4024,
-        "mid": 983.7435,
-        "lower": 929.0846,
-        "percentB": 1.02
-      },
-      "maCross": null,
-      "close": 1040.55,
-      "changePercent": 2.79,
-      "action": "SELL",
-      "priority": "HIGH",
-      "note": "ボリンジャーバンド+2σ接触(%B 102%)。短期的な過熱、利確検討。",
-      "tradePlan": {
-        "entryType": "成行 / 戻り売り",
-        "entryTarget": 1040.55,
-        "entryRange": "1,041 〜 1,077",
-        "stopLoss": 1087.37,
-        "stopLossPct": 4.5,
-        "takeProfit": 919,
-        "takeProfitPct": -11.68,
-        "riskRewardRatio": 2.6,
-        "executionNote": "【空売り指示】エントリー: 1,041以上 | 損切り(SL): 1,087 (+4.5%) | 利確(TP): 919 (-11.7%) | RR: 1:2.6"
+        "takeProfit": 5708,
+        "takeProfitPct": -17.93,
+        "riskRewardRatio": 3.98,
+        "executionNote": "【空売り指示】エントリー: 6,955以上 | 損切り(SL): 7,268 (+4.5%) | 利確(TP): 5,708 (-17.9%) | RR: 1:4.0"
       }
     },
     {
@@ -124,212 +124,247 @@
         "D6",
         "D10"
       ],
-      "triggerDetails": "25日乖離率 +8.9% (売圏) ＋ BB+2σ接触(%B107%) ＋ RSI極端値(74.6)",
-      "dailyRsi": 74.56,
-      "dailyKairi25": 8.86,
+      "triggerDetails": "25日乖離率 +14.0% (売圏) ＋ BB+2σ接触(%B121%) ＋ RSI極端値(81.2)",
+      "dailyRsi": 81.22,
+      "dailyKairi25": 14,
       "bollinger": {
-        "upper": 1865.0178,
-        "mid": 1736.975,
-        "lower": 1608.9322,
-        "percentB": 1.072
+        "upper": 1916.1168,
+        "mid": 1752.55,
+        "lower": 1588.9832,
+        "percentB": 1.211
       },
       "maCross": null,
-      "close": 1883.5,
-      "changePercent": 1.81,
+      "close": 1985,
+      "changePercent": 5.5,
       "action": "SELL",
       "priority": "HIGH",
-      "note": "ボリンジャーバンド+2σ接触(%B 107%)。短期的な過熱、利確検討。",
+      "note": "ボリンジャーバンド+2σ接触(%B 121%)。短期的な過熱、利確検討。",
       "tradePlan": {
         "entryType": "成行 / 戻り売り",
-        "entryTarget": 1883.5,
-        "entryRange": "1,884 〜 1,949",
-        "stopLoss": 1968.26,
+        "entryTarget": 1985,
+        "entryRange": "1,985 〜 2,054",
+        "stopLoss": 2074.32,
         "stopLossPct": 4.5,
         "takeProfit": 1642,
-        "takeProfitPct": -12.82,
-        "riskRewardRatio": 2.85,
-        "executionNote": "【空売り指示】エントリー: 1,884以上 | 損切り(SL): 1,968 (+4.5%) | 利確(TP): 1,642 (-12.8%) | RR: 1:2.8"
+        "takeProfitPct": -17.28,
+        "riskRewardRatio": 3.84,
+        "executionNote": "【空売り指示】エントリー: 1,985以上 | 損切り(SL): 2,074 (+4.5%) | 利確(TP): 1,642 (-17.3%) | RR: 1:3.8"
       }
     },
     {
-      "symbol": "NEE",
-      "name": "ネクステラ・エナジー (NEE)",
-      "sector": "再エネ・太陽光",
+      "symbol": "^IXIC",
+      "name": "ナスダック総合 (NASDAQ)",
+      "sector": "指数",
+      "type": "index",
+      "triggers": [
+        "D1",
+        "D3"
+      ],
+      "triggerDetails": "日足RSIブレイク(BUY) ＋ 25日乖離率 -3.1% (買圏)",
+      "dailyRsi": 42.4,
+      "dailyKairi25": -3.08,
+      "bollinger": {
+        "upper": 27596.7027,
+        "mid": 26358.5042,
+        "lower": 25120.3057,
+        "percentB": 0.249
+      },
+      "maCross": null,
+      "close": 25736.5137,
+      "changePercent": 1.44,
+      "action": "BUY",
+      "priority": "HIGH",
+      "note": "25日乖離率(-3.1%)押し目圏 ＋ 日足RSIブレイクアウト。短期の押し目買いポイント。",
+      "tradePlan": {
+        "entryType": "成行 / 押し目買付",
+        "entryTarget": 25736.5137,
+        "entryRange": "24,824 〜 25,737",
+        "stopLoss": 24578.37,
+        "stopLossPct": -4.5,
+        "takeProfit": 27821.17,
+        "takeProfitPct": 8.1,
+        "riskRewardRatio": 1.8,
+        "executionNote": "【買付指示】エントリー: 25,737以下 | 損切り(SL): 24,578 (-4.5%) | 利確(TP): 27,821 (+8.1%) | RR: 1:1.8"
+      }
+    },
+    {
+      "symbol": "GOOGL",
+      "name": "アルファベット (GOOGL)",
+      "sector": "テクノロジー",
+      "type": "stock",
+      "triggers": [
+        "D3",
+        "D10"
+      ],
+      "triggerDetails": "25日乖離率 -15.3% (買圏) ＋ RSI極端値(21.2)",
+      "dailyRsi": 21.25,
+      "dailyKairi25": -15.28,
+      "bollinger": {
+        "upper": 378.9791,
+        "mid": 327.15,
+        "lower": 275.3209,
+        "percentB": 0.045
+      },
+      "maCross": null,
+      "close": 280.03,
+      "changePercent": 0.37,
+      "action": "BUY",
+      "priority": "HIGH",
+      "note": "25日乖離率(-15.3%)下限到達。売られ過ぎからの自律反発狙い。",
+      "tradePlan": {
+        "entryType": "成行 / 押し目買付",
+        "entryTarget": 280.03,
+        "entryRange": "270 〜 280",
+        "stopLoss": 267.43,
+        "stopLossPct": -4.5,
+        "takeProfit": 359.4,
+        "takeProfitPct": 28.34,
+        "riskRewardRatio": 6.3,
+        "executionNote": "【買付指示】エントリー: 280以下 | 損切り(SL): 267 (-4.5%) | 利確(TP): 359 (+28.3%) | RR: 1:6.3"
+      }
+    },
+    {
+      "symbol": "META",
+      "name": "メタ・プラットフォームズ (META)",
+      "sector": "テクノロジー",
+      "type": "stock",
+      "triggers": [
+        "D1",
+        "D3"
+      ],
+      "triggerDetails": "日足RSIブレイク(BUY) ＋ 25日乖離率 -9.9% (買圏)",
+      "dailyRsi": 33.91,
+      "dailyKairi25": -9.89,
+      "bollinger": {
+        "upper": 781.6435,
+        "mid": 678.4555,
+        "lower": 575.2675,
+        "percentB": 0.222
+      },
+      "maCross": null,
+      "close": 621.03,
+      "changePercent": 2.36,
+      "action": "BUY",
+      "priority": "HIGH",
+      "note": "25日乖離率(-9.9%)押し目圏 ＋ 日足RSIブレイクアウト。短期の押し目買いポイント。",
+      "tradePlan": {
+        "entryType": "成行 / 押し目買付",
+        "entryTarget": 621.03,
+        "entryRange": "599 〜 621",
+        "stopLoss": 593.08,
+        "stopLossPct": -4.5,
+        "takeProfit": 771.27,
+        "takeProfitPct": 24.19,
+        "riskRewardRatio": 5.38,
+        "executionNote": "【買付指示】エントリー: 621以下 | 損切り(SL): 593 (-4.5%) | 利確(TP): 771 (+24.2%) | RR: 1:5.4"
+      }
+    },
+    {
+      "symbol": "6758.T",
+      "name": "ソニーグループ (6758)",
+      "sector": "テクノロジー",
       "type": "stock",
       "triggers": [
         "D4",
-        "D6",
-        "D10"
+        "D6"
       ],
-      "triggerDetails": "25日乖離率 +7.3% (売圏) ＋ BB+2σ接触(%B105%) ＋ RSI極端値(70.6)",
-      "dailyRsi": 70.64,
-      "dailyKairi25": 7.34,
+      "triggerDetails": "25日乖離率 +8.3% (売圏) ＋ BB+2σ接触(%B105%)",
+      "dailyRsi": 68.47,
+      "dailyKairi25": 8.33,
       "bollinger": {
-        "upper": 84.5737,
-        "mid": 79.961,
-        "lower": 75.3483,
-        "percentB": 1.049
+        "upper": 4218.186,
+        "mid": 3956.35,
+        "lower": 3694.514,
+        "percentB": 1.047
       },
       "maCross": null,
-      "close": 85.03,
-      "changePercent": 1.58,
+      "close": 4243,
+      "changePercent": 7.88,
       "action": "SELL",
       "priority": "HIGH",
       "note": "ボリンジャーバンド+2σ接触(%B 105%)。短期的な過熱、利確検討。",
       "tradePlan": {
         "entryType": "成行 / 戻り売り",
-        "entryTarget": 85.03,
-        "entryRange": "85.030 〜 87.968",
-        "stopLoss": 88.86,
+        "entryTarget": 4243,
+        "entryRange": "4,243 〜 4,390",
+        "stopLoss": 4433.93,
         "stopLossPct": 4.5,
-        "takeProfit": 76.34,
-        "takeProfitPct": -10.22,
-        "riskRewardRatio": 2.27,
-        "executionNote": "【空売り指示】エントリー: 85.030以上 | 損切り(SL): 88.856 (+4.5%) | 利確(TP): 76.340 (-10.2%) | RR: 1:2.3"
+        "takeProfit": 3662,
+        "takeProfitPct": -13.69,
+        "riskRewardRatio": 3.04,
+        "executionNote": "【空売り指示】エントリー: 4,243以上 | 損切り(SL): 4,434 (+4.5%) | 利確(TP): 3,662 (-13.7%) | RR: 1:3.0"
       }
     },
     {
-      "symbol": "AUDUSD=X",
-      "name": "豪ドル / 米ドル (AUD/USD)",
-      "sector": "為替",
-      "type": "forex",
-      "triggers": [
-        "D2",
-        "D8"
-      ],
-      "triggerDetails": "日足RSI下抜け(SELL) ＋ MAデッドクロス(5/25)",
-      "dailyRsi": 40.58,
-      "dailyKairi25": -0.24,
-      "bollinger": {
-        "upper": 0.7063,
-        "mid": 0.6996,
-        "lower": 0.6929,
-        "percentB": 0.313
-      },
-      "maCross": "dead",
-      "close": 0.6971,
-      "changePercent": -0.41,
-      "action": "SELL",
-      "priority": "HIGH",
-      "note": "短期(5日)線が長期(25日)線を下抜け(デッドクロス)。短期トレンド転換の初動。",
-      "tradePlan": {
-        "entryType": "成行 / 戻り売り",
-        "entryTarget": 0.6971,
-        "entryRange": "0.697 〜 0.721",
-        "stopLoss": 0.73,
-        "stopLossPct": 4.5,
-        "takeProfit": 0.64,
-        "takeProfitPct": -8.1,
-        "riskRewardRatio": 1.8,
-        "executionNote": "【空売り指示】エントリー: 0.697以上 | 損切り(SL): 0.728 (+4.5%) | 利確(TP): 0.641 (-8.1%) | RR: 1:1.8"
-      }
-    },
-    {
-      "symbol": "AMD",
-      "name": "アドバンスト・マイクロ・デバイセズ (AMD)",
-      "sector": "半導体",
-      "type": "stock",
-      "triggers": [
-        "D3",
-        "D5"
-      ],
-      "triggerDetails": "25日乖離率 -18.6% (買圏) ＋ BB-2σ接触(%B-1%)",
-      "dailyRsi": 35.57,
-      "dailyKairi25": -18.64,
-      "bollinger": {
-        "upper": 656.3166,
-        "mid": 562.195,
-        "lower": 468.0734,
-        "percentB": -0.007
-      },
-      "maCross": null,
-      "close": 466.84,
-      "changePercent": -7.52,
-      "action": "BUY",
-      "priority": "HIGH",
-      "note": "ボリンジャーバンド-2σ接触(%B -1%)。売られ過ぎからの自律反発狙い。",
-      "tradePlan": {
-        "entryType": "成行 / 押し目買付",
-        "entryTarget": 466.84,
-        "entryRange": "450 〜 467",
-        "stopLoss": 445.83,
-        "stopLossPct": -4.5,
-        "takeProfit": 658.52,
-        "takeProfitPct": 41.06,
-        "riskRewardRatio": 9.12,
-        "executionNote": "【買付指示】エントリー: 467以下 | 損切り(SL): 446 (-4.5%) | 利確(TP): 659 (+41.1%) | RR: 1:9.1"
-      }
-    },
-    {
-      "symbol": "5019.T",
-      "name": "出光興産 (5019)",
+      "symbol": "5020.T",
+      "name": "ENEOSホールディングス (5020)",
       "sector": "エネルギー",
       "type": "stock",
       "triggers": [
         "D3",
         "D5"
       ],
-      "triggerDetails": "25日乖離率 -5.7% (買圏) ＋ BB-2σ接触(%B-17%)",
-      "dailyRsi": 36.02,
-      "dailyKairi25": -5.73,
+      "triggerDetails": "25日乖離率 -5.1% (買圏) ＋ BB-2σ接触(%B-3%)",
+      "dailyRsi": 37.68,
+      "dailyKairi25": -5.08,
       "bollinger": {
-        "upper": 1597.9043,
-        "mid": 1535.8,
-        "lower": 1473.6957,
-        "percentB": -0.175
+        "upper": 1475.767,
+        "mid": 1402.325,
+        "lower": 1328.883,
+        "percentB": -0.03
       },
       "maCross": null,
-      "close": 1452,
-      "changePercent": -2.42,
+      "close": 1324.5,
+      "changePercent": -1.23,
       "action": "BUY",
       "priority": "HIGH",
-      "note": "ボリンジャーバンド-2σ接触(%B -17%)。売られ過ぎからの自律反発狙い。",
+      "note": "ボリンジャーバンド-2σ接触(%B -3%)。売られ過ぎからの自律反発狙い。",
       "tradePlan": {
         "entryType": "成行 / 押し目買付",
-        "entryTarget": 1452,
-        "entryRange": "1,401 〜 1,452",
-        "stopLoss": 1386.66,
+        "entryTarget": 1324.5,
+        "entryRange": "1,278 〜 1,325",
+        "stopLoss": 1264.9,
         "stopLossPct": -4.5,
-        "takeProfit": 1588,
-        "takeProfitPct": 9.37,
-        "riskRewardRatio": 2.08,
-        "executionNote": "【買付指示】エントリー: 1,452以下 | 損切り(SL): 1,387 (-4.5%) | 利確(TP): 1,588 (+9.4%) | RR: 1:2.1"
+        "takeProfit": 1470.5,
+        "takeProfitPct": 11.02,
+        "riskRewardRatio": 2.45,
+        "executionNote": "【買付指示】エントリー: 1,325以下 | 損切り(SL): 1,265 (-4.5%) | 利確(TP): 1,471 (+11.0%) | RR: 1:2.4"
       }
     },
     {
-      "symbol": "7012.T",
-      "name": "川崎重工業 (7012)",
+      "symbol": "7013.T",
+      "name": "IHI (7013)",
       "sector": "防衛・重工",
       "type": "stock",
       "triggers": [
-        "D3",
-        "D10"
+        "D1",
+        "D3"
       ],
-      "triggerDetails": "25日乖離率 -7.6% (買圏) ＋ RSI極端値(29.5)",
-      "dailyRsi": 29.49,
-      "dailyKairi25": -7.63,
+      "triggerDetails": "日足RSIブレイク(BUY) ＋ 25日乖離率 -3.2% (買圏)",
+      "dailyRsi": 43.98,
+      "dailyKairi25": -3.23,
       "bollinger": {
-        "upper": 2378.2601,
-        "mid": 2212.45,
-        "lower": 2046.6399,
-        "percentB": 0.07
+        "upper": 2675.4107,
+        "mid": 2469.325,
+        "lower": 2263.2393,
+        "percentB": 0.419
       },
       "maCross": null,
-      "close": 2070,
-      "changePercent": -1.29,
+      "close": 2436,
+      "changePercent": 1.75,
       "action": "BUY",
       "priority": "HIGH",
-      "note": "25日乖離率(-7.6%)下限到達。売られ過ぎからの自律反発狙い。",
+      "note": "25日乖離率(-3.2%)押し目圏 ＋ 日足RSIブレイクアウト。短期の押し目買いポイント。",
       "tradePlan": {
         "entryType": "成行 / 押し目買付",
-        "entryTarget": 2070,
-        "entryRange": "1,997 〜 2,070",
-        "stopLoss": 1976.85,
-        "stopLossPct": -4.5,
-        "takeProfit": 2453,
-        "takeProfitPct": 18.5,
-        "riskRewardRatio": 4.11,
-        "executionNote": "【買付指示】エントリー: 2,070以下 | 損切り(SL): 1,977 (-4.5%) | 利確(TP): 2,453 (+18.5%) | RR: 1:4.1"
+        "entryTarget": 2436,
+        "entryRange": "2,105 〜 2,436",
+        "stopLoss": 2084.26,
+        "stopLossPct": -14.44,
+        "takeProfit": 3069.13,
+        "takeProfitPct": 25.99,
+        "riskRewardRatio": 1.8,
+        "executionNote": "【買付指示】エントリー: 2,436以下 | 損切り(SL): 2,084 (-14.4%) | 利確(TP): 3,069 (+26.0%) | RR: 1:1.8"
       }
     },
     {
@@ -341,31 +376,31 @@
         "D4",
         "D10"
       ],
-      "triggerDetails": "25日乖離率 +16.2% (売圏) ＋ RSI極端値(76.8)",
-      "dailyRsi": 76.75,
-      "dailyKairi25": 16.15,
+      "triggerDetails": "25日乖離率 +14.4% (売圏) ＋ RSI極端値(76.4)",
+      "dailyRsi": 76.35,
+      "dailyKairi25": 14.36,
       "bollinger": {
-        "upper": 671.0996,
-        "mid": 565.1925,
-        "lower": 459.2854,
-        "percentB": 0.868
+        "upper": 679.0289,
+        "mid": 571.6365,
+        "lower": 464.2441,
+        "percentB": 0.814
       },
       "maCross": null,
-      "close": 643.15,
-      "changePercent": 0.97,
+      "close": 639,
+      "changePercent": -0.65,
       "action": "SELL",
       "priority": "HIGH",
-      "note": "25日乖離率(+16.2%)上限到達。短期的過熱感、利益確定・手仕舞い推奨。",
+      "note": "25日乖離率(+14.4%)上限到達。短期的過熱感、利益確定・手仕舞い推奨。",
       "tradePlan": {
         "entryType": "成行 / 戻り売り",
-        "entryTarget": 643.15,
-        "entryRange": "643 〜 665",
-        "stopLoss": 672.09,
+        "entryTarget": 639,
+        "entryRange": "639 〜 661",
+        "stopLoss": 667.75,
         "stopLossPct": 4.5,
         "takeProfit": 497,
-        "takeProfitPct": -22.72,
-        "riskRewardRatio": 5.05,
-        "executionNote": "【空売り指示】エントリー: 643以上 | 損切り(SL): 672 (+4.5%) | 利確(TP): 497 (-22.7%) | RR: 1:5.0"
+        "takeProfitPct": -22.22,
+        "riskRewardRatio": 4.94,
+        "executionNote": "【空売り指示】エントリー: 639以上 | 損切り(SL): 668 (+4.5%) | 利確(TP): 497 (-22.2%) | RR: 1:4.9"
       }
     },
     {
@@ -377,67 +412,31 @@
         "D2",
         "D4"
       ],
-      "triggerDetails": "日足RSI下抜け(SELL) ＋ 25日乖離率 +6.7% (売圏)",
-      "dailyRsi": 65.29,
-      "dailyKairi25": 6.73,
+      "triggerDetails": "日足RSI下抜け(SELL) ＋ 25日乖離率 +6.9% (売圏)",
+      "dailyRsi": 67.56,
+      "dailyKairi25": 6.89,
       "bollinger": {
-        "upper": 203.4918,
-        "mid": 191.177,
-        "lower": 178.8622,
-        "percentB": 0.972
+        "upper": 205.1251,
+        "mid": 192.2035,
+        "lower": 179.2819,
+        "percentB": 0.95
       },
       "maCross": null,
-      "close": 202.79,
-      "changePercent": 1.5,
+      "close": 203.82,
+      "changePercent": 0.51,
       "action": "SELL",
       "priority": "HIGH",
-      "note": "25日乖離率(+6.7%)過熱圏 ＋ 日足RSI下抜け。短期の利確・警戒ポイント。",
+      "note": "25日乖離率(+6.9%)過熱圏 ＋ 日足RSI下抜け。短期の利確・警戒ポイント。",
       "tradePlan": {
         "entryType": "成行 / 戻り売り",
-        "entryTarget": 202.79,
-        "entryRange": "203 〜 210",
-        "stopLoss": 211.92,
+        "entryTarget": 203.82,
+        "entryRange": "204 〜 211",
+        "stopLoss": 212.99,
         "stopLossPct": 4.5,
         "takeProfit": 179.02,
-        "takeProfitPct": -11.72,
-        "riskRewardRatio": 2.6,
-        "executionNote": "【空売り指示】エントリー: 203以上 | 損切り(SL): 212 (+4.5%) | 利確(TP): 179 (-11.7%) | RR: 1:2.6"
-      }
-    },
-    {
-      "symbol": "8306.T",
-      "name": "三菱UFJフィナンシャルG (8306)",
-      "sector": "金融",
-      "type": "stock",
-      "triggers": [
-        "D1",
-        "D3"
-      ],
-      "triggerDetails": "日足RSIブレイク(BUY) ＋ 25日乖離率 -2.7% (買圏)",
-      "dailyRsi": 44.24,
-      "dailyKairi25": -2.7,
-      "bollinger": {
-        "upper": 3629.7033,
-        "mid": 3441.7,
-        "lower": 3253.6967,
-        "percentB": 0.339
-      },
-      "maCross": null,
-      "close": 3381,
-      "changePercent": -0.06,
-      "action": "BUY",
-      "priority": "HIGH",
-      "note": "25日乖離率(-2.7%)押し目圏 ＋ 日足RSIブレイクアウト。短期の押し目買いポイント。",
-      "tradePlan": {
-        "entryType": "成行 / 押し目買付",
-        "entryTarget": 3381,
-        "entryRange": "3,174 〜 3,381",
-        "stopLoss": 3142.15,
-        "stopLossPct": -7.06,
-        "takeProfit": 3810.93,
-        "takeProfitPct": 12.72,
-        "riskRewardRatio": 1.8,
-        "executionNote": "【買付指示】エントリー: 3,381以下 | 損切り(SL): 3,142 (-7.1%) | 利確(TP): 3,811 (+12.7%) | RR: 1:1.8"
+        "takeProfitPct": -12.17,
+        "riskRewardRatio": 2.7,
+        "executionNote": "【空売り指示】エントリー: 204以上 | 損切り(SL): 213 (+4.5%) | 利確(TP): 179 (-12.2%) | RR: 1:2.7"
       }
     },
     {
@@ -447,281 +446,282 @@
       "type": "stock",
       "triggers": [
         "D1",
-        "D3"
+        "D9"
       ],
-      "triggerDetails": "日足RSIブレイク(BUY) ＋ 25日乖離率 -3.6% (買圏)",
-      "dailyRsi": 41.99,
-      "dailyKairi25": -3.65,
+      "triggerDetails": "日足RSIブレイク(BUY) ＋ 最適化シグナルBUY確定(0日前)",
+      "dailyRsi": 47.18,
+      "dailyKairi25": -1.3,
       "bollinger": {
-        "upper": 3401.4633,
-        "mid": 3232.25,
-        "lower": 3063.0367,
-        "percentB": 0.236
+        "upper": 3364.4888,
+        "mid": 3221.65,
+        "lower": 3078.8112,
+        "percentB": 0.473
       },
       "maCross": null,
-      "close": 3143,
-      "changePercent": -0.38,
+      "close": 3214,
+      "changePercent": 2.16,
       "action": "BUY",
       "priority": "HIGH",
-      "note": "25日乖離率(-3.6%)押し目圏 ＋ 日足RSIブレイクアウト。短期の押し目買いポイント。",
+      "note": "日足RSI抵抗線を上方ブレイク。短期上昇の初動、分割エントリー検討。",
       "tradePlan": {
         "entryType": "成行 / 押し目買付",
-        "entryTarget": 3143,
-        "entryRange": "2,984 〜 3,143",
+        "entryTarget": 3214,
+        "entryRange": "2,984 〜 3,214",
         "stopLoss": 2954.01,
-        "stopLossPct": -6.01,
-        "takeProfit": 3483.17,
-        "takeProfitPct": 10.82,
+        "stopLossPct": -8.09,
+        "takeProfit": 3681.97,
+        "takeProfitPct": 14.56,
         "riskRewardRatio": 1.8,
-        "executionNote": "【買付指示】エントリー: 3,143以下 | 損切り(SL): 2,954 (-6.0%) | 利確(TP): 3,483 (+10.8%) | RR: 1:1.8"
+        "executionNote": "【買付指示】エントリー: 3,214以下 | 損切り(SL): 2,954 (-8.1%) | 利確(TP): 3,682 (+14.6%) | RR: 1:1.8"
       }
     },
     {
-      "symbol": "8031.T",
-      "name": "三井物産 (8031)",
-      "sector": "商社",
-      "type": "stock",
-      "triggers": [
-        "D2",
-        "D8"
-      ],
-      "triggerDetails": "日足RSI下抜け(SELL) ＋ MAデッドクロス(5/25)",
-      "dailyRsi": 45.57,
-      "dailyKairi25": -0.74,
-      "bollinger": {
-        "upper": 5137.2408,
-        "mid": 4960.85,
-        "lower": 4784.4592,
-        "percentB": 0.362
-      },
-      "maCross": "dead",
-      "close": 4912,
-      "changePercent": -0.1,
-      "action": "SELL",
-      "priority": "HIGH",
-      "note": "短期(5日)線が長期(25日)線を下抜け(デッドクロス)。短期トレンド転換の初動。",
-      "tradePlan": {
-        "entryType": "成行 / 戻り売り",
-        "entryTarget": 4912,
-        "entryRange": "4,912 〜 5,167",
-        "stopLoss": 5219.13,
-        "stopLossPct": 6.25,
-        "takeProfit": 4359.17,
-        "takeProfitPct": -11.25,
-        "riskRewardRatio": 1.8,
-        "executionNote": "【空売り指示】エントリー: 4,912以上 | 損切り(SL): 5,219 (+6.3%) | 利確(TP): 4,359 (-11.3%) | RR: 1:1.8"
-      }
-    },
-    {
-      "symbol": "ETH-USD",
-      "name": "イーサリアム (ETH/USD)",
-      "sector": "暗号資産",
-      "type": "crypto",
-      "triggers": [
-        "D1",
-        "D3"
-      ],
-      "triggerDetails": "日足RSIブレイク(BUY) ＋ 25日乖離率 -4.7% (買圏)",
-      "dailyRsi": 37.36,
-      "dailyKairi25": -4.71,
-      "bollinger": {
-        "upper": 2494.7927,
-        "mid": 2349.9537,
-        "lower": 2205.1147,
-        "percentB": 0.203
-      },
-      "maCross": null,
-      "close": 2263.96,
-      "changePercent": 0.67,
-      "action": "BUY",
-      "priority": "HIGH",
-      "note": "25日乖離率(-4.7%)押し目圏 ＋ 日足RSIブレイクアウト。短期の押し目買いポイント。",
-      "tradePlan": {
-        "entryType": "成行 / 押し目買付",
-        "entryTarget": 2263.96,
-        "entryRange": "2,162 〜 2,264",
-        "stopLoss": 2140.7,
-        "stopLossPct": -5.44,
-        "takeProfit": 2522.84,
-        "takeProfitPct": 11.43,
-        "riskRewardRatio": 2.1,
-        "executionNote": "【買付指示】エントリー: 2,264以下 | 損切り(SL): 2,141 (-5.4%) | 利確(TP): 2,523 (+11.4%) | RR: 1:2.1"
-      }
-    },
-    {
-      "symbol": "9519.T",
-      "name": "レノバ (9519)",
-      "sector": "再エネ・太陽光",
+      "symbol": "5803.T",
+      "name": "フジクラ (5803)",
+      "sector": "素材・非鉄",
       "type": "stock",
       "triggers": [
         "D3",
         "D10"
       ],
-      "triggerDetails": "25日乖離率 -9.3% (買圏) ＋ RSI極端値(26.5)",
-      "dailyRsi": 26.5,
-      "dailyKairi25": -9.31,
+      "triggerDetails": "25日乖離率 -26.4% (買圏) ＋ RSI極端値(25.9)",
+      "dailyRsi": 25.86,
+      "dailyKairi25": -26.41,
       "bollinger": {
-        "upper": 855.3797,
-        "mid": 770.15,
-        "lower": 684.9203,
-        "percentB": 0.135
+        "upper": 5661.075,
+        "mid": 4418.1,
+        "lower": 3175.125,
+        "percentB": 0.096
       },
       "maCross": null,
-      "close": 708,
-      "changePercent": 0.14,
+      "close": 3414,
+      "changePercent": -7.23,
       "action": "BUY",
       "priority": "HIGH",
-      "note": "25日乖離率(-9.3%)下限到達。売られ過ぎからの自律反発狙い。",
+      "note": "25日乖離率(-26.4%)下限到達。売られ過ぎからの自律反発狙い。",
       "tradePlan": {
         "entryType": "成行 / 押し目買付",
-        "entryTarget": 708,
-        "entryRange": "683 〜 708",
-        "stopLoss": 676.14,
+        "entryTarget": 3414,
+        "entryRange": "3,293 〜 3,414",
+        "stopLoss": 3260.37,
         "stopLossPct": -4.5,
-        "takeProfit": 854,
-        "takeProfitPct": 20.62,
-        "riskRewardRatio": 4.58,
-        "executionNote": "【買付指示】エントリー: 708以下 | 損切り(SL): 676 (-4.5%) | 利確(TP): 854 (+20.6%) | RR: 1:4.6"
+        "takeProfit": 6012,
+        "takeProfitPct": 76.1,
+        "riskRewardRatio": 16.91,
+        "executionNote": "【買付指示】エントリー: 3,414以下 | 損切り(SL): 3,260 (-4.5%) | 利確(TP): 6,012 (+76.1%) | RR: 1:16.9"
       }
     },
     {
-      "symbol": "^DJI",
-      "name": "NYダウ (Dow Jones)",
-      "sector": "指数",
-      "type": "index",
-      "triggers": [
-        "D8"
-      ],
-      "triggerDetails": "MAデッドクロス(5/25)",
-      "dailyRsi": 45.32,
-      "dailyKairi25": -0.16,
-      "bollinger": {
-        "upper": 52954.6759,
-        "mid": 52044.3826,
-        "lower": 51134.0893,
-        "percentB": 0.358
-      },
-      "maCross": "dead",
-      "close": 51786.7188,
-      "changePercent": -0.38,
-      "action": "SELL",
-      "priority": "HIGH",
-      "note": "短期(5日)線が長期(25日)線を下抜け(デッドクロス)。短期トレンド転換の初動。",
-      "tradePlan": {
-        "entryType": "成行 / 戻り売り",
-        "entryTarget": 51786.7188,
-        "entryRange": "51,787 〜 53,576",
-        "stopLoss": 54117.12,
-        "stopLossPct": 4.5,
-        "takeProfit": 47591.99,
-        "takeProfitPct": -8.1,
-        "riskRewardRatio": 1.8,
-        "executionNote": "【空売り指示】エントリー: 51,787以上 | 損切り(SL): 54,117 (+4.5%) | 利確(TP): 47,592 (-8.1%) | RR: 1:1.8"
-      }
-    },
-    {
-      "symbol": "USDJPY=X",
-      "name": "米ドル / 円 (USD/JPY)",
-      "sector": "為替",
-      "type": "forex",
-      "triggers": [
-        "D1"
-      ],
-      "triggerDetails": "日足RSIブレイク(BUY)",
-      "dailyRsi": 56.58,
-      "dailyKairi25": 0.27,
-      "bollinger": {
-        "upper": 158.9075,
-        "mid": 157.9205,
-        "lower": 156.9334,
-        "percentB": 0.712
-      },
-      "maCross": null,
-      "close": 158.338,
-      "changePercent": 0.27,
-      "action": "BUY",
-      "priority": "HIGH",
-      "note": "日足RSI抵抗線を上方ブレイク。短期上昇の初動、分割エントリー検討。",
-      "tradePlan": {
-        "entryType": "成行 / 押し目買付",
-        "entryTarget": 158.338,
-        "entryRange": "153 〜 158",
-        "stopLoss": 151.21,
-        "stopLossPct": -4.5,
-        "takeProfit": 171.16,
-        "takeProfitPct": 8.1,
-        "riskRewardRatio": 1.8,
-        "executionNote": "【買付指示】エントリー: 158以下 | 損切り(SL): 151 (-4.5%) | 利確(TP): 171 (+8.1%) | RR: 1:1.8"
-      }
-    },
-    {
-      "symbol": "EURUSD=X",
-      "name": "ユーロ / 米ドル (EUR/USD)",
-      "sector": "為替",
-      "type": "forex",
-      "triggers": [
-        "D1"
-      ],
-      "triggerDetails": "日足RSIブレイク(BUY)",
-      "dailyRsi": 46.22,
-      "dailyKairi25": 0.2,
-      "bollinger": {
-        "upper": 1.1255,
-        "mid": 1.1198,
-        "lower": 1.1141,
-        "percentB": 0.807
-      },
-      "maCross": null,
-      "close": 1.1233,
-      "changePercent": 0.37,
-      "action": "BUY",
-      "priority": "HIGH",
-      "note": "日足RSI抵抗線を上方ブレイク。短期上昇の初動、分割エントリー検討。",
-      "tradePlan": {
-        "entryType": "成行 / 押し目買付",
-        "entryTarget": 1.1233,
-        "entryRange": "1.083 〜 1.123",
-        "stopLoss": 1.07,
-        "stopLossPct": -4.5,
-        "takeProfit": 1.21,
-        "takeProfitPct": 8.1,
-        "riskRewardRatio": 1.8,
-        "executionNote": "【買付指示】エントリー: 1.123以下 | 損切り(SL): 1.073 (-4.5%) | 利確(TP): 1.214 (+8.1%) | RR: 1:1.8"
-      }
-    },
-    {
-      "symbol": "5020.T",
-      "name": "ENEOSホールディングス (5020)",
-      "sector": "エネルギー",
+      "symbol": "8002.T",
+      "name": "丸紅 (8002)",
+      "sector": "商社",
       "type": "stock",
       "triggers": [
-        "D8"
+        "D2",
+        "D4"
       ],
-      "triggerDetails": "MAデッドクロス(5/25)",
-      "dailyRsi": 44.04,
-      "dailyKairi25": -2.11,
+      "triggerDetails": "日足RSI下抜け(SELL) ＋ 25日乖離率 +2.6% (売圏)",
+      "dailyRsi": 56.4,
+      "dailyKairi25": 2.62,
       "bollinger": {
-        "upper": 1467.182,
-        "mid": 1406.5,
-        "lower": 1345.818,
-        "percentB": 0.191
+        "upper": 5127.1978,
+        "mid": 4902.65,
+        "lower": 4678.1022,
+        "percentB": 0.739
       },
-      "maCross": "dead",
-      "close": 1369,
-      "changePercent": -2.7,
+      "maCross": null,
+      "close": 5010,
+      "changePercent": 5.38,
       "action": "SELL",
       "priority": "HIGH",
-      "note": "短期(5日)線が長期(25日)線を下抜け(デッドクロス)。短期トレンド転換の初動。",
+      "note": "25日乖離率(+2.6%)過熱圏 ＋ 日足RSI下抜け。短期の利確・警戒ポイント。",
       "tradePlan": {
         "entryType": "成行 / 戻り売り",
-        "entryTarget": 1369,
-        "entryRange": "1,369 〜 1,478",
-        "stopLoss": 1492.56,
-        "stopLossPct": 9.03,
-        "takeProfit": 1146.6,
-        "takeProfitPct": -16.25,
+        "entryTarget": 5010,
+        "entryRange": "5,010 〜 5,183",
+        "stopLoss": 5235.45,
+        "stopLossPct": 4.5,
+        "takeProfit": 4557,
+        "takeProfitPct": -9.04,
+        "riskRewardRatio": 2.01,
+        "executionNote": "【空売り指示】エントリー: 5,010以上 | 損切り(SL): 5,235 (+4.5%) | 利確(TP): 4,557 (-9.0%) | RR: 1:2.0"
+      }
+    },
+    {
+      "symbol": "LLY",
+      "name": "イーライリリー (LLY)",
+      "sector": "医薬品",
+      "type": "stock",
+      "triggers": [
+        "D4",
+        "D10"
+      ],
+      "triggerDetails": "25日乖離率 +13.0% (売圏) ＋ RSI極端値(74.4)",
+      "dailyRsi": 74.41,
+      "dailyKairi25": 12.97,
+      "bollinger": {
+        "upper": 1428.3664,
+        "mid": 1271.998,
+        "lower": 1115.6296,
+        "percentB": 0.939
+      },
+      "maCross": null,
+      "close": 1409.38,
+      "changePercent": -0.11,
+      "action": "SELL",
+      "priority": "HIGH",
+      "note": "25日乖離率(+13.0%)上限到達。短期的過熱感、利益確定・手仕舞い推奨。",
+      "tradePlan": {
+        "entryType": "成行 / 戻り売り",
+        "entryTarget": 1409.38,
+        "entryRange": "1,409 〜 1,458",
+        "stopLoss": 1472.8,
+        "stopLossPct": 4.5,
+        "takeProfit": 1131.21,
+        "takeProfitPct": -19.74,
+        "riskRewardRatio": 4.39,
+        "executionNote": "【空売り指示】エントリー: 1,409以上 | 損切り(SL): 1,473 (+4.5%) | 利確(TP): 1,131 (-19.7%) | RR: 1:4.4"
+      }
+    },
+    {
+      "symbol": "6981.T",
+      "name": "村田製作所 (6981)",
+      "sector": "電子部品",
+      "type": "stock",
+      "triggers": [
+        "D3",
+        "D10"
+      ],
+      "triggerDetails": "25日乖離率 -25.3% (買圏) ＋ RSI極端値(29.1)",
+      "dailyRsi": 29.11,
+      "dailyKairi25": -25.34,
+      "bollinger": {
+        "upper": 8404.827,
+        "mid": 6839.85,
+        "lower": 5274.873,
+        "percentB": 0.025
+      },
+      "maCross": null,
+      "close": 5352,
+      "changePercent": -11.27,
+      "action": "BUY",
+      "priority": "HIGH",
+      "note": "25日乖離率(-25.3%)下限到達。売られ過ぎからの自律反発狙い。",
+      "tradePlan": {
+        "entryType": "成行 / 押し目買付",
+        "entryTarget": 5352,
+        "entryRange": "5,162 〜 5,352",
+        "stopLoss": 5111.16,
+        "stopLossPct": -4.5,
+        "takeProfit": 8870,
+        "takeProfitPct": 65.73,
+        "riskRewardRatio": 14.61,
+        "executionNote": "【買付指示】エントリー: 5,352以下 | 損切り(SL): 5,111 (-4.5%) | 利確(TP): 8,870 (+65.7%) | RR: 1:14.6"
+      }
+    },
+    {
+      "symbol": "AUDUSD=X",
+      "name": "豪ドル / 米ドル (AUD/USD)",
+      "sector": "為替",
+      "type": "forex",
+      "triggers": [
+        "D2"
+      ],
+      "triggerDetails": "日足RSI下抜け(SELL)",
+      "dailyRsi": 49.45,
+      "dailyKairi25": 0.34,
+      "bollinger": {
+        "upper": 0.7064,
+        "mid": 0.6998,
+        "lower": 0.6932,
+        "percentB": 0.618
+      },
+      "maCross": null,
+      "close": 0.7014,
+      "changePercent": 0.66,
+      "action": "SELL",
+      "priority": "HIGH",
+      "note": "日足RSI支持線を下方ブレイク。短期下落の警戒、ストップ設定。",
+      "tradePlan": {
+        "entryType": "成行 / 戻り売り",
+        "entryTarget": 0.7014,
+        "entryRange": "0.701 〜 0.726",
+        "stopLoss": 0.73,
+        "stopLossPct": 4.5,
+        "takeProfit": 0.64,
+        "takeProfitPct": -8.1,
         "riskRewardRatio": 1.8,
-        "executionNote": "【空売り指示】エントリー: 1,369以上 | 損切り(SL): 1,493 (+9.0%) | 利確(TP): 1,147 (-16.2%) | RR: 1:1.8"
+        "executionNote": "【空売り指示】エントリー: 0.701以上 | 損切り(SL): 0.733 (+4.5%) | 利確(TP): 0.645 (-8.1%) | RR: 1:1.8"
+      }
+    },
+    {
+      "symbol": "AMZN",
+      "name": "アマゾン (AMZN)",
+      "sector": "テクノロジー",
+      "type": "stock",
+      "triggers": [
+        "D2"
+      ],
+      "triggerDetails": "日足RSI下抜け(SELL)",
+      "dailyRsi": 47.87,
+      "dailyKairi25": -1.04,
+      "bollinger": {
+        "upper": 266.7489,
+        "mid": 253.822,
+        "lower": 240.8951,
+        "percentB": 0.379
+      },
+      "maCross": null,
+      "close": 250.69,
+      "changePercent": 2.06,
+      "action": "SELL",
+      "priority": "HIGH",
+      "note": "日足RSI支持線を下方ブレイク。短期下落の警戒、ストップ設定。",
+      "tradePlan": {
+        "entryType": "成行 / 戻り売り",
+        "entryTarget": 250.69,
+        "entryRange": "251 〜 267",
+        "stopLoss": 269.32,
+        "stopLossPct": 7.43,
+        "takeProfit": 217.16,
+        "takeProfitPct": -13.38,
+        "riskRewardRatio": 1.8,
+        "executionNote": "【空売り指示】エントリー: 251以上 | 損切り(SL): 269 (+7.4%) | 利確(TP): 217 (-13.4%) | RR: 1:1.8"
+      }
+    },
+    {
+      "symbol": "8306.T",
+      "name": "三菱UFJフィナンシャルG (8306)",
+      "sector": "金融",
+      "type": "stock",
+      "triggers": [
+        "D1"
+      ],
+      "triggerDetails": "日足RSIブレイク(BUY)",
+      "dailyRsi": 51.14,
+      "dailyKairi25": 0.47,
+      "bollinger": {
+        "upper": 3590.7605,
+        "mid": 3431.4,
+        "lower": 3272.0395,
+        "percentB": 0.671
+      },
+      "maCross": null,
+      "close": 3486,
+      "changePercent": 3.75,
+      "action": "BUY",
+      "priority": "HIGH",
+      "note": "日足RSI抵抗線を上方ブレイク。短期上昇の初動、分割エントリー検討。",
+      "tradePlan": {
+        "entryType": "成行 / 押し目買付",
+        "entryTarget": 3486,
+        "entryRange": "3,174 〜 3,486",
+        "stopLoss": 3142.15,
+        "stopLossPct": -9.86,
+        "takeProfit": 4104.93,
+        "takeProfitPct": 17.75,
+        "riskRewardRatio": 1.8,
+        "executionNote": "【買付指示】エントリー: 3,486以下 | 損切り(SL): 3,142 (-9.9%) | 利確(TP): 4,105 (+17.8%) | RR: 1:1.8"
       }
     },
     {
@@ -733,100 +733,100 @@
         "D1"
       ],
       "triggerDetails": "日足RSIブレイク(BUY)",
-      "dailyRsi": 43.24,
-      "dailyKairi25": -0.92,
+      "dailyRsi": 50.69,
+      "dailyKairi25": 1.16,
       "bollinger": {
-        "upper": 151.705,
-        "mid": 146.035,
-        "lower": 140.365,
-        "percentB": 0.506
+        "upper": 151.5883,
+        "mid": 145.955,
+        "lower": 140.3217,
+        "percentB": 0.753
       },
       "maCross": null,
-      "close": 146.1,
-      "changePercent": 1.6,
+      "close": 148.8,
+      "changePercent": 2.62,
       "action": "BUY",
       "priority": "HIGH",
       "note": "日足RSI抵抗線を上方ブレイク。短期上昇の初動、分割エントリー検討。",
       "tradePlan": {
         "entryType": "成行 / 押し目買付",
-        "entryTarget": 146.1,
-        "entryRange": "141 〜 146",
+        "entryTarget": 148.8,
+        "entryRange": "141 〜 149",
         "stopLoss": 139.18,
-        "stopLossPct": -4.74,
-        "takeProfit": 158.56,
-        "takeProfitPct": 8.53,
+        "stopLossPct": -6.46,
+        "takeProfit": 166.12,
+        "takeProfitPct": 11.64,
         "riskRewardRatio": 1.8,
-        "executionNote": "【買付指示】エントリー: 146以下 | 損切り(SL): 139 (-4.7%) | 利確(TP): 159 (+8.5%) | RR: 1:1.8"
+        "executionNote": "【買付指示】エントリー: 149以下 | 損切り(SL): 139 (-6.5%) | 利確(TP): 166 (+11.6%) | RR: 1:1.8"
       }
     },
     {
-      "symbol": "8058.T",
-      "name": "三菱商事 (8058)",
-      "sector": "商社",
+      "symbol": "5401.T",
+      "name": "日本製鉄 (5401)",
+      "sector": "素材・非鉄",
       "type": "stock",
       "triggers": [
-        "D8"
+        "D1"
       ],
-      "triggerDetails": "MAデッドクロス(5/25)",
-      "dailyRsi": 45.57,
-      "dailyKairi25": -0.99,
+      "triggerDetails": "日足RSIブレイク(BUY)",
+      "dailyRsi": 55.6,
+      "dailyKairi25": 2.22,
       "bollinger": {
-        "upper": 4936.9408,
-        "mid": 4752.05,
-        "lower": 4567.1592,
-        "percentB": 0.348
+        "upper": 675.2011,
+        "mid": 653.255,
+        "lower": 631.3089,
+        "percentB": 0.804
       },
-      "maCross": "dead",
-      "close": 4696,
-      "changePercent": -1.59,
-      "action": "SELL",
+      "maCross": null,
+      "close": 666.6,
+      "changePercent": 0.98,
+      "action": "BUY",
       "priority": "HIGH",
-      "note": "短期(5日)線が長期(25日)線を下抜け(デッドクロス)。短期トレンド転換の初動。",
+      "note": "日足RSI抵抗線を上方ブレイク。短期上昇の初動、分割エントリー検討。",
       "tradePlan": {
-        "entryType": "成行 / 戻り売り",
-        "entryTarget": 4696,
-        "entryRange": "4,696 〜 4,975",
-        "stopLoss": 5025.26,
-        "stopLossPct": 7.01,
-        "takeProfit": 4103.32,
-        "takeProfitPct": -12.62,
+        "entryType": "成行 / 押し目買付",
+        "entryTarget": 666.6,
+        "entryRange": "624 〜 667",
+        "stopLoss": 617.4,
+        "stopLossPct": -7.38,
+        "takeProfit": 755.16,
+        "takeProfitPct": 13.29,
         "riskRewardRatio": 1.8,
-        "executionNote": "【空売り指示】エントリー: 4,696以上 | 損切り(SL): 5,025 (+7.0%) | 利確(TP): 4,103 (-12.6%) | RR: 1:1.8"
+        "executionNote": "【買付指示】エントリー: 667以下 | 損切り(SL): 617 (-7.4%) | 利確(TP): 755 (+13.3%) | RR: 1:1.8"
       }
     },
     {
-      "symbol": "8002.T",
-      "name": "丸紅 (8002)",
+      "symbol": "8053.T",
+      "name": "住友商事 (8053)",
       "sector": "商社",
       "type": "stock",
       "triggers": [
-        "D8"
+        "D2"
       ],
-      "triggerDetails": "MAデッドクロス(5/25)",
-      "dailyRsi": 43.32,
-      "dailyKairi25": -1.21,
+      "triggerDetails": "日足RSI下抜け(SELL)",
+      "dailyRsi": 49.01,
+      "dailyKairi25": -0.58,
       "bollinger": {
-        "upper": 5111.7539,
-        "mid": 4896.05,
-        "lower": 4680.3461,
-        "percentB": 0.31
+        "upper": 1780.2046,
+        "mid": 1719.025,
+        "lower": 1657.8454,
+        "percentB": 0.463
       },
-      "maCross": "dead",
-      "close": 4814,
-      "changePercent": -0.15,
+      "maCross": null,
+      "close": 1714.5,
+      "changePercent": 3.66,
       "action": "SELL",
       "priority": "HIGH",
-      "note": "短期(5日)線が長期(25日)線を下抜け(デッドクロス)。短期トレンド転換の初動。",
+      "note": "日足RSI支持線を下方ブレイク。短期下落の警戒、ストップ設定。",
       "tradePlan": {
         "entryType": "成行 / 戻り売り",
-        "entryTarget": 4814,
-        "entryRange": "4,814 〜 5,147",
-        "stopLoss": 5198.83,
-        "stopLossPct": 7.99,
-        "takeProfit": 4121.31,
-        "takeProfitPct": -14.39,
+        "entryTarget": 1714.5,
+        "entryRange": "1,715 〜 1,801",
+        "stopLoss": 1819.39,
+        "stopLossPct": 6.12,
+        "takeProfit": 1525.7,
+        "takeProfitPct": -11.01,
         "riskRewardRatio": 1.8,
-        "executionNote": "【空売り指示】エントリー: 4,814以上 | 損切り(SL): 5,199 (+8.0%) | 利確(TP): 4,121 (-14.4%) | RR: 1:1.8"
+        "executionNote": "【空売り指示】エントリー: 1,715以上 | 損切り(SL): 1,819 (+6.1%) | 利確(TP): 1,526 (-11.0%) | RR: 1:1.8"
       }
     },
     {
@@ -838,30 +838,30 @@
         "D1"
       ],
       "triggerDetails": "日足RSIブレイク(BUY)",
-      "dailyRsi": 43.03,
-      "dailyKairi25": -1.04,
+      "dailyRsi": 52.6,
+      "dailyKairi25": 1.5,
       "bollinger": {
-        "upper": 2957.4922,
-        "mid": 2875.175,
-        "lower": 2792.8578,
-        "percentB": 0.365
+        "upper": 2963.9698,
+        "mid": 2875.5,
+        "lower": 2787.0302,
+        "percentB": 0.78
       },
       "maCross": null,
-      "close": 2853,
-      "changePercent": 0.48,
+      "close": 2925,
+      "changePercent": 3.82,
       "action": "BUY",
       "priority": "HIGH",
       "note": "日足RSI抵抗線を上方ブレイク。短期上昇の初動、分割エントリー検討。",
       "tradePlan": {
         "entryType": "成行 / 押し目買付",
-        "entryTarget": 2853,
-        "entryRange": "2,727 〜 2,853",
+        "entryTarget": 2925,
+        "entryRange": "2,727 〜 2,925",
         "stopLoss": 2699.88,
-        "stopLossPct": -5.37,
-        "takeProfit": 3128.61,
-        "takeProfitPct": 9.66,
+        "stopLossPct": -7.7,
+        "takeProfit": 3330.21,
+        "takeProfitPct": 13.85,
         "riskRewardRatio": 1.8,
-        "executionNote": "【買付指示】エントリー: 2,853以下 | 損切り(SL): 2,700 (-5.4%) | 利確(TP): 3,129 (+9.7%) | RR: 1:1.8"
+        "executionNote": "【買付指示】エントリー: 2,925以下 | 損切り(SL): 2,700 (-7.7%) | 利確(TP): 3,330 (+13.9%) | RR: 1:1.8"
       }
     },
     {
@@ -873,142 +873,136 @@
         "D1"
       ],
       "triggerDetails": "日足RSIブレイク(BUY)",
-      "dailyRsi": 48.88,
-      "dailyKairi25": 1.01,
+      "dailyRsi": 50.07,
+      "dailyKairi25": 1.5,
       "bollinger": {
-        "upper": 46.5038,
-        "mid": 44.2715,
-        "lower": 42.0392,
-        "percentB": 0.674
+        "upper": 46.3749,
+        "mid": 44.2345,
+        "lower": 42.0941,
+        "percentB": 0.735
       },
       "maCross": null,
-      "close": 45.05,
-      "changePercent": 0.72,
+      "close": 45.24,
+      "changePercent": 0.42,
       "action": "BUY",
       "priority": "HIGH",
       "note": "日足RSI抵抗線を上方ブレイク。短期上昇の初動、分割エントリー検討。",
       "tradePlan": {
         "entryType": "成行 / 押し目買付",
-        "entryTarget": 45.05,
-        "entryRange": "40.600 〜 45.050",
+        "entryTarget": 45.24,
+        "entryRange": "40.600 〜 45.240",
         "stopLoss": 40.2,
-        "stopLossPct": -10.77,
-        "takeProfit": 53.78,
-        "takeProfitPct": 19.39,
+        "stopLossPct": -11.15,
+        "takeProfit": 54.32,
+        "takeProfitPct": 20.06,
         "riskRewardRatio": 1.8,
-        "executionNote": "【買付指示】エントリー: 45.050以下 | 損切り(SL): 40.198 (-10.8%) | 利確(TP): 53.784 (+19.4%) | RR: 1:1.8"
+        "executionNote": "【買付指示】エントリー: 45.240以下 | 損切り(SL): 40.198 (-11.1%) | 利確(TP): 54.316 (+20.1%) | RR: 1:1.8"
       }
     },
     {
-      "symbol": "7201.T",
-      "name": "日産自動車 (7201)",
-      "sector": "自動車",
-      "type": "stock",
+      "symbol": "BTC-USD",
+      "name": "ビットコイン (BTC/USD)",
+      "sector": "暗号資産",
+      "type": "crypto",
       "triggers": [
-        "D1",
-        "D2",
-        "D3",
-        "D10"
+        "D1"
       ],
-      "triggerDetails": "日足RSIブレイク(BUY) ＋ 日足RSI下抜け(SELL) ＋ 25日乖離率 -5.5% (買圏) ＋ RSI極端値(29.0)",
-      "dailyRsi": 29.04,
-      "dailyKairi25": -5.46,
+      "triggerDetails": "日足RSIブレイク(BUY)",
+      "dailyRsi": 50.46,
+      "dailyKairi25": -0.36,
       "bollinger": {
-        "upper": 291.6243,
-        "mid": 274.175,
-        "lower": 256.7257,
-        "percentB": 0.157
+        "upper": 84251.8942,
+        "mid": 80201.5016,
+        "lower": 76151.1089,
+        "percentB": 0.52
       },
       "maCross": null,
-      "close": 262.2,
-      "changePercent": -0.15,
-      "action": "NEUTRAL",
-      "priority": "MEDIUM",
-      "note": "レンジ推移。シグナルの明確化まで待機。",
-      "tradePlan": null
+      "close": 80363.8594,
+      "changePercent": 3.9,
+      "action": "BUY",
+      "priority": "HIGH",
+      "note": "日足RSI抵抗線を上方ブレイク。短期上昇の初動、分割エントリー検討。",
+      "tradePlan": {
+        "entryType": "成行 / 押し目買付",
+        "entryTarget": 80363.8594,
+        "entryRange": "75,798 〜 80,364",
+        "stopLoss": 75047.03,
+        "stopLossPct": -6.62,
+        "takeProfit": 89934.14,
+        "takeProfitPct": 11.91,
+        "riskRewardRatio": 1.8,
+        "executionNote": "【買付指示】エントリー: 80,364以下 | 損切り(SL): 75,047 (-6.6%) | 利確(TP): 89,934 (+11.9%) | RR: 1:1.8"
+      }
     },
     {
-      "symbol": "8053.T",
-      "name": "住友商事 (8053)",
-      "sector": "商社",
-      "type": "stock",
+      "symbol": "ETH-USD",
+      "name": "イーサリアム (ETH/USD)",
+      "sector": "暗号資産",
+      "type": "crypto",
       "triggers": [
-        "D1",
-        "D2",
-        "D3",
-        "D5"
+        "D1"
       ],
-      "triggerDetails": "日足RSIブレイク(BUY) ＋ 日足RSI下抜け(SELL) ＋ 25日乖離率 -4.4% (買圏) ＋ BB-2σ接触(%B-6%)",
-      "dailyRsi": 40.78,
-      "dailyKairi25": -4.38,
+      "triggerDetails": "日足RSIブレイク(BUY)",
+      "dailyRsi": 53.16,
+      "dailyKairi25": 1.69,
       "bollinger": {
-        "upper": 1782.9874,
-        "mid": 1720.125,
-        "lower": 1657.2626,
-        "percentB": -0.062
+        "upper": 2489.8342,
+        "mid": 2348.9985,
+        "lower": 2208.1628,
+        "percentB": 0.726
       },
       "maCross": null,
-      "close": 1649.5,
-      "changePercent": -0.9,
-      "action": "NEUTRAL",
-      "priority": "MEDIUM",
-      "note": "レンジ推移。シグナルの明確化まで待機。",
-      "tradePlan": null
+      "close": 2412.6101,
+      "changePercent": 6.15,
+      "action": "BUY",
+      "priority": "HIGH",
+      "note": "日足RSI抵抗線を上方ブレイク。短期上昇の初動、分割エントリー検討。",
+      "tradePlan": {
+        "entryType": "成行 / 押し目買付",
+        "entryTarget": 2412.6101,
+        "entryRange": "2,162 〜 2,413",
+        "stopLoss": 2140.7,
+        "stopLossPct": -11.27,
+        "takeProfit": 2902.05,
+        "takeProfitPct": 20.29,
+        "riskRewardRatio": 1.8,
+        "executionNote": "【買付指示】エントリー: 2,413以下 | 損切り(SL): 2,141 (-11.3%) | 利確(TP): 2,902 (+20.3%) | RR: 1:1.8"
+      }
     },
     {
-      "symbol": "WMT",
-      "name": "ウォルマート (WMT)",
-      "sector": "消費・小売",
+      "symbol": "9519.T",
+      "name": "レノバ (9519)",
+      "sector": "再エネ・太陽光",
       "type": "stock",
       "triggers": [
-        "D4",
-        "D6",
-        "D9",
-        "D10"
+        "D1"
       ],
-      "triggerDetails": "25日乖離率 +11.4% (売圏) ＋ BB+2σ接触(%B102%) ＋ 最適化シグナルBUY確定(1日前) ＋ RSI極端値(76.3)",
-      "dailyRsi": 76.33,
-      "dailyKairi25": 11.38,
+      "triggerDetails": "日足RSIブレイク(BUY)",
+      "dailyRsi": 47.38,
+      "dailyKairi25": -1.91,
       "bollinger": {
-        "upper": 127.2167,
-        "mid": 117.083,
-        "lower": 106.9493,
-        "percentB": 1.023
+        "upper": 847.5153,
+        "mid": 769.45,
+        "lower": 691.3847,
+        "percentB": 0.478
       },
       "maCross": null,
-      "close": 127.69,
-      "changePercent": 3.38,
-      "action": "NEUTRAL",
-      "priority": "MEDIUM",
-      "note": "レンジ推移。シグナルの明確化まで待機。",
-      "tradePlan": null
-    },
-    {
-      "symbol": "MSFT",
-      "name": "マイクロソフト (MSFT)",
-      "sector": "テクノロジー",
-      "type": "stock",
-      "triggers": [
-        "D3",
-        "D5",
-        "D8"
-      ],
-      "triggerDetails": "25日乖離率 -3.8% (買圏) ＋ BB-2σ接触(%B-23%) ＋ MAデッドクロス(5/25)",
-      "dailyRsi": 44.17,
-      "dailyKairi25": -3.8,
-      "bollinger": {
-        "upper": 545.7139,
-        "mid": 530.078,
-        "lower": 514.4421,
-        "percentB": -0.234
-      },
-      "maCross": "dead",
-      "close": 507.12,
-      "changePercent": -2.83,
-      "action": "NEUTRAL",
-      "priority": "MEDIUM",
-      "note": "レンジ推移。シグナルの明確化まで待機。",
-      "tradePlan": null
+      "close": 766,
+      "changePercent": 2.41,
+      "action": "BUY",
+      "priority": "HIGH",
+      "note": "日足RSI抵抗線を上方ブレイク。短期上昇の初動、分割エントリー検討。",
+      "tradePlan": {
+        "entryType": "成行 / 押し目買付",
+        "entryTarget": 766,
+        "entryRange": "696 〜 766",
+        "stopLoss": 689.5,
+        "stopLossPct": -9.99,
+        "takeProfit": 903.7,
+        "takeProfitPct": 17.98,
+        "riskRewardRatio": 1.8,
+        "executionNote": "【買付指示】エントリー: 766以下 | 損切り(SL): 690 (-10.0%) | 利確(TP): 904 (+18.0%) | RR: 1:1.8"
+      }
     },
     {
       "symbol": "7269.T",
@@ -1018,47 +1012,22 @@
       "triggers": [
         "D2",
         "D4",
-        "D9"
+        "D6",
+        "D9",
+        "D10"
       ],
-      "triggerDetails": "日足RSI下抜け(SELL) ＋ 25日乖離率 +3.4% (売圏) ＋ 最適化シグナルBUY確定(0日前)",
-      "dailyRsi": 58.84,
-      "dailyKairi25": 3.38,
+      "triggerDetails": "日足RSI下抜け(SELL) ＋ 25日乖離率 +8.0% (売圏) ＋ BB+2σ接触(%B140%) ＋ 最適化シグナルBUY確定(0日前) ＋ RSI極端値(71.5)",
+      "dailyRsi": 71.53,
+      "dailyKairi25": 8.02,
       "bollinger": {
-        "upper": 2129.4103,
-        "mid": 2066.95,
-        "lower": 2004.4897,
-        "percentB": 0.897
+        "upper": 2157.944,
+        "mid": 2077.6,
+        "lower": 1997.256,
+        "percentB": 1.405
       },
       "maCross": null,
-      "close": 2116.5,
-      "changePercent": 0.98,
-      "action": "NEUTRAL",
-      "priority": "MEDIUM",
-      "note": "レンジ推移。シグナルの明確化まで待機。",
-      "tradePlan": null
-    },
-    {
-      "symbol": "3350.T",
-      "name": "メタプラネット (3350)",
-      "sector": "暗号資産",
-      "type": "stock",
-      "triggers": [
-        "D1",
-        "D2",
-        "D3"
-      ],
-      "triggerDetails": "日足RSIブレイク(BUY) ＋ 日足RSI下抜け(SELL) ＋ 25日乖離率 -7.7% (買圏)",
-      "dailyRsi": 43.6,
-      "dailyKairi25": -7.75,
-      "bollinger": {
-        "upper": 287.3412,
-        "mid": 265.65,
-        "lower": 243.9588,
-        "percentB": 0.139
-      },
-      "maCross": null,
-      "close": 250,
-      "changePercent": 0,
+      "close": 2223,
+      "changePercent": 6.47,
       "action": "NEUTRAL",
       "priority": "MEDIUM",
       "note": "レンジ推移。シグナルの明確化まで待機。",
@@ -1071,46 +1040,319 @@
       "type": "stock",
       "triggers": [
         "D1",
-        "D2"
+        "D2",
+        "D5",
+        "D8"
       ],
-      "triggerDetails": "日足RSIブレイク(BUY) ＋ 日足RSI下抜け(SELL)",
-      "dailyRsi": 49.1,
-      "dailyKairi25": -0.57,
+      "triggerDetails": "日足RSIブレイク(BUY) ＋ 日足RSI下抜け(SELL) ＋ BB-2σ接触(%B-12%) ＋ MAデッドクロス(5/25)",
+      "dailyRsi": 40.52,
+      "dailyKairi25": -2.48,
       "bollinger": {
-        "upper": 350.3004,
-        "mid": 342.355,
-        "lower": 334.4096,
-        "percentB": 0.246
+        "upper": 350.6193,
+        "mid": 342.2685,
+        "lower": 333.9177,
+        "percentB": -0.121
       },
-      "maCross": null,
-      "close": 338.32,
-      "changePercent": -1.83,
+      "maCross": "dead",
+      "close": 331.9,
+      "changePercent": -1.9,
       "action": "NEUTRAL",
       "priority": "MEDIUM",
       "note": "レンジ推移。シグナルの明確化まで待機。",
       "tradePlan": null
     },
     {
-      "symbol": "AMZN",
-      "name": "アマゾン (AMZN)",
-      "sector": "テクノロジー",
+      "symbol": "7267.T",
+      "name": "ホンダ (7267)",
+      "sector": "自動車",
+      "type": "stock",
+      "triggers": [
+        "D4",
+        "D6",
+        "D9",
+        "D10"
+      ],
+      "triggerDetails": "25日乖離率 +7.9% (売圏) ＋ BB+2σ接触(%B120%) ＋ 最適化シグナルBUY確定(0日前) ＋ RSI極端値(75.6)",
+      "dailyRsi": 75.65,
+      "dailyKairi25": 7.92,
+      "bollinger": {
+        "upper": 1866.8956,
+        "mid": 1781.5,
+        "lower": 1696.1044,
+        "percentB": 1.2
+      },
+      "maCross": null,
+      "close": 1901,
+      "changePercent": 5.73,
+      "action": "NEUTRAL",
+      "priority": "MEDIUM",
+      "note": "レンジ推移。シグナルの明確化まで待機。",
+      "tradePlan": null
+    },
+    {
+      "symbol": "9983.T",
+      "name": "ファーストリテイリング (9983)",
+      "sector": "消費・小売",
+      "type": "stock",
+      "triggers": [
+        "D4",
+        "D6",
+        "D9",
+        "D10"
+      ],
+      "triggerDetails": "25日乖離率 +14.4% (売圏) ＋ BB+2σ接触(%B147%) ＋ 最適化シグナルBUY確定(0日前) ＋ RSI極端値(75.1)",
+      "dailyRsi": 75.1,
+      "dailyKairi25": 14.36,
+      "bollinger": {
+        "upper": 80638.4127,
+        "mid": 75337.5,
+        "lower": 70036.5873,
+        "percentB": 1.473
+      },
+      "maCross": null,
+      "close": 85650,
+      "changePercent": 10.7,
+      "action": "NEUTRAL",
+      "priority": "MEDIUM",
+      "note": "レンジ推移。シグナルの明確化まで待機。",
+      "tradePlan": null
+    },
+    {
+      "symbol": "^DJI",
+      "name": "NYダウ (Dow Jones)",
+      "sector": "指数",
+      "type": "index",
+      "triggers": [
+        "D4",
+        "D6",
+        "D7"
+      ],
+      "triggerDetails": "25日乖離率 +2.7% (売圏) ＋ BB+2σ接触(%B111%) ＋ MAゴールデンクロス(5/25)",
+      "dailyRsi": 60.74,
+      "dailyKairi25": 2.68,
+      "bollinger": {
+        "upper": 53141.0862,
+        "mid": 52153.1951,
+        "lower": 51165.304,
+        "percentB": 1.109
+      },
+      "maCross": "golden",
+      "close": 53356.1211,
+      "changePercent": 3.03,
+      "action": "NEUTRAL",
+      "priority": "MEDIUM",
+      "note": "レンジ推移。シグナルの明確化まで待機。",
+      "tradePlan": null
+    },
+    {
+      "symbol": "285A.T",
+      "name": "キオクシアホールディングス (285A)",
+      "sector": "半導体",
       "type": "stock",
       "triggers": [
         "D2",
-        "D3"
+        "D3",
+        "D10"
       ],
-      "triggerDetails": "日足RSI下抜け(SELL) ＋ 25日乖離率 -3.0% (買圏)",
-      "dailyRsi": 45.64,
-      "dailyKairi25": -2.97,
+      "triggerDetails": "日足RSI下抜け(SELL) ＋ 25日乖離率 -33.4% (買圏) ＋ RSI極端値(28.9)",
+      "dailyRsi": 28.88,
+      "dailyKairi25": -33.37,
       "bollinger": {
-        "upper": 266.9879,
-        "mid": 254.102,
-        "lower": 241.2161,
-        "percentB": 0.171
+        "upper": 17942.5715,
+        "mid": 13720.4,
+        "lower": 9498.2285,
+        "percentB": 0.039
       },
       "maCross": null,
-      "close": 245.63,
-      "changePercent": 2.2,
+      "close": 9828,
+      "changePercent": -8.45,
+      "action": "NEUTRAL",
+      "priority": "MEDIUM",
+      "note": "レンジ推移。シグナルの明確化まで待機。",
+      "tradePlan": null
+    },
+    {
+      "symbol": "7203.T",
+      "name": "トヨタ自動車 (7203)",
+      "sector": "自動車",
+      "type": "stock",
+      "triggers": [
+        "D4",
+        "D6",
+        "D9"
+      ],
+      "triggerDetails": "25日乖離率 +6.2% (売圏) ＋ BB+2σ接触(%B101%) ＋ 最適化シグナルBUY確定(0日前)",
+      "dailyRsi": 67.76,
+      "dailyKairi25": 6.19,
+      "bollinger": {
+        "upper": 3204.4837,
+        "mid": 3051.15,
+        "lower": 2897.8163,
+        "percentB": 1.015
+      },
+      "maCross": null,
+      "close": 3209,
+      "changePercent": 5.98,
+      "action": "NEUTRAL",
+      "priority": "MEDIUM",
+      "note": "レンジ推移。シグナルの明確化まで待機。",
+      "tradePlan": null
+    },
+    {
+      "symbol": "8058.T",
+      "name": "三菱商事 (8058)",
+      "sector": "商社",
+      "type": "stock",
+      "triggers": [
+        "D1",
+        "D4",
+        "D6"
+      ],
+      "triggerDetails": "日足RSIブレイク(BUY) ＋ 25日乖離率 +8.6% (売圏) ＋ BB+2σ接触(%B114%)",
+      "dailyRsi": 68.42,
+      "dailyKairi25": 8.65,
+      "bollinger": {
+        "upper": 5107.7864,
+        "mid": 4798.85,
+        "lower": 4489.9136,
+        "percentB": 1.144
+      },
+      "maCross": null,
+      "close": 5197,
+      "changePercent": 0.95,
+      "action": "NEUTRAL",
+      "priority": "MEDIUM",
+      "note": "レンジ推移。シグナルの明確化まで待機。",
+      "tradePlan": null
+    },
+    {
+      "symbol": "4568.T",
+      "name": "第一三共 (4568)",
+      "sector": "医薬品",
+      "type": "stock",
+      "triggers": [
+        "D1",
+        "D4",
+        "D6"
+      ],
+      "triggerDetails": "日足RSIブレイク(BUY) ＋ 25日乖離率 +11.5% (売圏) ＋ BB+2σ接触(%B113%)",
+      "dailyRsi": 67.23,
+      "dailyKairi25": 11.53,
+      "bollinger": {
+        "upper": 2997.6908,
+        "mid": 2745.85,
+        "lower": 2494.0092,
+        "percentB": 1.128
+      },
+      "maCross": null,
+      "close": 3062,
+      "changePercent": 5.24,
+      "action": "NEUTRAL",
+      "priority": "MEDIUM",
+      "note": "レンジ推移。シグナルの明確化まで待機。",
+      "tradePlan": null
+    },
+    {
+      "symbol": "WMT",
+      "name": "ウォルマート (WMT)",
+      "sector": "消費・小売",
+      "type": "stock",
+      "triggers": [
+        "D4",
+        "D9",
+        "D10"
+      ],
+      "triggerDetails": "25日乖離率 +8.2% (売圏) ＋ 最適化シグナルBUY確定(2日前) ＋ RSI極端値(72.3)",
+      "dailyRsi": 72.28,
+      "dailyKairi25": 8.23,
+      "bollinger": {
+        "upper": 127.5647,
+        "mid": 117.966,
+        "lower": 108.3673,
+        "percentB": 0.859
+      },
+      "maCross": null,
+      "close": 124.86,
+      "changePercent": -2.22,
+      "action": "NEUTRAL",
+      "priority": "MEDIUM",
+      "note": "レンジ推移。シグナルの明確化まで待機。",
+      "tradePlan": null
+    },
+    {
+      "symbol": "FSLR",
+      "name": "ファーストソーラー (FSLR)",
+      "sector": "再エネ・太陽光",
+      "type": "stock",
+      "triggers": [
+        "D1",
+        "D4",
+        "D7"
+      ],
+      "triggerDetails": "日足RSIブレイク(BUY) ＋ 25日乖離率 +5.3% (売圏) ＋ MAゴールデンクロス(5/25)",
+      "dailyRsi": 55.66,
+      "dailyKairi25": 5.26,
+      "bollinger": {
+        "upper": 186.1252,
+        "mid": 176.874,
+        "lower": 167.6228,
+        "percentB": 0.988
+      },
+      "maCross": "golden",
+      "close": 185.9,
+      "changePercent": 2.11,
+      "action": "NEUTRAL",
+      "priority": "MEDIUM",
+      "note": "レンジ推移。シグナルの明確化まで待機。",
+      "tradePlan": null
+    },
+    {
+      "symbol": "6146.T",
+      "name": "ディスコ (6146)",
+      "sector": "半導体",
+      "type": "stock",
+      "triggers": [
+        "D3",
+        "D9"
+      ],
+      "triggerDetails": "25日乖離率 -20.1% (買圏) ＋ 最適化シグナルSELL確定(0日前)",
+      "dailyRsi": 30.25,
+      "dailyKairi25": -20.07,
+      "bollinger": {
+        "upper": 62586.6767,
+        "mid": 53079,
+        "lower": 43571.3233,
+        "percentB": 0.01
+      },
+      "maCross": null,
+      "close": 43770,
+      "changePercent": -7.6,
+      "action": "NEUTRAL",
+      "priority": "MEDIUM",
+      "note": "レンジ推移。シグナルの明確化まで待機。",
+      "tradePlan": null
+    },
+    {
+      "symbol": "7201.T",
+      "name": "日産自動車 (7201)",
+      "sector": "自動車",
+      "type": "stock",
+      "triggers": [
+        "D1",
+        "D2"
+      ],
+      "triggerDetails": "日足RSIブレイク(BUY) ＋ 日足RSI下抜け(SELL)",
+      "dailyRsi": 49.68,
+      "dailyKairi25": 1.68,
+      "bollinger": {
+        "upper": 290.5105,
+        "mid": 274.04,
+        "lower": 257.5695,
+        "percentB": 0.726
+      },
+      "maCross": null,
+      "close": 281.5,
+      "changePercent": 6.27,
       "action": "NEUTRAL",
       "priority": "MEDIUM",
       "note": "レンジ推移。シグナルの明確化まで待機。",
@@ -1125,70 +1367,122 @@
         "D4",
         "D9"
       ],
-      "triggerDetails": "25日乖離率 +6.8% (売圏) ＋ 最適化シグナルBUY確定(0日前)",
-      "dailyRsi": 62.74,
-      "dailyKairi25": 6.83,
+      "triggerDetails": "25日乖離率 +4.9% (売圏) ＋ 最適化シグナルBUY確定(1日前)",
+      "dailyRsi": 59.72,
+      "dailyKairi25": 4.92,
       "bollinger": {
-        "upper": 411.5917,
-        "mid": 381.952,
-        "lower": 352.3123,
-        "percentB": 0.869
+        "upper": 413.3353,
+        "mid": 382.843,
+        "lower": 352.3507,
+        "percentB": 0.757
       },
       "maCross": null,
-      "close": 403.82,
-      "changePercent": 1,
+      "close": 398.5,
+      "changePercent": -1.32,
       "action": "NEUTRAL",
       "priority": "MEDIUM",
       "note": "レンジ推移。シグナルの明確化まで待機。",
       "tradePlan": null
     },
     {
-      "symbol": "4568.T",
-      "name": "第一三共 (4568)",
-      "sector": "医薬品",
-      "type": "stock",
-      "triggers": [
-        "D1",
-        "D4"
-      ],
-      "triggerDetails": "日足RSIブレイク(BUY) ＋ 25日乖離率 +5.1% (売圏)",
-      "dailyRsi": 57.81,
-      "dailyKairi25": 5.09,
-      "bollinger": {
-        "upper": 2928.6253,
-        "mid": 2728.475,
-        "lower": 2528.3247,
-        "percentB": 0.859
-      },
-      "maCross": null,
-      "close": 2872,
-      "changePercent": -0.71,
-      "action": "NEUTRAL",
-      "priority": "MEDIUM",
-      "note": "レンジ推移。シグナルの明確化まで待機。",
-      "tradePlan": null
-    },
-    {
-      "symbol": "JNJ",
-      "name": "ジョンソン・エンド・ジョンソン (JNJ)",
-      "sector": "医薬品",
+      "symbol": "8001.T",
+      "name": "伊藤忠商事 (8001)",
+      "sector": "商社",
       "type": "stock",
       "triggers": [
         "D4",
         "D9"
       ],
-      "triggerDetails": "25日乖離率 +3.5% (売圏) ＋ 最適化シグナルBUY確定(2日前)",
-      "dailyRsi": 55.99,
-      "dailyKairi25": 3.53,
+      "triggerDetails": "25日乖離率 +5.0% (売圏) ＋ 最適化シグナルBUY確定(0日前)",
+      "dailyRsi": 61.43,
+      "dailyKairi25": 5.02,
       "bollinger": {
-        "upper": 276.5411,
-        "mid": 261.681,
-        "lower": 246.8209,
-        "percentB": 0.799
+        "upper": 2415.7481,
+        "mid": 2278.675,
+        "lower": 2141.6019,
+        "percentB": 0.851
       },
       "maCross": null,
-      "close": 270.56,
-      "changePercent": -0.97,
+      "close": 2375,
+      "changePercent": 4.58,
+      "action": "NEUTRAL",
+      "priority": "MEDIUM",
+      "note": "レンジ推移。シグナルの明確化まで待機。",
+      "tradePlan": null
+    },
+    {
+      "symbol": "8031.T",
+      "name": "三井物産 (8031)",
+      "sector": "商社",
+      "type": "stock",
+      "triggers": [
+        "D2",
+        "D7"
+      ],
+      "triggerDetails": "日足RSI下抜け(SELL) ＋ MAゴールデンクロス(5/25)",
+      "dailyRsi": 55.67,
+      "dailyKairi25": 2.11,
+      "bollinger": {
+        "upper": 5147.8576,
+        "mid": 4965.25,
+        "lower": 4782.6424,
+        "percentB": 0.765
+      },
+      "maCross": "golden",
+      "close": 5062,
+      "changePercent": 3.31,
+      "action": "NEUTRAL",
+      "priority": "MEDIUM",
+      "note": "レンジ推移。シグナルの明確化まで待機。",
+      "tradePlan": null
+    },
+    {
+      "symbol": "7974.T",
+      "name": "任天堂 (7974)",
+      "sector": "消費・小売",
+      "type": "stock",
+      "triggers": [
+        "D4",
+        "D7"
+      ],
+      "triggerDetails": "25日乖離率 +7.2% (売圏) ＋ MAゴールデンクロス(5/25)",
+      "dailyRsi": 61.77,
+      "dailyKairi25": 7.22,
+      "bollinger": {
+        "upper": 8914.7505,
+        "mid": 8362.5,
+        "lower": 7810.2495,
+        "percentB": 0.949
+      },
+      "maCross": "golden",
+      "close": 8858,
+      "changePercent": 6.05,
+      "action": "NEUTRAL",
+      "priority": "MEDIUM",
+      "note": "レンジ推移。シグナルの明確化まで待機。",
+      "tradePlan": null
+    },
+    {
+      "symbol": "3350.T",
+      "name": "メタプラネット (3350)",
+      "sector": "暗号資産",
+      "type": "stock",
+      "triggers": [
+        "D1",
+        "D2"
+      ],
+      "triggerDetails": "日足RSIブレイク(BUY) ＋ 日足RSI下抜け(SELL)",
+      "dailyRsi": 49.47,
+      "dailyKairi25": -1.51,
+      "bollinger": {
+        "upper": 284.7536,
+        "mid": 264.15,
+        "lower": 243.5464,
+        "percentB": 0.545
+      },
+      "maCross": null,
+      "close": 266,
+      "changePercent": 9.92,
       "action": "NEUTRAL",
       "priority": "MEDIUM",
       "note": "レンジ推移。シグナルの明確化まで待機。",
@@ -1200,73 +1494,21 @@
       "sector": "再エネ・太陽光",
       "type": "stock",
       "triggers": [
-        "D2",
-        "D3"
-      ],
-      "triggerDetails": "日足RSI下抜け(SELL) ＋ 25日乖離率 -7.5% (買圏)",
-      "dailyRsi": 37.94,
-      "dailyKairi25": -7.45,
-      "bollinger": {
-        "upper": 2329.0301,
-        "mid": 2146.55,
-        "lower": 1964.0699,
-        "percentB": 0.087
-      },
-      "maCross": null,
-      "close": 1996,
-      "changePercent": -0.55,
-      "action": "NEUTRAL",
-      "priority": "MEDIUM",
-      "note": "レンジ推移。シグナルの明確化まで待機。",
-      "tradePlan": null
-    },
-    {
-      "symbol": "ENPH",
-      "name": "エンフェーズ・エナジー (ENPH)",
-      "sector": "再エネ・太陽光",
-      "type": "stock",
-      "triggers": [
-        "D2",
-        "D3"
-      ],
-      "triggerDetails": "日足RSI下抜け(SELL) ＋ 25日乖離率 -9.8% (買圏)",
-      "dailyRsi": 39.13,
-      "dailyKairi25": -9.83,
-      "bollinger": {
-        "upper": 35.515,
-        "mid": 30.4895,
-        "lower": 25.464,
-        "percentB": 0.245
-      },
-      "maCross": null,
-      "close": 27.93,
-      "changePercent": 8.89,
-      "action": "NEUTRAL",
-      "priority": "MEDIUM",
-      "note": "レンジ推移。シグナルの明確化まで待機。",
-      "tradePlan": null
-    },
-    {
-      "symbol": "FSLR",
-      "name": "ファーストソーラー (FSLR)",
-      "sector": "再エネ・太陽光",
-      "type": "stock",
-      "triggers": [
         "D1",
-        "D4"
+        "D2"
       ],
-      "triggerDetails": "日足RSIブレイク(BUY) ＋ 25日乖離率 +3.3% (売圏)",
-      "dailyRsi": 52.28,
-      "dailyKairi25": 3.29,
+      "triggerDetails": "日足RSIブレイク(BUY) ＋ 日足RSI下抜け(SELL)",
+      "dailyRsi": 52.16,
+      "dailyKairi25": 2.47,
       "bollinger": {
-        "upper": 184.9732,
-        "mid": 176.569,
-        "lower": 168.1648,
-        "percentB": 0.826
+        "upper": 2322.2391,
+        "mid": 2154,
+        "lower": 1985.7609,
+        "percentB": 0.696
       },
       "maCross": null,
-      "close": 182.05,
-      "changePercent": 4.39,
+      "close": 2220,
+      "changePercent": 3.11,
       "action": "NEUTRAL",
       "priority": "MEDIUM",
       "note": "レンジ推移。シグナルの明確化まで待機。",
@@ -1280,66 +1522,66 @@
       "triggers": [
         "D3"
       ],
-      "triggerDetails": "25日乖離率 -5.3% (買圏)",
-      "dailyRsi": 38.11,
-      "dailyKairi25": -5.31,
+      "triggerDetails": "25日乖離率 -5.4% (買圏)",
+      "dailyRsi": 37.79,
+      "dailyKairi25": -5.41,
       "bollinger": {
-        "upper": 70606.5996,
-        "mid": 65302.3914,
-        "lower": 59998.1832,
-        "percentB": 0.219
+        "upper": 70610.9405,
+        "mid": 65298.9684,
+        "lower": 59986.9963,
+        "percentB": 0.214
       },
       "maCross": null,
-      "close": 62325.0508,
-      "changePercent": -1.2,
+      "close": 62256.5898,
+      "changePercent": -1.31,
       "action": "BUY",
       "priority": "MEDIUM",
-      "note": "25日乖離率(-5.3%)下限到達。売られ過ぎからの自律反発狙い。",
+      "note": "25日乖離率(-5.4%)下限到達。売られ過ぎからの自律反発狙い。",
       "tradePlan": {
         "entryType": "成行 / 押し目買付",
-        "entryTarget": 62325.0508,
-        "entryRange": "60,116 〜 62,325",
-        "stopLoss": 59520.42,
+        "entryTarget": 62256.5898,
+        "entryRange": "60,050 〜 62,257",
+        "stopLoss": 59455.04,
         "stopLossPct": -4.5,
         "takeProfit": 70798.62,
-        "takeProfitPct": 13.6,
-        "riskRewardRatio": 3.02,
-        "executionNote": "【買付指示】エントリー: 62,325以下 | 損切り(SL): 59,520 (-4.5%) | 利確(TP): 70,799 (+13.6%) | RR: 1:3.0"
+        "takeProfitPct": 13.72,
+        "riskRewardRatio": 3.05,
+        "executionNote": "【買付指示】エントリー: 62,257以下 | 損切り(SL): 59,455 (-4.5%) | 利確(TP): 70,799 (+13.7%) | RR: 1:3.0"
       }
     },
     {
-      "symbol": "^IXIC",
-      "name": "ナスダック総合 (NASDAQ)",
-      "sector": "指数",
-      "type": "index",
+      "symbol": "USDJPY=X",
+      "name": "米ドル / 円 (USD/JPY)",
+      "sector": "為替",
+      "type": "forex",
       "triggers": [
-        "D3"
+        "D9"
       ],
-      "triggerDetails": "25日乖離率 -4.6% (買圏)",
-      "dailyRsi": 34.32,
-      "dailyKairi25": -4.61,
+      "triggerDetails": "最適化シグナルSELL確定(0日前)",
+      "dailyRsi": 52.82,
+      "dailyKairi25": -0.02,
       "bollinger": {
-        "upper": 27753.1628,
-        "mid": 26448.613,
-        "lower": 25144.0632,
-        "percentB": 0.087
+        "upper": 158.9167,
+        "mid": 157.9189,
+        "lower": 156.921,
+        "percentB": 0.489
       },
       "maCross": null,
-      "close": 25372.0098,
-      "changePercent": 0.83,
-      "action": "BUY",
+      "close": 157.897,
+      "changePercent": -0.36,
+      "action": "SELL",
       "priority": "MEDIUM",
-      "note": "25日乖離率(-4.6%)下限到達。売られ過ぎからの自律反発狙い。",
+      "note": "スクリーナー最適化シグナル(SELL)点灯中。直近の追随売りを狙う。",
       "tradePlan": {
-        "entryType": "成行 / 押し目買付",
-        "entryTarget": 25372.0098,
-        "entryRange": "24,473 〜 25,372",
-        "stopLoss": 24230.27,
-        "stopLossPct": -4.5,
-        "takeProfit": 27547.2,
-        "takeProfitPct": 8.57,
-        "riskRewardRatio": 1.91,
-        "executionNote": "【買付指示】エントリー: 25,372以下 | 損切り(SL): 24,230 (-4.5%) | 利確(TP): 27,547 (+8.6%) | RR: 1:1.9"
+        "entryType": "成行 / 戻り売り",
+        "entryTarget": 157.897,
+        "entryRange": "158 〜 163",
+        "stopLoss": 165,
+        "stopLossPct": 4.5,
+        "takeProfit": 145.11,
+        "takeProfitPct": -8.1,
+        "riskRewardRatio": 1.8,
+        "executionNote": "【空売り指示】エントリー: 158以上 | 損切り(SL): 165 (+4.5%) | 利確(TP): 145 (-8.1%) | RR: 1:1.8"
       }
     },
     {
@@ -1350,66 +1592,31 @@
       "triggers": [
         "D6"
       ],
-      "triggerDetails": "BB+2σ接触(%B108%)",
-      "dailyRsi": 65.48,
+      "triggerDetails": "BB+2σ接触(%B103%)",
+      "dailyRsi": 66.72,
       "dailyKairi25": 1.29,
       "bollinger": {
-        "upper": 212.4578,
-        "mid": 210.3678,
-        "lower": 208.2777,
-        "percentB": 1.084
+        "upper": 212.8461,
+        "mid": 210.5757,
+        "lower": 208.3053,
+        "percentB": 1.027
       },
       "maCross": null,
-      "close": 212.807,
-      "changePercent": 0.5,
+      "close": 212.967,
+      "changePercent": 0.05,
       "action": "SELL",
       "priority": "MEDIUM",
-      "note": "ボリンジャーバンド+2σ接触(%B 108%)。短期的な過熱、利確検討。",
+      "note": "ボリンジャーバンド+2σ接触(%B 103%)。短期的な過熱、利確検討。",
       "tradePlan": {
         "entryType": "成行 / 戻り売り",
-        "entryTarget": 212.807,
+        "entryTarget": 212.967,
         "entryRange": "213 〜 220",
-        "stopLoss": 222.38,
+        "stopLoss": 222.55,
         "stopLossPct": 4.5,
-        "takeProfit": 195.57,
+        "takeProfit": 195.72,
         "takeProfitPct": -8.1,
         "riskRewardRatio": 1.8,
-        "executionNote": "【空売り指示】エントリー: 213以上 | 損切り(SL): 222 (+4.5%) | 利確(TP): 196 (-8.1%) | RR: 1:1.8"
-      }
-    },
-    {
-      "symbol": "META",
-      "name": "メタ・プラットフォームズ (META)",
-      "sector": "テクノロジー",
-      "type": "stock",
-      "triggers": [
-        "D3"
-      ],
-      "triggerDetails": "25日乖離率 -12.6% (買圏)",
-      "dailyRsi": 31.11,
-      "dailyKairi25": -12.56,
-      "bollinger": {
-        "upper": 787.2051,
-        "mid": 684.348,
-        "lower": 581.4909,
-        "percentB": 0.123
-      },
-      "maCross": null,
-      "close": 606.73,
-      "changePercent": -1.34,
-      "action": "BUY",
-      "priority": "MEDIUM",
-      "note": "25日乖離率(-12.6%)下限到達。売られ過ぎからの自律反発狙い。",
-      "tradePlan": {
-        "entryType": "成行 / 押し目買付",
-        "entryTarget": 606.73,
-        "entryRange": "585 〜 607",
-        "stopLoss": 579.43,
-        "stopLossPct": -4.5,
-        "takeProfit": 771.27,
-        "takeProfitPct": 27.12,
-        "riskRewardRatio": 6.03,
-        "executionNote": "【買付指示】エントリー: 607以下 | 損切り(SL): 579 (-4.5%) | 利確(TP): 771 (+27.1%) | RR: 1:6.0"
+        "executionNote": "【空売り指示】エントリー: 213以上 | 損切り(SL): 223 (+4.5%) | 利確(TP): 196 (-8.1%) | RR: 1:1.8"
       }
     },
     {
@@ -1420,66 +1627,31 @@
       "triggers": [
         "D3"
       ],
-      "triggerDetails": "25日乖離率 -20.1% (買圏)",
-      "dailyRsi": 32.7,
-      "dailyKairi25": -20.12,
+      "triggerDetails": "25日乖離率 -21.0% (買圏)",
+      "dailyRsi": 31.07,
+      "dailyKairi25": -20.98,
       "bollinger": {
-        "upper": 6274.429,
-        "mid": 4937.95,
-        "lower": 3601.471,
-        "percentB": 0.215
+        "upper": 6054.4822,
+        "mid": 4831.45,
+        "lower": 3608.4178,
+        "percentB": 0.19
       },
       "maCross": null,
-      "close": 4177,
-      "changePercent": -5.28,
+      "close": 4073,
+      "changePercent": -4.59,
       "action": "BUY",
       "priority": "MEDIUM",
-      "note": "25日乖離率(-20.1%)下限到達。売られ過ぎからの自律反発狙い。",
+      "note": "25日乖離率(-21.0%)下限到達。売られ過ぎからの自律反発狙い。",
       "tradePlan": {
         "entryType": "成行 / 押し目買付",
-        "entryTarget": 4177,
-        "entryRange": "3,942 〜 4,177",
-        "stopLoss": 3902.57,
-        "stopLossPct": -6.57,
-        "takeProfit": 6432,
-        "takeProfitPct": 53.99,
-        "riskRewardRatio": 8.22,
-        "executionNote": "【買付指示】エントリー: 4,177以下 | 損切り(SL): 3,903 (-6.6%) | 利確(TP): 6,432 (+54.0%) | RR: 1:8.2"
-      }
-    },
-    {
-      "symbol": "6758.T",
-      "name": "ソニーグループ (6758)",
-      "sector": "テクノロジー",
-      "type": "stock",
-      "triggers": [
-        "D4"
-      ],
-      "triggerDetails": "25日乖離率 +2.5% (売圏)",
-      "dailyRsi": 56.79,
-      "dailyKairi25": 2.52,
-      "bollinger": {
-        "upper": 4176.1161,
-        "mid": 3935.8,
-        "lower": 3695.4839,
-        "percentB": 0.627
-      },
-      "maCross": null,
-      "close": 3997,
-      "changePercent": 0.78,
-      "action": "SELL",
-      "priority": "MEDIUM",
-      "note": "25日乖離率(+2.5%)上限到達。短期的過熱感、利益確定・手仕舞い推奨。",
-      "tradePlan": {
-        "entryType": "成行 / 戻り売り",
-        "entryTarget": 3997,
-        "entryRange": "3,997 〜 4,218",
-        "stopLoss": 4260.97,
-        "stopLossPct": 6.6,
-        "takeProfit": 3521.85,
-        "takeProfitPct": -11.89,
-        "riskRewardRatio": 1.8,
-        "executionNote": "【空売り指示】エントリー: 3,997以上 | 損切り(SL): 4,261 (+6.6%) | 利確(TP): 3,522 (-11.9%) | RR: 1:1.8"
+        "entryTarget": 4073,
+        "entryRange": "3,910 〜 4,073",
+        "stopLoss": 3871.05,
+        "stopLossPct": -4.96,
+        "takeProfit": 6426,
+        "takeProfitPct": 57.77,
+        "riskRewardRatio": 11.65,
+        "executionNote": "【買付指示】エントリー: 4,073以下 | 損切り(SL): 3,871 (-5.0%) | 利確(TP): 6,426 (+57.8%) | RR: 1:11.7"
       }
     },
     {
@@ -1490,31 +1662,66 @@
       "triggers": [
         "D3"
       ],
-      "triggerDetails": "25日乖離率 -9.0% (買圏)",
-      "dailyRsi": 34.07,
-      "dailyKairi25": -9.01,
+      "triggerDetails": "25日乖離率 -6.6% (買圏)",
+      "dailyRsi": 37.79,
+      "dailyKairi25": -6.58,
       "bollinger": {
-        "upper": 238.7566,
-        "mid": 219.6175,
-        "lower": 200.4784,
-        "percentB": 0.041
+        "upper": 235.6571,
+        "mid": 217.99,
+        "lower": 200.3229,
+        "percentB": 0.18
       },
       "maCross": null,
-      "close": 202.06,
-      "changePercent": -1.26,
+      "close": 206.69,
+      "changePercent": 2.29,
       "action": "BUY",
       "priority": "MEDIUM",
-      "note": "25日乖離率(-9.0%)下限到達。売られ過ぎからの自律反発狙い。",
+      "note": "25日乖離率(-6.6%)下限到達。売られ過ぎからの自律反発狙い。",
       "tradePlan": {
         "entryType": "成行 / 押し目買付",
-        "entryTarget": 202.06,
-        "entryRange": "195 〜 202",
-        "stopLoss": 192.97,
+        "entryTarget": 206.69,
+        "entryRange": "199 〜 207",
+        "stopLoss": 197.39,
         "stopLossPct": -4.5,
-        "takeProfit": 243.37,
-        "takeProfitPct": 20.44,
-        "riskRewardRatio": 4.54,
-        "executionNote": "【買付指示】エントリー: 202以下 | 損切り(SL): 193 (-4.5%) | 利確(TP): 243 (+20.4%) | RR: 1:4.5"
+        "takeProfit": 239.08,
+        "takeProfitPct": 15.67,
+        "riskRewardRatio": 3.48,
+        "executionNote": "【買付指示】エントリー: 207以下 | 損切り(SL): 197 (-4.5%) | 利確(TP): 239 (+15.7%) | RR: 1:3.5"
+      }
+    },
+    {
+      "symbol": "AMD",
+      "name": "アドバンスト・マイクロ・デバイセズ (AMD)",
+      "sector": "半導体",
+      "type": "stock",
+      "triggers": [
+        "D3"
+      ],
+      "triggerDetails": "25日乖離率 -14.9% (買圏)",
+      "dailyRsi": 36.63,
+      "dailyKairi25": -14.93,
+      "bollinger": {
+        "upper": 644.9645,
+        "mid": 553.919,
+        "lower": 462.8735,
+        "percentB": 0.115
+      },
+      "maCross": null,
+      "close": 483.9,
+      "changePercent": 3.65,
+      "action": "BUY",
+      "priority": "MEDIUM",
+      "note": "25日乖離率(-14.9%)下限到達。売られ過ぎからの自律反発狙い。",
+      "tradePlan": {
+        "entryType": "成行 / 押し目買付",
+        "entryTarget": 483.9,
+        "entryRange": "464 〜 484",
+        "stopLoss": 459.08,
+        "stopLossPct": -5.13,
+        "takeProfit": 648.48,
+        "takeProfitPct": 34.01,
+        "riskRewardRatio": 6.63,
+        "executionNote": "【買付指示】エントリー: 484以下 | 損切り(SL): 459 (-5.1%) | 利確(TP): 648 (+34.0%) | RR: 1:6.6"
       }
     },
     {
@@ -1525,31 +1732,31 @@
       "triggers": [
         "D3"
       ],
-      "triggerDetails": "25日乖離率 -6.8% (買圏)",
-      "dailyRsi": 39.91,
-      "dailyKairi25": -6.78,
+      "triggerDetails": "25日乖離率 -3.7% (買圏)",
+      "dailyRsi": 43.28,
+      "dailyKairi25": -3.66,
       "bollinger": {
-        "upper": 376.5274,
-        "mid": 343.6835,
-        "lower": 310.8396,
-        "percentB": 0.173
+        "upper": 371.1629,
+        "mid": 341.4995,
+        "lower": 311.8361,
+        "percentB": 0.342
       },
       "maCross": null,
-      "close": 322.23,
-      "changePercent": -1.18,
+      "close": 332.13,
+      "changePercent": 3.07,
       "action": "BUY",
       "priority": "MEDIUM",
-      "note": "25日乖離率(-6.8%)下限到達。売られ過ぎからの自律反発狙い。",
+      "note": "25日乖離率(-3.7%)下限到達。売られ過ぎからの自律反発狙い。",
       "tradePlan": {
         "entryType": "成行 / 押し目買付",
-        "entryTarget": 322.23,
-        "entryRange": "311 〜 322",
-        "stopLoss": 307.73,
-        "stopLossPct": -4.5,
-        "takeProfit": 380.84,
-        "takeProfitPct": 18.19,
-        "riskRewardRatio": 4.04,
-        "executionNote": "【買付指示】エントリー: 322以下 | 損切り(SL): 308 (-4.5%) | 利確(TP): 381 (+18.2%) | RR: 1:4.0"
+        "entryTarget": 332.13,
+        "entryRange": "318 〜 332",
+        "stopLoss": 314.51,
+        "stopLossPct": -5.31,
+        "takeProfit": 376.97,
+        "takeProfitPct": 13.5,
+        "riskRewardRatio": 2.54,
+        "executionNote": "【買付指示】エントリー: 332以下 | 損切り(SL): 315 (-5.3%) | 利確(TP): 377 (+13.5%) | RR: 1:2.5"
       }
     },
     {
@@ -1560,31 +1767,31 @@
       "triggers": [
         "D3"
       ],
-      "triggerDetails": "25日乖離率 -10.5% (買圏)",
-      "dailyRsi": 41.36,
-      "dailyKairi25": -10.53,
+      "triggerDetails": "25日乖離率 -17.2% (買圏)",
+      "dailyRsi": 34.09,
+      "dailyKairi25": -17.16,
       "bollinger": {
-        "upper": 12812.2998,
-        "mid": 10540.55,
-        "lower": 8268.8002,
-        "percentB": 0.319
+        "upper": 12471.2868,
+        "mid": 10343.05,
+        "lower": 8214.8132,
+        "percentB": 0.164
       },
       "maCross": null,
-      "close": 9719,
-      "changePercent": -2.86,
+      "close": 8911,
+      "changePercent": -7.78,
       "action": "BUY",
       "priority": "MEDIUM",
-      "note": "25日乖離率(-10.5%)下限到達。売られ過ぎからの自律反発狙い。",
+      "note": "25日乖離率(-17.2%)下限到達。売られ過ぎからの自律反発狙い。",
       "tradePlan": {
         "entryType": "成行 / 押し目買付",
-        "entryTarget": 9719,
-        "entryRange": "8,755 〜 9,719",
-        "stopLoss": 8668,
-        "stopLossPct": -10.81,
-        "takeProfit": 12915,
-        "takeProfitPct": 32.88,
-        "riskRewardRatio": 3.04,
-        "executionNote": "【買付指示】エントリー: 9,719以下 | 損切り(SL): 8,668 (-10.8%) | 利確(TP): 12,915 (+32.9%) | RR: 1:3.0"
+        "entryTarget": 8911,
+        "entryRange": "8,595 〜 8,911",
+        "stopLoss": 8510,
+        "stopLossPct": -4.5,
+        "takeProfit": 12740,
+        "takeProfitPct": 42.97,
+        "riskRewardRatio": 9.55,
+        "executionNote": "【買付指示】エントリー: 8,911以下 | 損切り(SL): 8,510 (-4.5%) | 利確(TP): 12,740 (+43.0%) | RR: 1:9.5"
       }
     },
     {
@@ -1595,276 +1802,66 @@
       "triggers": [
         "D3"
       ],
-      "triggerDetails": "25日乖離率 -5.1% (買圏)",
-      "dailyRsi": 48.97,
-      "dailyKairi25": -5.14,
-      "bollinger": {
-        "upper": 43036.8875,
-        "mid": 36241.5,
-        "lower": 29446.1125,
-        "percentB": 0.373
-      },
-      "maCross": null,
-      "close": 34510,
-      "changePercent": -3.52,
-      "action": "BUY",
-      "priority": "MEDIUM",
-      "note": "25日乖離率(-5.1%)下限到達。売られ過ぎからの自律反発狙い。",
-      "tradePlan": {
-        "entryType": "成行 / 押し目買付",
-        "entryTarget": 34510,
-        "entryRange": "29,875 〜 34,510",
-        "stopLoss": 29579.55,
-        "stopLossPct": -14.29,
-        "takeProfit": 43384.81,
-        "takeProfitPct": 25.72,
-        "riskRewardRatio": 1.8,
-        "executionNote": "【買付指示】エントリー: 34,510以下 | 損切り(SL): 29,580 (-14.3%) | 利確(TP): 43,385 (+25.7%) | RR: 1:1.8"
-      }
-    },
-    {
-      "symbol": "6146.T",
-      "name": "ディスコ (6146)",
-      "sector": "半導体",
-      "type": "stock",
-      "triggers": [
-        "D3"
-      ],
       "triggerDetails": "25日乖離率 -14.2% (買圏)",
-      "dailyRsi": 35.61,
+      "dailyRsi": 41.2,
       "dailyKairi25": -14.23,
       "bollinger": {
-        "upper": 64121.9118,
-        "mid": 54167.5,
-        "lower": 44213.0882,
-        "percentB": 0.161
+        "upper": 42338.581,
+        "mid": 35707.5,
+        "lower": 29076.419,
+        "percentB": 0.153
       },
       "maCross": null,
-      "close": 47410,
-      "changePercent": -5.63,
+      "close": 31110,
+      "changePercent": -10.01,
       "action": "BUY",
       "priority": "MEDIUM",
       "note": "25日乖離率(-14.2%)下限到達。売られ過ぎからの自律反発狙い。",
       "tradePlan": {
         "entryType": "成行 / 押し目買付",
-        "entryTarget": 47410,
-        "entryRange": "45,729 〜 47,410",
-        "stopLoss": 45276.55,
-        "stopLossPct": -4.5,
-        "takeProfit": 65500,
-        "takeProfitPct": 38.16,
-        "riskRewardRatio": 8.48,
-        "executionNote": "【買付指示】エントリー: 47,410以下 | 損切り(SL): 45,277 (-4.5%) | 利確(TP): 65,500 (+38.2%) | RR: 1:8.5"
+        "entryTarget": 31110,
+        "entryRange": "29,875 〜 31,110",
+        "stopLoss": 29579.55,
+        "stopLossPct": -4.92,
+        "takeProfit": 41990,
+        "takeProfitPct": 34.97,
+        "riskRewardRatio": 7.11,
+        "executionNote": "【買付指示】エントリー: 31,110以下 | 損切り(SL): 29,580 (-4.9%) | 利確(TP): 41,990 (+35.0%) | RR: 1:7.1"
       }
     },
     {
-      "symbol": "285A.T",
-      "name": "キオクシアホールディングス (285A)",
-      "sector": "半導体",
-      "type": "stock",
-      "triggers": [
-        "D3"
-      ],
-      "triggerDetails": "25日乖離率 -30.0% (買圏)",
-      "dailyRsi": 31.41,
-      "dailyKairi25": -30,
-      "bollinger": {
-        "upper": 18549.4344,
-        "mid": 14156.25,
-        "lower": 9763.0656,
-        "percentB": 0.089
-      },
-      "maCross": null,
-      "close": 10545,
-      "changePercent": -7.05,
-      "action": "BUY",
-      "priority": "MEDIUM",
-      "note": "25日乖離率(-30.0%)下限到達。売られ過ぎからの自律反発狙い。",
-      "tradePlan": {
-        "entryType": "成行 / 押し目買付",
-        "entryTarget": 10545,
-        "entryRange": "10,171 〜 10,545",
-        "stopLoss": 10070.48,
-        "stopLossPct": -4.5,
-        "takeProfit": 19215,
-        "takeProfitPct": 82.22,
-        "riskRewardRatio": 18.27,
-        "executionNote": "【買付指示】エントリー: 10,545以下 | 損切り(SL): 10,070 (-4.5%) | 利確(TP): 19,215 (+82.2%) | RR: 1:18.3"
-      }
-    },
-    {
-      "symbol": "1605.T",
-      "name": "INPEX (1605)",
-      "sector": "エネルギー",
-      "type": "stock",
-      "triggers": [
-        "D4"
-      ],
-      "triggerDetails": "25日乖離率 +3.1% (売圏)",
-      "dailyRsi": 53.44,
-      "dailyKairi25": 3.06,
-      "bollinger": {
-        "upper": 4140.0366,
-        "mid": 3834.3,
-        "lower": 3528.5634,
-        "percentB": 0.634
-      },
-      "maCross": null,
-      "close": 3916,
-      "changePercent": -3.4,
-      "action": "SELL",
-      "priority": "MEDIUM",
-      "note": "25日乖離率(+3.1%)上限到達。短期的過熱感、利益確定・手仕舞い推奨。",
-      "tradePlan": {
-        "entryType": "成行 / 戻り売り",
-        "entryTarget": 3916,
-        "entryRange": "3,916 〜 4,145",
-        "stopLoss": 4186.88,
-        "stopLossPct": 6.92,
-        "takeProfit": 3428.43,
-        "takeProfitPct": -12.45,
-        "riskRewardRatio": 1.8,
-        "executionNote": "【空売り指示】エントリー: 3,916以上 | 損切り(SL): 4,187 (+6.9%) | 利確(TP): 3,428 (-12.5%) | RR: 1:1.8"
-      }
-    },
-    {
-      "symbol": "XOM",
-      "name": "エクソンモービル (XOM)",
-      "sector": "エネルギー",
-      "type": "stock",
-      "triggers": [
-        "D4"
-      ],
-      "triggerDetails": "25日乖離率 +3.2% (売圏)",
-      "dailyRsi": 62.08,
-      "dailyKairi25": 3.23,
-      "bollinger": {
-        "upper": 189.3132,
-        "mid": 176.761,
-        "lower": 164.2088,
-        "percentB": 0.616
-      },
-      "maCross": null,
-      "close": 179.67,
-      "changePercent": -4.05,
-      "action": "SELL",
-      "priority": "MEDIUM",
-      "note": "25日乖離率(+3.2%)上限到達。短期的過熱感、利益確定・手仕舞い推奨。",
-      "tradePlan": {
-        "entryType": "成行 / 戻り売り",
-        "entryTarget": 179.67,
-        "entryRange": "180 〜 189",
-        "stopLoss": 191.33,
-        "stopLossPct": 6.49,
-        "takeProfit": 158.69,
-        "takeProfitPct": -11.68,
-        "riskRewardRatio": 1.8,
-        "executionNote": "【空売り指示】エントリー: 180以上 | 損切り(SL): 191 (+6.5%) | 利確(TP): 159 (-11.7%) | RR: 1:1.8"
-      }
-    },
-    {
-      "symbol": "CVX",
-      "name": "シェブロン (CVX)",
-      "sector": "エネルギー",
-      "type": "stock",
-      "triggers": [
-        "D4"
-      ],
-      "triggerDetails": "25日乖離率 +3.8% (売圏)",
-      "dailyRsi": 63.73,
-      "dailyKairi25": 3.81,
-      "bollinger": {
-        "upper": 239.8891,
-        "mid": 222.814,
-        "lower": 205.7389,
-        "percentB": 0.645
-      },
-      "maCross": null,
-      "close": 227.77,
-      "changePercent": -3.29,
-      "action": "SELL",
-      "priority": "MEDIUM",
-      "note": "25日乖離率(+3.8%)上限到達。短期的過熱感、利益確定・手仕舞い推奨。",
-      "tradePlan": {
-        "entryType": "成行 / 戻り売り",
-        "entryTarget": 227.77,
-        "entryRange": "228 〜 238",
-        "stopLoss": 240.03,
-        "stopLossPct": 5.38,
-        "takeProfit": 204.86,
-        "takeProfitPct": -10.06,
-        "riskRewardRatio": 1.87,
-        "executionNote": "【空売り指示】エントリー: 228以上 | 損切り(SL): 240 (+5.4%) | 利確(TP): 205 (-10.1%) | RR: 1:1.9"
-      }
-    },
-    {
-      "symbol": "7011.T",
-      "name": "三菱重工業 (7011)",
+      "symbol": "7012.T",
+      "name": "川崎重工業 (7012)",
       "sector": "防衛・重工",
       "type": "stock",
       "triggers": [
         "D3"
       ],
-      "triggerDetails": "25日乖離率 -8.6% (買圏)",
-      "dailyRsi": 30.56,
-      "dailyKairi25": -8.58,
+      "triggerDetails": "25日乖離率 -6.1% (買圏)",
+      "dailyRsi": 33.76,
+      "dailyKairi25": -6.11,
       "bollinger": {
-        "upper": 3904.1504,
-        "mid": 3624.2,
-        "lower": 3344.2496,
-        "percentB": 0.012
+        "upper": 2355.0221,
+        "mid": 2199,
+        "lower": 2042.9779,
+        "percentB": 0.165
       },
       "maCross": null,
-      "close": 3351,
-      "changePercent": -0.36,
+      "close": 2094.5,
+      "changePercent": 0.92,
       "action": "BUY",
       "priority": "MEDIUM",
-      "note": "25日乖離率(-8.6%)下限到達。売られ過ぎからの自律反発狙い。",
+      "note": "25日乖離率(-6.1%)下限到達。売られ過ぎからの自律反発狙い。",
       "tradePlan": {
         "entryType": "成行 / 押し目買付",
-        "entryTarget": 3351,
-        "entryRange": "3,232 〜 3,351",
-        "stopLoss": 3200.2,
-        "stopLossPct": -4.5,
-        "takeProfit": 3910,
-        "takeProfitPct": 16.68,
-        "riskRewardRatio": 3.71,
-        "executionNote": "【買付指示】エントリー: 3,351以下 | 損切り(SL): 3,200 (-4.5%) | 利確(TP): 3,910 (+16.7%) | RR: 1:3.7"
-      }
-    },
-    {
-      "symbol": "7013.T",
-      "name": "IHI (7013)",
-      "sector": "防衛・重工",
-      "type": "stock",
-      "triggers": [
-        "D3"
-      ],
-      "triggerDetails": "25日乖離率 -8.8% (買圏)",
-      "dailyRsi": 31.8,
-      "dailyKairi25": -8.77,
-      "bollinger": {
-        "upper": 2720.4094,
-        "mid": 2478.675,
-        "lower": 2236.9406,
-        "percentB": 0.135
-      },
-      "maCross": null,
-      "close": 2302,
-      "changePercent": -0.17,
-      "action": "BUY",
-      "priority": "MEDIUM",
-      "note": "25日乖離率(-8.8%)下限到達。売られ過ぎからの自律反発狙い。",
-      "tradePlan": {
-        "entryType": "成行 / 押し目買付",
-        "entryTarget": 2302,
-        "entryRange": "2,220 〜 2,302",
-        "stopLoss": 2198.41,
-        "stopLossPct": -4.5,
-        "takeProfit": 2784,
-        "takeProfitPct": 20.94,
-        "riskRewardRatio": 4.65,
-        "executionNote": "【買付指示】エントリー: 2,302以下 | 損切り(SL): 2,198 (-4.5%) | 利確(TP): 2,784 (+20.9%) | RR: 1:4.7"
+        "entryTarget": 2094.5,
+        "entryRange": "1,956 〜 2,095",
+        "stopLoss": 1936.51,
+        "stopLossPct": -7.54,
+        "takeProfit": 2453,
+        "takeProfitPct": 17.12,
+        "riskRewardRatio": 2.27,
+        "executionNote": "【買付指示】エントリー: 2,095以下 | 損切り(SL): 1,937 (-7.5%) | 利確(TP): 2,453 (+17.1%) | RR: 1:2.3"
       }
     },
     {
@@ -1875,101 +1872,31 @@
       "triggers": [
         "D3"
       ],
-      "triggerDetails": "25日乖離率 -6.1% (買圏)",
-      "dailyRsi": 39.45,
-      "dailyKairi25": -6.12,
+      "triggerDetails": "25日乖離率 -4.0% (買圏)",
+      "dailyRsi": 43.39,
+      "dailyKairi25": -4,
       "bollinger": {
-        "upper": 8709.2161,
-        "mid": 7938.3,
-        "lower": 7167.3839,
-        "percentB": 0.267
+        "upper": 8532.6738,
+        "mid": 7879.85,
+        "lower": 7227.0262,
+        "percentB": 0.378
       },
       "maCross": null,
-      "close": 7579,
-      "changePercent": -0.11,
+      "close": 7720,
+      "changePercent": 2.29,
       "action": "BUY",
       "priority": "MEDIUM",
-      "note": "25日乖離率(-6.1%)下限到達。売られ過ぎからの自律反発狙い。",
+      "note": "25日乖離率(-4.0%)下限到達。売られ過ぎからの自律反発狙い。",
       "tradePlan": {
         "entryType": "成行 / 押し目買付",
-        "entryTarget": 7579,
-        "entryRange": "7,116 〜 7,579",
+        "entryTarget": 7720,
+        "entryRange": "7,116 〜 7,720",
         "stopLoss": 7045.7,
-        "stopLossPct": -7.04,
-        "takeProfit": 8903,
-        "takeProfitPct": 17.47,
-        "riskRewardRatio": 2.48,
-        "executionNote": "【買付指示】エントリー: 7,579以下 | 損切り(SL): 7,046 (-7.0%) | 利確(TP): 8,903 (+17.5%) | RR: 1:2.5"
-      }
-    },
-    {
-      "symbol": "7267.T",
-      "name": "ホンダ (7267)",
-      "sector": "自動車",
-      "type": "stock",
-      "triggers": [
-        "D4"
-      ],
-      "triggerDetails": "25日乖離率 +2.8% (売圏)",
-      "dailyRsi": 62.94,
-      "dailyKairi25": 2.78,
-      "bollinger": {
-        "upper": 1847.0148,
-        "mid": 1770.975,
-        "lower": 1694.9352,
-        "percentB": 0.697
-      },
-      "maCross": null,
-      "close": 1801,
-      "changePercent": 0.11,
-      "action": "SELL",
-      "priority": "MEDIUM",
-      "note": "25日乖離率(+2.8%)上限到達。短期的過熱感、利益確定・手仕舞い推奨。",
-      "tradePlan": {
-        "entryType": "成行 / 戻り売り",
-        "entryTarget": 1801,
-        "entryRange": "1,801 〜 1,863",
-        "stopLoss": 1882.04,
-        "stopLossPct": 4.5,
-        "takeProfit": 1655.12,
-        "takeProfitPct": -8.1,
+        "stopLossPct": -8.73,
+        "takeProfit": 8933.73,
+        "takeProfitPct": 15.72,
         "riskRewardRatio": 1.8,
-        "executionNote": "【空売り指示】エントリー: 1,801以上 | 損切り(SL): 1,882 (+4.5%) | 利確(TP): 1,655 (-8.1%) | RR: 1:1.8"
-      }
-    },
-    {
-      "symbol": "5803.T",
-      "name": "フジクラ (5803)",
-      "sector": "素材・非鉄",
-      "type": "stock",
-      "triggers": [
-        "D3"
-      ],
-      "triggerDetails": "25日乖離率 -21.1% (買圏)",
-      "dailyRsi": 30.07,
-      "dailyKairi25": -21.14,
-      "bollinger": {
-        "upper": 5840.555,
-        "mid": 4541.5,
-        "lower": 3242.445,
-        "percentB": 0.179
-      },
-      "maCross": null,
-      "close": 3707,
-      "changePercent": -4.95,
-      "action": "BUY",
-      "priority": "MEDIUM",
-      "note": "25日乖離率(-21.1%)下限到達。売られ過ぎからの自律反発狙い。",
-      "tradePlan": {
-        "entryType": "成行 / 押し目買付",
-        "entryTarget": 3707,
-        "entryRange": "3,576 〜 3,707",
-        "stopLoss": 3540.18,
-        "stopLossPct": -4.5,
-        "takeProfit": 6012,
-        "takeProfitPct": 62.18,
-        "riskRewardRatio": 13.82,
-        "executionNote": "【買付指示】エントリー: 3,707以下 | 損切り(SL): 3,540 (-4.5%) | 利確(TP): 6,012 (+62.2%) | RR: 1:13.8"
+        "executionNote": "【買付指示】エントリー: 7,720以下 | 損切り(SL): 7,046 (-8.7%) | 利確(TP): 8,934 (+15.7%) | RR: 1:1.8"
       }
     },
     {
@@ -1980,195 +1907,160 @@
       "triggers": [
         "D3"
       ],
-      "triggerDetails": "25日乖離率 -14.2% (買圏)",
-      "dailyRsi": 34.26,
-      "dailyKairi25": -14.16,
+      "triggerDetails": "25日乖離率 -15.8% (買圏)",
+      "dailyRsi": 33.21,
+      "dailyKairi25": -15.84,
       "bollinger": {
-        "upper": 3831.4509,
-        "mid": 3176.25,
-        "lower": 2521.0491,
-        "percentB": 0.212
+        "upper": 3731.5054,
+        "mid": 3122.15,
+        "lower": 2512.7946,
+        "percentB": 0.169
       },
       "maCross": null,
-      "close": 2799,
-      "changePercent": -4.34,
+      "close": 2719,
+      "changePercent": -3.72,
       "action": "BUY",
       "priority": "MEDIUM",
-      "note": "25日乖離率(-14.2%)下限到達。売られ過ぎからの自律反発狙い。",
+      "note": "25日乖離率(-15.8%)下限到達。売られ過ぎからの自律反発狙い。",
       "tradePlan": {
         "entryType": "成行 / 押し目買付",
-        "entryTarget": 2799,
-        "entryRange": "2,679 〜 2,799",
-        "stopLoss": 2652.61,
-        "stopLossPct": -5.23,
+        "entryTarget": 2719,
+        "entryRange": "2,594 〜 2,719",
+        "stopLoss": 2567.89,
+        "stopLossPct": -5.56,
         "takeProfit": 3971,
-        "takeProfitPct": 41.87,
-        "riskRewardRatio": 8.01,
-        "executionNote": "【買付指示】エントリー: 2,799以下 | 損切り(SL): 2,653 (-5.2%) | 利確(TP): 3,971 (+41.9%) | RR: 1:8.0"
+        "takeProfitPct": 46.05,
+        "riskRewardRatio": 8.29,
+        "executionNote": "【買付指示】エントリー: 2,719以下 | 損切り(SL): 2,568 (-5.6%) | 利確(TP): 3,971 (+46.0%) | RR: 1:8.3"
       }
     },
     {
-      "symbol": "4502.T",
-      "name": "武田薬品工業 (4502)",
+      "symbol": "JNJ",
+      "name": "ジョンソン・エンド・ジョンソン (JNJ)",
       "sector": "医薬品",
       "type": "stock",
       "triggers": [
-        "D4"
+        "D9"
       ],
-      "triggerDetails": "25日乖離率 +7.3% (売圏)",
-      "dailyRsi": 69.07,
-      "dailyKairi25": 7.31,
+      "triggerDetails": "最適化シグナルBUY確定(3日前)",
+      "dailyRsi": 52.81,
+      "dailyKairi25": 1.87,
       "bollinger": {
-        "upper": 6800.1821,
-        "mid": 6225.6,
-        "lower": 5651.0179,
-        "percentB": 0.799
+        "upper": 276.8803,
+        "mid": 262.2505,
+        "lower": 247.6207,
+        "percentB": 0.634
       },
       "maCross": null,
-      "close": 6569,
-      "changePercent": -1.17,
-      "action": "SELL",
+      "close": 266.17,
+      "changePercent": -1.62,
+      "action": "BUY",
       "priority": "MEDIUM",
-      "note": "25日乖離率(+7.3%)上限到達。短期的過熱感、利益確定・手仕舞い推奨。",
+      "note": "スクリーナー最適化シグナル(BUY)点灯中。直近の追随買いを狙う。",
       "tradePlan": {
-        "entryType": "成行 / 戻り売り",
-        "entryTarget": 6569,
-        "entryRange": "6,569 〜 6,830",
-        "stopLoss": 6898.95,
-        "stopLossPct": 5.02,
-        "takeProfit": 5650,
-        "takeProfitPct": -13.99,
-        "riskRewardRatio": 2.79,
-        "executionNote": "【空売り指示】エントリー: 6,569以上 | 損切り(SL): 6,899 (+5.0%) | 利確(TP): 5,650 (-14.0%) | RR: 1:2.8"
+        "entryType": "成行 / 押し目買付",
+        "entryTarget": 266.17,
+        "entryRange": "244 〜 266",
+        "stopLoss": 241.49,
+        "stopLossPct": -9.27,
+        "takeProfit": 310.59,
+        "takeProfitPct": 16.69,
+        "riskRewardRatio": 1.8,
+        "executionNote": "【買付指示】エントリー: 266以下 | 損切り(SL): 241 (-9.3%) | 利確(TP): 311 (+16.7%) | RR: 1:1.8"
       }
     },
     {
-      "symbol": "9983.T",
-      "name": "ファーストリテイリング (9983)",
+      "symbol": "COST",
+      "name": "コストコ (COST)",
       "sector": "消費・小売",
       "type": "stock",
       "triggers": [
         "D4"
       ],
-      "triggerDetails": "25日乖離率 +3.2% (売圏)",
-      "dailyRsi": 59.35,
-      "dailyKairi25": 3.17,
+      "triggerDetails": "25日乖離率 +4.6% (売圏)",
+      "dailyRsi": 68.38,
+      "dailyKairi25": 4.59,
       "bollinger": {
-        "upper": 77055.7337,
-        "mid": 74793,
-        "lower": 72530.2663,
-        "percentB": 0.886
+        "upper": 1039.961,
+        "mid": 987.9225,
+        "lower": 935.884,
+        "percentB": 0.801
       },
       "maCross": null,
-      "close": 76540,
-      "changePercent": 1.57,
+      "close": 1019.26,
+      "changePercent": -2.05,
       "action": "SELL",
       "priority": "MEDIUM",
-      "note": "25日乖離率(+3.2%)上限到達。短期的過熱感、利益確定・手仕舞い推奨。",
+      "note": "25日乖離率(+4.6%)上限到達。短期的過熱感、利益確定・手仕舞い推奨。",
       "tradePlan": {
         "entryType": "成行 / 戻り売り",
-        "entryTarget": 76540,
-        "entryRange": "76,540 〜 79,184",
-        "stopLoss": 79984.3,
+        "entryTarget": 1019.26,
+        "entryRange": "1,019 〜 1,054",
+        "stopLoss": 1065.13,
         "stopLossPct": 4.5,
-        "takeProfit": 70340.26,
+        "takeProfit": 936.7,
         "takeProfitPct": -8.1,
         "riskRewardRatio": 1.8,
-        "executionNote": "【空売り指示】エントリー: 76,540以上 | 損切り(SL): 79,984 (+4.5%) | 利確(TP): 70,340 (-8.1%) | RR: 1:1.8"
+        "executionNote": "【空売り指示】エントリー: 1,019以上 | 損切り(SL): 1,065 (+4.5%) | 利確(TP): 937 (-8.1%) | RR: 1:1.8"
       }
     },
     {
-      "symbol": "6981.T",
-      "name": "村田製作所 (6981)",
-      "sector": "電子部品",
+      "symbol": "NEE",
+      "name": "ネクステラ・エナジー (NEE)",
+      "sector": "再エネ・太陽光",
       "type": "stock",
       "triggers": [
-        "D3"
+        "D4"
       ],
-      "triggerDetails": "25日乖離率 -16.1% (買圏)",
-      "dailyRsi": 35.86,
-      "dailyKairi25": -16.09,
+      "triggerDetails": "25日乖離率 +6.0% (売圏)",
+      "dailyRsi": 68.45,
+      "dailyKairi25": 6.01,
       "bollinger": {
-        "upper": 8644.7414,
-        "mid": 7017.55,
-        "lower": 5390.3586,
-        "percentB": 0.221
+        "upper": 85.1633,
+        "mid": 80.2835,
+        "lower": 75.4037,
+        "percentB": 0.915
       },
       "maCross": null,
-      "close": 6109,
-      "changePercent": -3.64,
-      "action": "BUY",
+      "close": 84.33,
+      "changePercent": -0.82,
+      "action": "SELL",
       "priority": "MEDIUM",
-      "note": "25日乖離率(-16.1%)下限到達。売られ過ぎからの自律反発狙い。",
+      "note": "25日乖離率(+6.0%)上限到達。短期的過熱感、利益確定・手仕舞い推奨。",
       "tradePlan": {
-        "entryType": "成行 / 押し目買付",
-        "entryTarget": 6109,
-        "entryRange": "5,851 〜 6,109",
-        "stopLoss": 5792.78,
-        "stopLossPct": -5.18,
-        "takeProfit": 8980,
-        "takeProfitPct": 47,
-        "riskRewardRatio": 9.08,
-        "executionNote": "【買付指示】エントリー: 6,109以下 | 損切り(SL): 5,793 (-5.2%) | 利確(TP): 8,980 (+47.0%) | RR: 1:9.1"
-      }
-    },
-    {
-      "symbol": "BTC-USD",
-      "name": "ビットコイン (BTC/USD)",
-      "sector": "暗号資産",
-      "type": "crypto",
-      "triggers": [
-        "D3"
-      ],
-      "triggerDetails": "25日乖離率 -4.7% (買圏)",
-      "dailyRsi": 36.26,
-      "dailyKairi25": -4.74,
-      "bollinger": {
-        "upper": 84472.0511,
-        "mid": 80268.6969,
-        "lower": 76065.3427,
-        "percentB": 0.101
-      },
-      "maCross": null,
-      "close": 76911.3516,
-      "changePercent": 0.31,
-      "action": "BUY",
-      "priority": "MEDIUM",
-      "note": "25日乖離率(-4.7%)下限到達。売られ過ぎからの自律反発狙い。",
-      "tradePlan": {
-        "entryType": "成行 / 押し目買付",
-        "entryTarget": 76911.3516,
-        "entryRange": "74,185 〜 76,911",
-        "stopLoss": 73450.34,
-        "stopLossPct": -4.5,
-        "takeProfit": 84840.05,
-        "takeProfitPct": 10.31,
-        "riskRewardRatio": 2.29,
-        "executionNote": "【買付指示】エントリー: 76,911以下 | 損切り(SL): 73,450 (-4.5%) | 利確(TP): 84,840 (+10.3%) | RR: 1:2.3"
+        "entryType": "成行 / 戻り売り",
+        "entryTarget": 84.33,
+        "entryRange": "84.330 〜 87.244",
+        "stopLoss": 88.12,
+        "stopLossPct": 4.5,
+        "takeProfit": 76.43,
+        "takeProfitPct": -9.37,
+        "riskRewardRatio": 2.08,
+        "executionNote": "【空売り指示】エントリー: 84.330以上 | 損切り(SL): 88.125 (+4.5%) | 利確(TP): 76.430 (-9.4%) | RR: 1:2.1"
       }
     }
   ],
   "marketSummary": {
     "nikkei": {
       "name": "日経平均",
-      "dailyRsi": 38.11,
-      "changePercent": -1.2,
-      "close": 62325.0508,
+      "dailyRsi": 37.79,
+      "changePercent": -1.31,
+      "close": 62256.5898,
       "trend": "下落傾向・要警戒"
     },
     "sp500": {
       "name": "S&P 500",
-      "dailyRsi": 39.3,
-      "changePercent": 0.36,
-      "close": 7568.9199,
-      "trend": "下落傾向・要警戒"
+      "dailyRsi": 49.6,
+      "changePercent": 1.58,
+      "close": 7688.6201,
+      "trend": "揉み合い・中立"
     },
     "usdjpy": {
       "name": "ドル円",
-      "dailyRsi": 56.58,
-      "changePercent": 0.27,
-      "close": 158.338,
-      "trend": "保ち合い"
+      "dailyRsi": 52.82,
+      "changePercent": -0.36,
+      "close": 157.897,
+      "trend": "円高推移"
     }
   }
 }
