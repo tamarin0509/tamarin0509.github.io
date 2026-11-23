@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-22T01:05:16.027Z",
+  "updatedAt": "2026-11-23T01:28:57.653Z",
   "results": [
     {
       "symbol": "^N225",
@@ -150,16 +150,16 @@
       "name": "米ドル / 円 (USD/JPY)",
       "type": "forex",
       "sector": "為替",
-      "close": 159.707,
-      "changePercent": 0.2,
-      "rsi": 56.41,
-      "kairi25": 0.84,
+      "close": 158.888,
+      "changePercent": -0.51,
+      "rsi": 52.14,
+      "kairi25": 0.29,
       "bestParams": {
-        "rsiPeriod": 21,
-        "maPeriod": 20,
+        "rsiPeriod": 25,
+        "maPeriod": 90,
         "maMethod": "EMA",
         "offset": -3,
-        "margin": 2,
+        "margin": 0.2,
         "nLines": 3,
         "peakMethod": "kairi",
         "swingPeriod": 10,
@@ -167,12 +167,12 @@
         "mtfFilter": "weekly"
       },
       "latestSignal": {
-        "time": "2026-11-09",
+        "time": "2026-11-03",
         "type": "BUY",
-        "price": 158.292,
-        "rsi": 51.87713770160163,
+        "price": 157.915,
+        "rsi": 51.000001806849696,
         "status": "confirmed",
-        "barsAgo": 9
+        "barsAgo": 14
       },
       "tradeInstruction": {
         "action": "BUY",
@@ -180,27 +180,27 @@
         "name": "米ドル / 円 (USD/JPY)",
         "orderType": "MARKET_OPEN",
         "orderTypeJp": "翌日寄り付き成行買い (MARKET BUY)",
-        "entryPrice": 159.71,
-        "entryRangeStr": "¥160 近辺 (寄り成行)",
-        "stopLoss": 153.32,
+        "entryPrice": 158.89,
+        "entryRangeStr": "¥159 近辺 (寄り成行)",
+        "stopLoss": 152.53,
         "stopLossPct": -4,
-        "takeProfit": 182.07,
+        "takeProfit": 181.13,
         "takeProfitPct": 14,
         "riskRewardRatio": 3.5,
         "maxHoldBars": 15,
-        "executionGuide": "【スマホ操作】証券アプリで「米ドル / 円 (USD/JPY) 成行 / 逆指値 153円 / 利確 182円」をセット！"
+        "executionGuide": "【スマホ操作】証券アプリで「米ドル / 円 (USD/JPY) 成行 / 逆指値 153円 / 利確 181円」をセット！"
       },
       "backtest": {
-        "trades": 15,
-        "wins": 7,
-        "winRatePct": 46.7,
-        "profitFactor": 0.91,
-        "totalReturnPct": -0.96,
-        "buyHoldReturnPct": 3.22,
-        "maxDrawdownPct": 7.01,
-        "expectancyPct": -0.054,
-        "avgHoldBars": 13.6,
-        "score": -0.036
+        "trades": 7,
+        "wins": 3,
+        "winRatePct": 42.9,
+        "profitFactor": 0.68,
+        "totalReturnPct": -0.78,
+        "buyHoldReturnPct": 3.08,
+        "maxDrawdownPct": 2.52,
+        "expectancyPct": -0.109,
+        "avgHoldBars": 14.7,
+        "score": -0.059
       }
     },
     {
@@ -208,10 +208,10 @@
       "name": "ユーロ / 米ドル (EUR/USD)",
       "type": "forex",
       "sector": "為替",
-      "close": 1.097,
-      "changePercent": -0.02,
-      "rsi": 29.73,
-      "kairi25": -1.58,
+      "close": 1.0985,
+      "changePercent": 0.14,
+      "rsi": 30.38,
+      "kairi25": -1.36,
       "bestParams": {
         "rsiPeriod": 21,
         "maPeriod": 45,
@@ -227,16 +227,16 @@
       "latestSignal": null,
       "tradeInstruction": null,
       "backtest": {
-        "trades": 8,
+        "trades": 9,
         "wins": 5,
-        "winRatePct": 62.5,
-        "profitFactor": 1.63,
-        "totalReturnPct": 2.02,
-        "buyHoldReturnPct": 3.41,
-        "maxDrawdownPct": 2.13,
-        "expectancyPct": 0.257,
+        "winRatePct": 55.6,
+        "profitFactor": 1.04,
+        "totalReturnPct": 0.15,
+        "buyHoldReturnPct": 4.82,
+        "maxDrawdownPct": 3.44,
+        "expectancyPct": 0.025,
         "avgHoldBars": 15,
-        "score": 0.15
+        "score": 0.015
       }
     },
     {
@@ -244,12 +244,12 @@
       "name": "英ポンド / 円 (GBP/JPY)",
       "type": "forex",
       "sector": "為替",
-      "close": 208.993,
-      "changePercent": -0.25,
-      "rsi": 21.47,
-      "kairi25": -0.99,
+      "close": 208.291,
+      "changePercent": -0.34,
+      "rsi": 31.83,
+      "kairi25": -1.28,
       "bestParams": {
-        "rsiPeriod": 7,
+        "rsiPeriod": 14,
         "maPeriod": 20,
         "maMethod": "EMA",
         "offset": -3,
@@ -263,16 +263,16 @@
       "latestSignal": null,
       "tradeInstruction": null,
       "backtest": {
-        "trades": 12,
+        "trades": 14,
         "wins": 5,
-        "winRatePct": 41.7,
-        "profitFactor": 0.79,
-        "totalReturnPct": -1.17,
-        "buyHoldReturnPct": 6.41,
-        "maxDrawdownPct": 3.88,
-        "expectancyPct": -0.094,
-        "avgHoldBars": 15,
-        "score": -0.063
+        "winRatePct": 35.7,
+        "profitFactor": 0.51,
+        "totalReturnPct": -3.2,
+        "buyHoldReturnPct": 7.3,
+        "maxDrawdownPct": 5.12,
+        "expectancyPct": -0.228,
+        "avgHoldBars": 14.2,
+        "score": -0.158
       }
     },
     {
@@ -280,10 +280,10 @@
       "name": "豪ドル / 米ドル (AUD/USD)",
       "type": "forex",
       "sector": "為替",
-      "close": 0.6619,
-      "changePercent": -0.56,
-      "rsi": 15.4,
-      "kairi25": -4.18,
+      "close": 0.6651,
+      "changePercent": -0.08,
+      "rsi": 16.3,
+      "kairi25": -3.73,
       "bestParams": {
         "rsiPeriod": 14,
         "maPeriod": 60,
@@ -304,7 +304,7 @@
         "winRatePct": 37.5,
         "profitFactor": 0.86,
         "totalReturnPct": -1.67,
-        "buyHoldReturnPct": 1.18,
+        "buyHoldReturnPct": 1.7,
         "maxDrawdownPct": 10.46,
         "expectancyPct": -0.158,
         "avgHoldBars": 15,
@@ -2815,10 +2815,10 @@
       "name": "ビットコイン (BTC/USD)",
       "type": "crypto",
       "sector": "暗号資産",
-      "close": 60054.2617,
-      "changePercent": 2.13,
-      "rsi": 24.28,
-      "kairi25": -16.3,
+      "close": 60944.8398,
+      "changePercent": 1.42,
+      "rsi": 27.61,
+      "kairi25": -14.09,
       "bestParams": {
         "rsiPeriod": 21,
         "maPeriod": 45,
@@ -2834,16 +2834,16 @@
       "latestSignal": null,
       "tradeInstruction": null,
       "backtest": {
-        "trades": 13,
+        "trades": 12,
         "wins": 7,
-        "winRatePct": 53.8,
-        "profitFactor": 0.98,
-        "totalReturnPct": -9.86,
-        "buyHoldReturnPct": -39.34,
+        "winRatePct": 58.3,
+        "profitFactor": 1.14,
+        "totalReturnPct": -0.74,
+        "buyHoldReturnPct": -37.67,
         "maxDrawdownPct": 27.25,
-        "expectancyPct": -0.09,
-        "avgHoldBars": 13.8,
-        "score": -0.035
+        "expectancyPct": 0.669,
+        "avgHoldBars": 14,
+        "score": 0.248
       }
     },
     {
@@ -2851,10 +2851,10 @@
       "name": "イーサリアム (ETH/USD)",
       "type": "crypto",
       "sector": "暗号資産",
-      "close": 1680.62,
-      "changePercent": 3.78,
-      "rsi": 26.98,
-      "kairi25": -18.26,
+      "close": 1713.48,
+      "changePercent": 1.86,
+      "rsi": 29.44,
+      "kairi25": -15.61,
       "bestParams": {
         "rsiPeriod": 21,
         "maPeriod": 90,
@@ -2870,16 +2870,16 @@
       "latestSignal": null,
       "tradeInstruction": null,
       "backtest": {
-        "trades": 6,
+        "trades": 7,
         "wins": 3,
-        "winRatePct": 50,
-        "profitFactor": 1.65,
-        "totalReturnPct": 9.77,
-        "buyHoldReturnPct": -49.56,
-        "maxDrawdownPct": 32.76,
-        "expectancyPct": 2.806,
+        "winRatePct": 42.9,
+        "profitFactor": 1.14,
+        "totalReturnPct": -2.9,
+        "buyHoldReturnPct": -49.55,
+        "maxDrawdownPct": 37.66,
+        "expectancyPct": 0.757,
         "avgHoldBars": 15,
-        "score": 0.665
+        "score": 0.179
       }
     },
     {
